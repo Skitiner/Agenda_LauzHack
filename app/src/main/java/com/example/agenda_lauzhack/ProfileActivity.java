@@ -27,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private ArrayList<Integer> sportIds = new ArrayList() {
         {
-            add(R.id.koala); add(R.id.rabbit); add(R.id.leopard);
+            add(R.id.sloth); add(R.id.rabbit); add(R.id.cheetah);
         }
     };
 
@@ -90,24 +90,24 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     private void setSport() {
-        ImageButton koalaSportButton = findViewById(R.id.koala);
+        ImageButton slothSportButton = findViewById(R.id.sloth);
         ImageButton rabbitSportButton = findViewById(R.id.rabbit);
-        ImageButton leopardSportButton = findViewById(R.id.leopard);
+        ImageButton cheetahSportButton = findViewById(R.id.cheetah);
 
         if (positionSport==0){
-            koalaSportButton.setBackgroundColor(0xFF00897B);
+            slothSportButton.setBackgroundColor(0xFF00897B);
             rabbitSportButton.setBackgroundColor(0xFFFF0000);
-            leopardSportButton.setBackgroundColor(0xFFFF0000);
+            cheetahSportButton.setBackgroundColor(0xFFFF0000);
         }
         else if (positionSport==1) {
-            koalaSportButton.setBackgroundColor(0xFFFF0000);
+            slothSportButton.setBackgroundColor(0xFFFF0000);
             rabbitSportButton.setBackgroundColor(0xFF00897B);
-            leopardSportButton.setBackgroundColor(0xFFFF0000);
+            cheetahSportButton.setBackgroundColor(0xFFFF0000);
         }
         else {
-            koalaSportButton.setBackgroundColor(0xFFFF0000);
+            slothSportButton.setBackgroundColor(0xFFFF0000);
             rabbitSportButton.setBackgroundColor(0xFFFF0000);
-            leopardSportButton.setBackgroundColor(0xFF00897B);
+            cheetahSportButton.setBackgroundColor(0xFF00897B);
         }
 
     }

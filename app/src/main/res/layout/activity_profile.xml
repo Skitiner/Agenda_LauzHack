@@ -401,13 +401,13 @@ tools:context=".ProfileActivity">
             android:layout_weight="5" />
 
         <ImageButton
-            android:id="@+id/koala"
+            android:id="@+id/sloth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:background="@color/red"
             android:onClick="clickedSportButtonXmlCallback"
-            app:srcCompat="@android:drawable/ic_media_pause" />
+            app:srcCompat="@mipmap/sloth_foreground" />
 
         <Space
             android:layout_width="match_parent"
@@ -421,7 +421,7 @@ tools:context=".ProfileActivity">
             android:layout_weight="4"
             android:background="@color/green"
             android:onClick="clickedSportButtonXmlCallback"
-            app:srcCompat="@android:drawable/ic_media_play" />
+            app:srcCompat="@mipmap/rabbit_foreground" />
 
         <Space
             android:layout_width="match_parent"
@@ -429,13 +429,13 @@ tools:context=".ProfileActivity">
             android:layout_weight="5" />
 
         <ImageButton
-            android:id="@+id/leopard"
+            android:id="@+id/cheetah"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:background="@color/red"
             android:onClick="clickedSportButtonXmlCallback"
-            app:srcCompat="@android:drawable/ic_media_ff" />
+            app:srcCompat="@mipmap/cheetah_foreground" />
 
         <Space
             android:layout_width="match_parent"
