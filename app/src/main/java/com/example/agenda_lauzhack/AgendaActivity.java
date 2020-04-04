@@ -1,34 +1,46 @@
 package com.example.agenda_lauzhack;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class AgendaActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class AgendaActivity extends AppCompatActivity  {
+
+    private myAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
         setContentView(R.layout.activity_agenda);
+        ListView schedule = findViewById(R.id.schedule);
+        schedule.setAdapter(adapter);
 
-        //myAdapter adapter = new myAdapter(this, R.layout);
+        ArrayList<timeSlot> mySlots = new ArrayList<>();
+        for (int i = 0; i < 24; i++) {
+            timeSlot slot = new timeSlot();
+            slot.time = i;
+            slot.task_1 = timeSlot.currentTask.SPORT;
+            slot.task_2 = timeSlot.currentTask.SPORT;
+            slot.task_3 = timeSlot.currentTask.FREE;
+            slot.task_4 = timeSlot.currentTask.FREE;
 
-        timeSlot slot1 = new timeSlot();
-        slot1.time = 1;
-        slot1.task_1 = timeSlot.currentTask.EAT;
-        slot1.task_2 = timeSlot.currentTask.EAT;
-        slot1.task_3 = timeSlot.currentTask.FREE;
-        slot1.task_4 = timeSlot.currentTask.SPORT;
+            mySlots.add(slot);
+        }
 
+        adapter.addAll(mySlots);
     }
 
     private class myAdapter extends ArrayAdapter<timeSlot> {
@@ -37,6 +49,7 @@ public class AgendaActivity extends AppCompatActivity {
 
         public myAdapter(@NonNull Context context, int resource) {
             super(context, resource);
+            time_layout = resource;
         }
 
         @NonNull
@@ -54,28 +67,33 @@ public class AgendaActivity extends AppCompatActivity {
             }
 
 
+
             ((TextView) row.findViewById(R.id.t_1)).setText(getItem(position).time + "h");
 
             // public enum currentTask {SPORT, WORK, EAT, FREE}
             switch (getItem(position).task_1) {
                 case SPORT:
                     ((TextView) row.findViewById(R.id.a_1)).setText("Sport");
-                    ((TextView) row.findViewById(R.id.a_1)).setBackground(Drawable.createFromPath("@color/darkBlue"));
+                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
+                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.lightBlue, null));
                     break;
 
                 case WORK:
                     ((TextView) row.findViewById(R.id.a_1)).setText("Work");
-                    ((TextView) row.findViewById(R.id.a_1)).setBackground(Drawable.createFromPath("@color/lightBlue"));
+                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case EAT:
                     ((TextView) row.findViewById(R.id.a_1)).setText("Eat");
-                    ((TextView) row.findViewById(R.id.a_1)).setBackground(Drawable.createFromPath("@color/orange"));
+                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case FREE:
                     ((TextView) row.findViewById(R.id.a_1)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_1)).setBackground(Drawable.createFromPath("@color/gray"));
+                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.gray, null));
+                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
             }
@@ -83,22 +101,26 @@ public class AgendaActivity extends AppCompatActivity {
             switch (getItem(position).task_2) {
                 case SPORT:
                     ((TextView) row.findViewById(R.id.a_2)).setText("Sport");
-                    ((TextView) row.findViewById(R.id.a_2)).setBackground(Drawable.createFromPath("@color/darkBlue"));
+                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
+                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.lightBlue, null));
                     break;
 
                 case WORK:
                     ((TextView) row.findViewById(R.id.a_2)).setText("Work");
-                    ((TextView) row.findViewById(R.id.a_2)).setBackground(Drawable.createFromPath("@color/lightBlue"));
+                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case EAT:
                     ((TextView) row.findViewById(R.id.a_2)).setText("Eat");
-                    ((TextView) row.findViewById(R.id.a_2)).setBackground(Drawable.createFromPath("@color/orange"));
+                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case FREE:
                     ((TextView) row.findViewById(R.id.a_2)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_2)).setBackground(Drawable.createFromPath("@color/gray"));
+                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.gray, null));
+                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
             }
@@ -106,22 +128,26 @@ public class AgendaActivity extends AppCompatActivity {
             switch (getItem(position).task_3) {
                 case SPORT:
                     ((TextView) row.findViewById(R.id.a_3)).setText("Sport");
-                    ((TextView) row.findViewById(R.id.a_3)).setBackground(Drawable.createFromPath("@color/darkBlue"));
+                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
+                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case WORK:
                     ((TextView) row.findViewById(R.id.a_3)).setText("Work");
-                    ((TextView) row.findViewById(R.id.a_3)).setBackground(Drawable.createFromPath("@color/lightBlue"));
+                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case EAT:
                     ((TextView) row.findViewById(R.id.a_3)).setText("Eat");
-                    ((TextView) row.findViewById(R.id.a_3)).setBackground(Drawable.createFromPath("@color/orange"));
+                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case FREE:
                     ((TextView) row.findViewById(R.id.a_3)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_3)).setBackground(Drawable.createFromPath("@color/gray"));
+                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.gray, null));
+                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
             }
@@ -129,22 +155,26 @@ public class AgendaActivity extends AppCompatActivity {
             switch (getItem(position).task_4) {
                 case SPORT:
                     ((TextView) row.findViewById(R.id.a_4)).setText("Sport");
-                    ((TextView) row.findViewById(R.id.a_4)).setBackground(Drawable.createFromPath("@color/darkBlue"));
+                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
+                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.lightBlue, null));
                     break;
 
                 case WORK:
                     ((TextView) row.findViewById(R.id.a_4)).setText("Work");
-                    ((TextView) row.findViewById(R.id.a_4)).setBackground(Drawable.createFromPath("@color/lightBlue"));
+                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case EAT:
                     ((TextView) row.findViewById(R.id.a_4)).setText("Eat");
-                    ((TextView) row.findViewById(R.id.a_4)).setBackground(Drawable.createFromPath("@color/orange"));
+                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
                 case FREE:
                     ((TextView) row.findViewById(R.id.a_4)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_4)).setBackground(Drawable.createFromPath("@color/gray"));
+                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.gray, null));
+                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.darkBlue, null));
                     break;
 
             }
