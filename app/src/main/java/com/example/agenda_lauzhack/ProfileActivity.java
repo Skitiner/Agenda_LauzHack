@@ -95,19 +95,19 @@ public class ProfileActivity extends AppCompatActivity {
         ImageButton cheetahSportButton = findViewById(R.id.cheetah);
 
         if (positionSport==0){
-            slothSportButton.setBackgroundColor(0xFF00897B);
-            rabbitSportButton.setBackgroundColor(0xFFFF0000);
-            cheetahSportButton.setBackgroundColor(0xFFFF0000);
+            slothSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
+            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
         }
         else if (positionSport==1) {
-            slothSportButton.setBackgroundColor(0xFFFF0000);
-            rabbitSportButton.setBackgroundColor(0xFF00897B);
-            cheetahSportButton.setBackgroundColor(0xFFFF0000);
+            slothSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
+            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
         }
         else {
-            slothSportButton.setBackgroundColor(0xFFFF0000);
-            rabbitSportButton.setBackgroundColor(0xFFFF0000);
-            cheetahSportButton.setBackgroundColor(0xFF00897B);
+            slothSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
         }
 
     }
