@@ -21,7 +21,7 @@
     <string name="sport">Selectionner votre routine sportive</string>
     <string name="forgetWorkHour"> Vous avez oublié d\'entrer un nombre d\'heure de travail !</string>        <!-- à changer dans profileactivity aussi-->
     <string name="forgetWakeUp">Vous avez oublié d\'entrer une heure de réveil !</string>                 <!-- à changer dans profileactivity aussi-->
-    <string name="Saved">Correctement sauvegarder !</string>                                           <!-- à changer dans profileactivity aussi-->
+    <string name="Saved">Correctement sauvegardé !</string>                                           <!-- à changer dans profileactivity aussi-->
     <!--
     <string name="app_name">Agenda_LauzHack</string>
     <string name="Agenda">Agenda</string>
