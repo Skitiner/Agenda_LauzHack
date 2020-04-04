@@ -3,6 +3,8 @@ package com.example.agenda_lauzhack;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -13,11 +15,22 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class AgendaActivity extends AppCompatActivity  {
 
     private myAdapter adapter;
+    private ListView schedule;
+    private ArrayList<ArrayList<timeSlot>> week;
+    private int currentDay;
+    private Date currentDate;
+    private TextView date;
+    private int date_offset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,22 +38,97 @@ public class AgendaActivity extends AppCompatActivity  {
 
         adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
         setContentView(R.layout.activity_agenda);
-        ListView schedule = findViewById(R.id.schedule);
-        schedule.setAdapter(adapter);
+        schedule = findViewById(R.id.schedule);
 
-        ArrayList<timeSlot> mySlots = new ArrayList<>();
-        for (int i = 0; i < 24; i++) {
-            timeSlot slot = new timeSlot();
-            slot.time = i;
-            slot.task_1 = timeSlot.currentTask.SPORT;
-            slot.task_2 = timeSlot.currentTask.SPORT;
-            slot.task_3 = timeSlot.currentTask.FREE;
-            slot.task_4 = timeSlot.currentTask.FREE;
+        SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+        date = findViewById(R.id.date);
+        currentDate = new Date();
+        date.setText(formatter.format(currentDate));
+        currentDay = 0;
+        date_offset = 0;
 
-            mySlots.add(slot);
+        week = new ArrayList<>();
+
+        timeSlot.currentTask task;
+
+        for(int j = 0; j < 7; j++ ) {
+            ArrayList<timeSlot> mySlots = new ArrayList<>();
+
+            for (int i = 0; i < 24; i++) {
+                int num = j%4;
+                task = timeSlot.currentTask.values()[num];
+
+                timeSlot slot = new timeSlot();
+                slot.time = i;
+                slot.task_1 = task;
+                slot.task_2 = task;
+                slot.task_3 = task;
+                slot.task_4 = task;
+
+                mySlots.add(slot);
+            }
+            week.add(mySlots);
         }
 
-        adapter.addAll(mySlots);
+        adapter.addAll(week.get(0));
+        schedule.setAdapter(adapter);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_agenda, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.today_button:
+                currentDay = 0;
+                adapter.clear();
+                adapter.addAll(week.get(currentDay));
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+                date = findViewById(R.id.date);
+                currentDate = new Date();
+                date.setText(formatter.format(currentDate));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void changeDay(View view) {
+        adapter.clear();
+        if(view.getId() == R.id.nextDay){
+            currentDay++;
+            currentDay %= 7;
+            date_offset++;
+        }
+        else if(view.getId() == R.id.previousDay){
+            if(currentDay == 0)
+                currentDay = 6;
+            else
+                currentDay--;
+
+            date_offset--;
+        }
+
+        adapter.addAll(week.get(currentDay));
+
+        // Start date
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+        String dt = sdf.format(currentDate);
+        Calendar c = Calendar.getInstance();
+        try {
+            c.setTime(sdf.parse(dt));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        c.add(Calendar.DATE, date_offset);  // number of days to add
+        dt = sdf.format(c.getTime());
+
+        date.setText(dt);
     }
 
     private class myAdapter extends ArrayAdapter<timeSlot> {
@@ -129,7 +217,7 @@ public class AgendaActivity extends AppCompatActivity  {
                 case SPORT:
                     ((TextView) row.findViewById(R.id.a_3)).setText("Sport");
                     ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.lightBlue, null));
                     break;
 
                 case WORK:
