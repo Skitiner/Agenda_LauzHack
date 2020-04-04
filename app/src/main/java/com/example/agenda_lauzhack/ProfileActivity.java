@@ -1,22 +1,22 @@
 package com.example.agenda_lauzhack;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 
 public class ProfileActivity extends AppCompatActivity {
 
     public static final String USER_PROFILE = "USER_PROFILE";
+    public static final String FIXED_WORK = "FIXED_WORK";
+    public static final String LUNCH_TIME = "LUNCH_TIME";
 
     private ArrayList<Integer> dayIds = new ArrayList() {
         {
@@ -127,12 +127,17 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
-        // TODO: 04.04.2020 huuu
-        Toast.makeText(ProfileActivity.this, "Fixed work", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, AgendaActivity.class);
+        intent.putExtra(FIXED_WORK, true);
+        intent.putExtra(LUNCH_TIME, false);
+        startActivity(intent);
     }
     public void clickedSetEatTimeButtonXmlCallback(View view) {
-        // TODO: 04.04.2020 huuu
-        Toast.makeText(ProfileActivity.this, "Lunch Time", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, AgendaActivity.class);
+        intent.putExtra(FIXED_WORK, false);
+        intent.putExtra(LUNCH_TIME, true);
+        startActivity(intent);
     }
 
     public void clickedSportButtonXmlCallback(View view) {

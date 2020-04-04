@@ -1,13 +1,13 @@
 package com.example.agenda_lauzhack;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,16 +28,22 @@ public class AgendaActivity extends AppCompatActivity  {
     private myAdapter adapter;
     private ListView schedule;
     private ArrayList<ArrayList<timeSlot>> week;
+    private ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
     private int currentDay;
     private Date currentDate;
     private TextView date;
     private int date_offset;
 
-    private boolean editable = true;
+    private boolean fixed_work;
+    private boolean lunch_time;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Intent intent = getIntent();
+        fixed_work = true;
+        lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
 
         adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
         setContentView(R.layout.activity_agenda);
@@ -51,12 +57,13 @@ public class AgendaActivity extends AppCompatActivity  {
         date_offset = 0;
 
         week = new ArrayList<>();
+        dailyTasks = new ArrayList<>();
 
         timeSlot.currentTask task;
 
         for(int j = 0; j < 7; j++ ) {
             ArrayList<timeSlot> mySlots = new ArrayList<>();
-
+            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
             for (int i = 0; i < 24; i++) {
 
                 task = timeSlot.currentTask.FREE;
@@ -68,160 +75,121 @@ public class AgendaActivity extends AppCompatActivity  {
                 slot.task_3 = task;
                 slot.task_4 = task;
 
+                tasks.add(slot.task_1);
+                tasks.add(slot.task_2);
+                tasks.add(slot.task_3);
+                tasks.add(slot.task_4);
+
                 mySlots.add(slot);
+
             }
             week.add(mySlots);
+            dailyTasks.add(tasks);
         }
 
         adapter.addAll(week.get(0));
         schedule.setAdapter(adapter);
 
-        if (editable) {
-            schedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-                    final TextView task1 = (TextView) view.findViewById(R.id.a_1);
-                    final TextView task2 = (TextView) view.findViewById(R.id.a_2);
-                    final TextView task3 = (TextView) view.findViewById(R.id.a_3);
-                    final TextView task4 = (TextView) view.findViewById(R.id.a_4);
+        /*schedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-                    final TextView time = (TextView) view.findViewById(R.id.t_1) ;
+                final TextView task1 = (TextView) view.findViewById(R.id.a_1);
+                final TextView task2 = (TextView) view.findViewById(R.id.a_2);
+                final TextView task3 = (TextView) view.findViewById(R.id.a_3);
+                final TextView task4 = (TextView) view.findViewById(R.id.a_4);
 
-                    time.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                final TextView time = (TextView) view.findViewById(R.id.t_1) ;
 
+                time.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(fixed_work) {
                             if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX ||
                                     week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX ||
                                     week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX ||
                                     week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
 
-                                task1.setText(R.string.fixed_work);
-                                task1.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task1.setTextColor(getResources().getColor(R.color.white, null));
-                                task2.setText(R.string.fixed_work);
-                                task2.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task2.setTextColor(getResources().getColor(R.color.white, null));
-                                task3.setText(R.string.fixed_work);
-                                task3.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task3.setTextColor(getResources().getColor(R.color.white, null));
-                                task4.setText(R.string.fixed_work);
-                                task4.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task4.setTextColor(getResources().getColor(R.color.white, null));
 
                                 week.get(currentDay).get(position).task_1 = timeSlot.currentTask.WORK_FIX;
                                 week.get(currentDay).get(position).task_2 = timeSlot.currentTask.WORK_FIX;
                                 week.get(currentDay).get(position).task_3 = timeSlot.currentTask.WORK_FIX;
                                 week.get(currentDay).get(position).task_4 = timeSlot.currentTask.WORK_FIX;
-                            }
-                            else {
-                                task1.setText("-");
-                                task1.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task1.setTextColor(getResources().getColor(R.color.darkBlue, null));
-                                task2.setText("-");
-                                task2.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task2.setTextColor(getResources().getColor(R.color.darkBlue, null));
-                                task3.setText("-");
-                                task3.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task3.setTextColor(getResources().getColor(R.color.darkBlue, null));
-                                task4.setText("-");
-                                task4.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task4.setTextColor(getResources().getColor(R.color.darkBlue, null));
-
+                            } else {
                                 week.get(currentDay).get(position).task_1 = timeSlot.currentTask.FREE;
                                 week.get(currentDay).get(position).task_2 = timeSlot.currentTask.FREE;
                                 week.get(currentDay).get(position).task_3 = timeSlot.currentTask.FREE;
                                 week.get(currentDay).get(position).task_4 = timeSlot.currentTask.FREE;
                             }
+                            adapter.clear();
+                            adapter.addAll(week.get(currentDay));
                         }
-                    });
+                    }
+                });
 
-                    task1.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
+                task1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(fixed_work) {
                             if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX) {
-                                task1.setText(R.string.fixed_work);
-                                task1.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task1.setTextColor(getResources().getColor(R.color.white, null));
-
                                 week.get(currentDay).get(position).task_1 = timeSlot.currentTask.WORK_FIX;
-                            }
-                            else {
-                                task1.setText("-");
-                                task1.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task1.setTextColor(getResources().getColor(R.color.darkBlue, null));
-
+                            } else {
                                 week.get(currentDay).get(position).task_1 = timeSlot.currentTask.FREE;
                             }
+                            adapter.clear();
+                            adapter.addAll(week.get(currentDay));
                         }
-                    });
+                    }
+                });
 
-                    task2.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                task2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(fixed_work) {
                             if (week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX) {
-                                task2.setText(R.string.fixed_work);
-                                task2.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task2.setTextColor(getResources().getColor(R.color.white, null));
-
                                 week.get(currentDay).get(position).task_2 = timeSlot.currentTask.WORK_FIX;
-                            }
-                            else {
-                                task2.setText("-");
-                                task2.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task2.setTextColor(getResources().getColor(R.color.darkBlue, null));
-
+                            } else {
                                 week.get(currentDay).get(position).task_2 = timeSlot.currentTask.FREE;
                             }
+                            adapter.clear();
+                            adapter.addAll(week.get(currentDay));
                         }
-                    });
+                    }
+                });
 
-                    task3.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                task3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(fixed_work) {
                             if (week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX) {
-                                task3.setText(R.string.fixed_work);
-                                task3.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task3.setTextColor(getResources().getColor(R.color.white, null));
-
                                 week.get(currentDay).get(position).task_3 = timeSlot.currentTask.WORK_FIX;
-                            }
-                            else {
-                                task3.setText("-");
-                                task3.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task3.setTextColor(getResources().getColor(R.color.darkBlue, null));
-
+                            } else {
                                 week.get(currentDay).get(position).task_3 = timeSlot.currentTask.FREE;
                             }
+                            adapter.clear();
+                            adapter.addAll(week.get(currentDay));
                         }
-                    });
+                    }
+                });
 
-                    task4.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
+                task4.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(fixed_work) {
                             if (week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
-                                task4.setText(R.string.fixed_work);
-                                task4.setBackgroundColor(getResources().getColor(R.color.red, null));
-                                task4.setTextColor(getResources().getColor(R.color.white, null));
-
                                 week.get(currentDay).get(position).task_4 = timeSlot.currentTask.WORK_FIX;
-                            }
-                            else {
-                                task4.setText("-");
-                                task4.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                                task4.setTextColor(getResources().getColor(R.color.darkBlue, null));
-
+                            } else {
                                 week.get(currentDay).get(position).task_4 = timeSlot.currentTask.FREE;
                             }
+                            adapter.clear();
+                            adapter.addAll(week.get(currentDay));
                         }
-                    });
-
-                }
-            });
-        }
-
+                    }
+                });
+            }
+        });*/
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -302,6 +270,11 @@ public class AgendaActivity extends AppCompatActivity  {
                         .inflate(time_layout, parent, false);
             }
 
+            row.findViewById(R.id.t_1).setOnClickListener(new textViewOnClickListener(row));
+            row.findViewById(R.id.a_1).setOnClickListener(new textViewOnClickListener(row));
+            row.findViewById(R.id.a_2).setOnClickListener(new textViewOnClickListener(row));
+            row.findViewById(R.id.a_3).setOnClickListener(new textViewOnClickListener(row));
+            row.findViewById(R.id.a_4).setOnClickListener(new textViewOnClickListener(row));
 
 
             ((TextView) row.findViewById(R.id.t_1)).setText(getItem(position).time + "h");
@@ -442,6 +415,41 @@ public class AgendaActivity extends AppCompatActivity  {
         }
 
 
+        private class textViewOnClickListener implements View.OnClickListener {
+
+            View row;
+
+            public textViewOnClickListener(View row) {
+                this.row = row;
+            }
+
+            @Override
+            public void onClick(View v) {
+                if(v.getId() == R.id.t_1) {
+                    ((TextView) row.findViewById(R.id.a_1)).setText(R.string.fixed_work);
+                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.red, null));
+                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.white, null));
+
+                    ((TextView) row.findViewById(R.id.a_2)).setText(R.string.fixed_work);
+                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.red, null));
+                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.white, null));
+
+                    ((TextView) row.findViewById(R.id.a_3)).setText(R.string.fixed_work);
+                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.red, null));
+                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.white, null));
+
+                    ((TextView) row.findViewById(R.id.a_4)).setText(R.string.fixed_work);
+                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.red, null));
+                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.white, null));
+
+                }
+                else {
+                    ((TextView) v).setText(R.string.fixed_work);
+                    ((TextView) v).setBackgroundColor(getResources().getColor(R.color.red, null));
+                    ((TextView) v).setTextColor(getResources().getColor(R.color.white, null));
+                }
+            }
+        }
     }
 }
 
