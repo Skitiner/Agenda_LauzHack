@@ -4,7 +4,7 @@
     <string name="Wakeup">Wake up :</string>
     <string name="NBWork">Number of work hours per week :</string>
     <string name="FixedWork">If you have some fixed working hours, you can set them on this button -></string>
-    <string name="FreeDay">As it is important to rest, select your free day (red = free day)</string>
+    <string name="FreeDay">As it is important to rest, select your free day (green = free day)</string>
     <string name="monday">Mo</string>
     <string name="tuesday">Tu</string>
     <string name="wednesday">We</string>
