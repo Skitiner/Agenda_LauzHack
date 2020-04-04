@@ -12,7 +12,12 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -128,8 +133,9 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
         // TODO: 04.04.2020 huuu
-        Toast.makeText(ProfileActivity.this, "Fixed work", Toast.LENGTH_SHORT).show();
+        Toast.makeText(ProfileActivity.this, "Fixed Work", Toast.LENGTH_SHORT).show();
     }
+
     public void clickedSetEatTimeButtonXmlCallback(View view) {
         // TODO: 04.04.2020 huuu
         Toast.makeText(ProfileActivity.this, "Lunch Time", Toast.LENGTH_SHORT).show();
@@ -171,6 +177,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void clickedBackToMenuButtonXmlCallback(View view) {
 
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
 
     }
