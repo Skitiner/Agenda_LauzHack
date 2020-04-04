@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">Agenda_LauzHack</string>
     <string name="Agenda">Agenda</string>
-    <string name="today">Today</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="fixed_work">Travail - fixé</string>
+    <string name="eat">Repas</string>
+    <string name="work">Travail</string>
+    <string name="Sport">Sport</string>
 </resources>

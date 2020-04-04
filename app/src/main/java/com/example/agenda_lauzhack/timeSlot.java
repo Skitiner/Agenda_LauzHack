@@ -1,7 +1,7 @@
 package com.example.agenda_lauzhack;
 
 public class timeSlot {
-    public enum currentTask {SPORT, WORK, EAT, FREE}
+    public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX}
 
     protected int time;
     protected currentTask task_1;
