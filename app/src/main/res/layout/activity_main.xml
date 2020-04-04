@@ -20,12 +20,13 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:clickable="true"
+        android:onClick="clickedProfileButtonXmlCallback"
         android:focusable="true"
         app:srcCompat="@android:drawable/ic_menu_myplaces" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="83dp" />
+        android:layout_height="80dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,6 +54,6 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="83dp" />
+        android:layout_height="80dp" />
 
 </LinearLayout>
