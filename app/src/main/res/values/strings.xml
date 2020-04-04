@@ -6,4 +6,40 @@
     <string name="eat">Repas</string>
     <string name="work">Travail</string>
     <string name="Sport">Sport</string>
+    <string name="Wakeup">Réveil :</string>
+    <string name="NBWork">Nombre d\'heure de travail par semaine :</string>
+    <string name="FixedWork">Si vous avez un horaire de travail fixe, vous pouvez le rentrer sur ce bouton -></string>
+    <string name="FreeDay">Car il est important de se reposer, sélectionnez le(s) jour(s) de repos :  (vert = jour(s) de repos)</string>
+    <string name="monday">Lu</string>
+    <string name="tuesday">Ma</string>
+    <string name="wednesday">Me</string>
+    <string name="thursday">Je</string>
+    <string name="friday">Ve</string>
+    <string name="saturday">Sa</string>
+    <string name="sunday">Di</string>
+    <string name="eatTime">Selectionner vos heures de repas - ></string>
+    <string name="sport">Selectionner votre routine sportive</string>
+    <string name="forgetWorkHour"> Vous avez oublié d\'entrer un nombre d\'heure de travail !</string>        <!-- à changer dans profileactivity aussi-->
+    <string name="forgetWakeUp">Vous avez oublié d\'entrer une heure de réveil !</string>                 <!-- à changer dans profileactivity aussi-->
+    <string name="Saved">Correctement sauvegarder !</string>                                           <!-- à changer dans profileactivity aussi-->
+    <!--
+    <string name="app_name">Agenda_LauzHack</string>
+    <string name="Agenda">Agenda</string>
+    <string name="Wakeup">Wake up :</string>
+    <string name="NBWork">Number of work hours per week :</string>
+    <string name="FixedWork">If you have some fixed working hours, you can set them on this button -></string>
+    <string name="FreeDay">As it is important to rest, select your free day (green = free day)</string>
+    <string name="monday">Mo</string>
+    <string name="tuesday">Tu</string>
+    <string name="wednesday">We</string>
+    <string name="thursday">Th</string>
+    <string name="friday">Fr</string>
+    <string name="saturday">Sa</string>
+    <string name="sunday">Su</string>
+    <string name="eatTime">Select your lunch time - ></string>
+    <string name="sport">Select your sport routine</string>
+    <string name="forgetWorkHour">You forgot to enter a number of work hour !</string>       à changer dans profileactivity aussi
+    <string name="forgetWakeUp">You forgot to enter a wake up hour !</string>                à changer dans profileactivity aussi
+    <string name="Saved">Correctly saved !</string>                                          à changer dans profileactivity aussi
+    -->
 </resources>
