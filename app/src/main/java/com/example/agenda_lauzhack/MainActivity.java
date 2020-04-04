@@ -16,10 +16,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // BAVE DE PANDA
     }
 
+    public void goToAgendaActivity(View view) {
+        Intent agenda = new Intent(this, AgendaActivity.class);
+        startActivity(agenda);
+
+    }
+  
     public void clickedProfileButtonXmlCallback(View view) {
 
         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);

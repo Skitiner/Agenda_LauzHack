@@ -6,4 +6,7 @@
     <color name="lightBlue">#FFA4E1FF</color>
     <color name="green">#FF00897B</color>           <!-- à changer dans profileactivity aussi-->
     <color name="red">#FFFF0000</color>             <!-- à changer dans profileactivity aussi-->
+    <color name="darkBlue">#3F51B5</color>
+    <color name="orange">#FFE38F14</color>
+    <color name="gray">#DDD</color>
 </resources>
