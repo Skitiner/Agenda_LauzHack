@@ -151,17 +151,17 @@ public class ProfileActivity extends AppCompatActivity {
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
         if (NBWorkEditText.getText().toString().isEmpty()) {
-            Toast.makeText(ProfileActivity.this, "You forgot to enter a number of work hour !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, R.string.forgetWorkHour, Toast.LENGTH_SHORT).show();
         }
         else if (WakeUpEditText.getText().toString().isEmpty()) {
-            Toast.makeText(ProfileActivity.this, "You forgot to enter a wake up hour !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, R.string.forgetWakeUp, Toast.LENGTH_SHORT).show();
         }
         else {
             userProfile.nbWorkHours = NBWorkEditText.getText().toString();
             userProfile.freeDay = NewFreeDay;
             userProfile.wakeUp = WakeUpEditText.getText().toString();
             userProfile.sportRoutine = positionSport;
-            Toast.makeText(ProfileActivity.this, "Correctly saved !", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
         }
 
         // TODO: 04.04.2020 save sur le natel
