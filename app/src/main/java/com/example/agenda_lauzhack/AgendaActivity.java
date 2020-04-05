@@ -3,6 +3,7 @@ package com.example.agenda_lauzhack;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -103,6 +104,12 @@ public class AgendaActivity extends AppCompatActivity  {
 
         adapter.addAll(week.get(currentDay));
         schedule.setAdapter(adapter);
+    }
+
+    public void saveTimeSlots(View view) {
+        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -307,13 +314,20 @@ public class AgendaActivity extends AppCompatActivity  {
                     {
                         if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.EAT) {
                             for(int i = 0; i < NB_SLOTS_LUNCH; i++) {
+                                if((daily_task_pos-1+i) >=  dailyTasks.get(currentDay).size()) {
+                                    break;
+                                }
                                 dailyTasks.get(currentDay).set(daily_task_pos-1 + i, timeSlot.currentTask.EAT);
                             }
                         }
                         else {
                             for(int i = -NB_SLOTS_LUNCH; i < NB_SLOTS_LUNCH; i++) {
+
+                                if((daily_task_pos-1+i) >=  dailyTasks.get(currentDay).size()) {
+                                    break;
+                                }
                                 if(dailyTasks.get(currentDay).get(daily_task_pos-1+i) == timeSlot.currentTask.EAT)
-                                    dailyTasks.get(currentDay).set(daily_task_pos-1 + i, timeSlot.currentTask.FREE);
+                                    dailyTasks.get(currentDay).set(daily_task_pos-1+i, timeSlot.currentTask.FREE);
                             }
                         }
                         updateAgenda();
