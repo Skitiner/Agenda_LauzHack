@@ -1,6 +1,8 @@
 package com.example.agenda_lauzhack;
 
-public class timeSlot {
+import java.io.Serializable;
+
+public class timeSlot implements Serializable {
     public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX}
 
     protected int time;
