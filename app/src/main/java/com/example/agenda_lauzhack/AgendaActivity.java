@@ -41,6 +41,7 @@ public class AgendaActivity extends AppCompatActivity  {
     private Date currentDate;
     private TextView date;
     private int date_offset;
+    private Profile userProfile;
 
     private boolean fixed_work;
     private boolean lunch_time;
@@ -50,8 +51,10 @@ public class AgendaActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);;
+        fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
+
+        userProfile = (Profile) intent.getSerializableExtra(MainActivity.USER_PROFILE);
 
         if (savedInstanceState != null) {
             week = (ArrayList) savedInstanceState.getSerializable(WEEK_SAVE);
@@ -107,9 +110,16 @@ public class AgendaActivity extends AppCompatActivity  {
 
         adapter.addAll(week.get(currentDay));
         schedule.setAdapter(adapter);
-
-        //schedule.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         schedule.setSelection(6);
+
+        // Calculation of optimal schedule
+        if(userProfile != null && userProfile.calculation) {
+
+            DaySlotsCalculation myCalculation = new DaySlotsCalculation(userProfile);
+            dailyTasks = myCalculation.slotCalculation(dailyTasks);
+            adapter.updateWeek();
+        }
+
     }
 
     public void saveTimeSlots(View view) {

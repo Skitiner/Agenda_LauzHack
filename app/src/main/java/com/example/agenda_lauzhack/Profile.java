@@ -12,6 +12,7 @@ public class Profile implements Serializable {
     protected boolean[] freeDay;
     protected String wakeUp;
     protected int sportRoutine;
+    protected boolean calculation;
     protected String FileName;
 
     public Profile(){
@@ -20,6 +21,7 @@ public class Profile implements Serializable {
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
         this.wakeUp = "8";
         this.sportRoutine = 1;
+        calculation = true;
         this.FileName = "userProfile.txt";
     }
 
@@ -90,5 +92,4 @@ public class Profile implements Serializable {
         this.wakeUp = wU;
         this.sportRoutine = Integer.parseInt(sR);
     }
-
 }
