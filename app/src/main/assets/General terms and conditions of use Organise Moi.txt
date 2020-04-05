@@ -1,6 +1,6 @@
 General terms and conditions of use
 These general terms of use apply to the entire Organise-MOIs application. We reserve the right to modify these terms of use later.
-Use of this application implies full and complete acceptance of these terms and conditions of use. They are accessible at any time from your �profile�.
+Use of this application implies full and complete acceptance of these terms and conditions of use. They are accessible at any time from your "profile".
 
 1. Definitions
 In these general terms of use, you can and should understand by the terms:
@@ -20,7 +20,7 @@ The latest version of this application, as well as its Code, are available on th
 Feel free to modify and improve this version. However, we will not be responsible for any new problems that that you will create.
 
 4. Terms of access
-To access and use this application, you must own a device with (at least) Android® 6.0, Marshmallow API 23. Unfortunately, we are still not available on iOS � (but maybe soon, who knows?).
+To access and use this application, you must own a device with (at least) Android® 6.0, Marshmallow API 23. Unfortunately, we are still not available on iOS ® (but maybe soon, who knows?).
 To use this application, you don't need to pay! The only thing you need is a mobile phone and time (but we know you have some: you're at home and you haven't organized anything yet).
 
 5. Use

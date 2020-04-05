@@ -56,6 +56,7 @@ public class popupActivity extends AppCompatActivity {
         String result = s.hasNext() ? s.next() : "";
 
         TextView conditionTextView = findViewById(R.id.utilisationCondition);
+        conditionTextView.setTextColor(getResources().getColor(R.color.black, null));
         conditionTextView.setText(result);
     }
 
