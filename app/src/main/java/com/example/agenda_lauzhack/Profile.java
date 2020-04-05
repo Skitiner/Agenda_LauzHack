@@ -21,7 +21,7 @@ public class Profile implements Serializable {
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
         this.wakeUp = "8";
         this.sportRoutine = 1;
-        calculation = true;
+        calculation = false;
         this.FileName = "userProfile.txt";
     }
 

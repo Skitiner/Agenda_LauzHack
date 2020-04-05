@@ -19,6 +19,7 @@ public class DaySlotsCalculation {
     public ArrayList<ArrayList<timeSlot.currentTask>> slotCalculation(ArrayList<ArrayList<timeSlot.currentTask>> week_slots) {
 
         slots_generated = week_slots;
+
         for (int i = 0; i < 7; i++) {
             slots_generated.get(i).set(0, timeSlot.currentTask.SPORT);
         }
