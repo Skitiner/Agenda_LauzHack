@@ -7,10 +7,13 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -132,6 +135,7 @@ public class ProfileActivity extends AppCompatActivity {
         intent.putExtra(LUNCH_TIME, false);
         startActivity(intent);
     }
+
     public void clickedSetEatTimeButtonXmlCallback(View view) {
 
         Intent intent = new Intent(this, AgendaActivity.class);
@@ -176,6 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void clickedBackToMenuButtonXmlCallback(View view) {
 
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
 
     }
