@@ -42,7 +42,7 @@ public class AgendaActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
 
         Intent intent = getIntent();
-        fixed_work = true;
+        fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);;
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
 
         adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
@@ -89,105 +89,6 @@ public class AgendaActivity extends AppCompatActivity  {
 
         adapter.addAll(week.get(0));
         schedule.setAdapter(adapter);
-
-        /*schedule.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-
-                final TextView task1 = (TextView) view.findViewById(R.id.a_1);
-                final TextView task2 = (TextView) view.findViewById(R.id.a_2);
-                final TextView task3 = (TextView) view.findViewById(R.id.a_3);
-                final TextView task4 = (TextView) view.findViewById(R.id.a_4);
-
-                final TextView time = (TextView) view.findViewById(R.id.t_1) ;
-
-                time.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(fixed_work) {
-                            if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX ||
-                                    week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX ||
-                                    week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX ||
-                                    week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
-
-
-                                week.get(currentDay).get(position).task_1 = timeSlot.currentTask.WORK_FIX;
-                                week.get(currentDay).get(position).task_2 = timeSlot.currentTask.WORK_FIX;
-                                week.get(currentDay).get(position).task_3 = timeSlot.currentTask.WORK_FIX;
-                                week.get(currentDay).get(position).task_4 = timeSlot.currentTask.WORK_FIX;
-                            } else {
-                                week.get(currentDay).get(position).task_1 = timeSlot.currentTask.FREE;
-                                week.get(currentDay).get(position).task_2 = timeSlot.currentTask.FREE;
-                                week.get(currentDay).get(position).task_3 = timeSlot.currentTask.FREE;
-                                week.get(currentDay).get(position).task_4 = timeSlot.currentTask.FREE;
-                            }
-                            adapter.clear();
-                            adapter.addAll(week.get(currentDay));
-                        }
-                    }
-                });
-
-                task1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(fixed_work) {
-                            if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX) {
-                                week.get(currentDay).get(position).task_1 = timeSlot.currentTask.WORK_FIX;
-                            } else {
-                                week.get(currentDay).get(position).task_1 = timeSlot.currentTask.FREE;
-                            }
-                            adapter.clear();
-                            adapter.addAll(week.get(currentDay));
-                        }
-                    }
-                });
-
-                task2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(fixed_work) {
-                            if (week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX) {
-                                week.get(currentDay).get(position).task_2 = timeSlot.currentTask.WORK_FIX;
-                            } else {
-                                week.get(currentDay).get(position).task_2 = timeSlot.currentTask.FREE;
-                            }
-                            adapter.clear();
-                            adapter.addAll(week.get(currentDay));
-                        }
-                    }
-                });
-
-                task3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(fixed_work) {
-                            if (week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX) {
-                                week.get(currentDay).get(position).task_3 = timeSlot.currentTask.WORK_FIX;
-                            } else {
-                                week.get(currentDay).get(position).task_3 = timeSlot.currentTask.FREE;
-                            }
-                            adapter.clear();
-                            adapter.addAll(week.get(currentDay));
-                        }
-                    }
-                });
-
-                task4.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(fixed_work) {
-                            if (week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
-                                week.get(currentDay).get(position).task_4 = timeSlot.currentTask.WORK_FIX;
-                            } else {
-                                week.get(currentDay).get(position).task_4 = timeSlot.currentTask.FREE;
-                            }
-                            adapter.clear();
-                            adapter.addAll(week.get(currentDay));
-                        }
-                    }
-                });
-            }
-        });*/
     }
 
 
@@ -270,183 +171,139 @@ public class AgendaActivity extends AppCompatActivity  {
                         .inflate(time_layout, parent, false);
             }
 
-            row.findViewById(R.id.t_1).setOnClickListener(new textViewOnClickListener(row));
-            row.findViewById(R.id.a_1).setOnClickListener(new textViewOnClickListener(row));
-            row.findViewById(R.id.a_2).setOnClickListener(new textViewOnClickListener(row));
-            row.findViewById(R.id.a_3).setOnClickListener(new textViewOnClickListener(row));
-            row.findViewById(R.id.a_4).setOnClickListener(new textViewOnClickListener(row));
+            row.findViewById(R.id.t_1).setOnClickListener(new textViewOnClickListener(row, position, 0));
+            row.findViewById(R.id.a_1).setOnClickListener(new textViewOnClickListener(row, position, 1));
+            row.findViewById(R.id.a_2).setOnClickListener(new textViewOnClickListener(row, position, 2));
+            row.findViewById(R.id.a_3).setOnClickListener(new textViewOnClickListener(row, position, 3));
+            row.findViewById(R.id.a_4).setOnClickListener(new textViewOnClickListener(row, position, 4));
 
 
             ((TextView) row.findViewById(R.id.t_1)).setText(getItem(position).time + "h");
+            setItemApparence((TextView) row.findViewById(R.id.a_1), getItem(position).task_1);
+            setItemApparence((TextView) row.findViewById(R.id.a_2), getItem(position).task_2);
+            setItemApparence((TextView) row.findViewById(R.id.a_3), getItem(position).task_3);
+            setItemApparence((TextView) row.findViewById(R.id.a_4), getItem(position).task_4);
 
-            // public enum currentTask {SPORT, WORK, EAT, FREE}
-            switch (getItem(position).task_1) {
-                case SPORT:
-                    ((TextView) row.findViewById(R.id.a_1)).setText(R.string.Sport);
-                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
-                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.lightBlue, null));
-                    break;
 
-                case WORK:
-                    ((TextView) row.findViewById(R.id.a_1)).setText(R.string.work);
-                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
-                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case EAT:
-                    ((TextView) row.findViewById(R.id.a_1)).setText(R.string.eat);
-                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.orange, null));
-                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case FREE:
-                    ((TextView) row.findViewById(R.id.a_1)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.gray, null));
-                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case WORK_FIX:
-                    ((TextView) row.findViewById(R.id.a_1)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.white, null));
-                    break;
-
-            }
-
-            switch (getItem(position).task_2) {
-                case SPORT:
-                    ((TextView) row.findViewById(R.id.a_2)).setText(R.string.Sport);
-                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
-                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.lightBlue, null));
-                    break;
-
-                case WORK:
-                    ((TextView) row.findViewById(R.id.a_2)).setText(R.string.work);
-                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
-                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case EAT:
-                    ((TextView) row.findViewById(R.id.a_2)).setText(R.string.eat);
-                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.orange, null));
-                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case FREE:
-                    ((TextView) row.findViewById(R.id.a_2)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.gray, null));
-                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case WORK_FIX:
-                    ((TextView) row.findViewById(R.id.a_2)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.white, null));
-                    break;
-
-            }
-
-            switch (getItem(position).task_3) {
-                case SPORT:
-                    ((TextView) row.findViewById(R.id.a_3)).setText(R.string.Sport);
-                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.lightBlue, null));
-                    break;
-
-                case WORK:
-                    ((TextView) row.findViewById(R.id.a_3)).setText(R.string.work);
-                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case EAT:
-                    ((TextView) row.findViewById(R.id.a_3)).setText(R.string.eat);
-                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.orange, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case FREE:
-                    ((TextView) row.findViewById(R.id.a_3)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.gray, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case WORK_FIX:
-                    ((TextView) row.findViewById(R.id.a_3)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.white, null));
-                    break;
-
-            }
-
-            switch (getItem(position).task_4) {
-                case SPORT:
-                    ((TextView) row.findViewById(R.id.a_4)).setText(R.string.Sport);
-                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
-                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.lightBlue, null));
-                    break;
-
-                case WORK:
-                    ((TextView) row.findViewById(R.id.a_4)).setText(R.string.work);
-                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
-                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case EAT:
-                    ((TextView) row.findViewById(R.id.a_4)).setText(R.string.eat);
-                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.orange, null));
-                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case FREE:
-                    ((TextView) row.findViewById(R.id.a_4)).setText("-");
-                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.gray, null));
-                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.darkBlue, null));
-                    break;
-
-                case WORK_FIX:
-                    ((TextView) row.findViewById(R.id.a_4)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.white, null));
-                    break;
-
-            }
             return row;
+        }
+
+        private void setItemApparence(TextView textView, timeSlot.currentTask task) {
+            switch (task) {
+                case SPORT:
+                    textView.setText(R.string.Sport);
+                    textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
+                    textView.setTextColor(getResources().getColor(R.color.lightBlue, null));
+                    break;
+
+                case WORK:
+                    textView.setText(R.string.work);
+                    textView.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+                    textView.setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    break;
+
+                case EAT:
+                    textView.setText(R.string.eat);
+                    textView.setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    textView.setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    break;
+
+                case FREE:
+                    textView.setText("-");
+                    textView.setBackgroundColor(getResources().getColor(R.color.gray, null));
+                    textView.setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    break;
+
+                case WORK_FIX:
+                    textView.setText(R.string.fixed_work);
+                    textView.setBackgroundColor(getResources().getColor(R.color.red, null));
+                    textView.setTextColor(getResources().getColor(R.color.white, null));
+                    break;
+
+            }
+        }
+
+        private void updateAgenda() {
+            int position;
+            for(int i = 0; i < 96; i +=4 ) {
+                position = i/4;
+                week.get(currentDay).get(position).task_1 =  dailyTasks.get(currentDay).get(i);
+                week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
+                week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
+                week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
+            }
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
         }
 
 
         private class textViewOnClickListener implements View.OnClickListener {
 
             View row;
+            int position;
+            int taskNum;
+            int daily_task_pos;
 
-            public textViewOnClickListener(View row) {
+            public textViewOnClickListener(View row, int position, int taskNum) {
                 this.row = row;
+                this.position = position;
+                this.taskNum = taskNum;
+                daily_task_pos = position*4 + taskNum;
             }
 
             @Override
             public void onClick(View v) {
-                if(v.getId() == R.id.t_1) {
-                    ((TextView) row.findViewById(R.id.a_1)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_1)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_1)).setTextColor(getResources().getColor(R.color.white, null));
+                if(fixed_work) {
+                    if (v.getId() == R.id.t_1) {
+                        if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX ||
+                                week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX ||
+                                week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX ||
+                                week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
 
-                    ((TextView) row.findViewById(R.id.a_2)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_2)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_2)).setTextColor(getResources().getColor(R.color.white, null));
 
-                    ((TextView) row.findViewById(R.id.a_3)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_3)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_3)).setTextColor(getResources().getColor(R.color.white, null));
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.WORK_FIX);
+                        }
+                        else {
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
+                        }
 
-                    ((TextView) row.findViewById(R.id.a_4)).setText(R.string.fixed_work);
-                    ((TextView) row.findViewById(R.id.a_4)).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) row.findViewById(R.id.a_4)).setTextColor(getResources().getColor(R.color.white, null));
-
+                    } else {
+                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.WORK_FIX)
+                            dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.WORK_FIX);
+                        else
+                            dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
+                    }
+                    updateAgenda();
                 }
-                else {
-                    ((TextView) v).setText(R.string.fixed_work);
-                    ((TextView) v).setBackgroundColor(getResources().getColor(R.color.red, null));
-                    ((TextView) v).setTextColor(getResources().getColor(R.color.white, null));
+
+                if(lunch_time) {
+                    if (v.getId() == R.id.t_1) {
+                        if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX ||
+                                week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX ||
+                                week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX ||
+                                week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
+                            week.get(currentDay).get(position).task_1 = timeSlot.currentTask.EAT;
+                            week.get(currentDay).get(position).task_2 = timeSlot.currentTask.EAT;
+                            week.get(currentDay).get(position).task_3 = timeSlot.currentTask.EAT;
+                            week.get(currentDay).get(position).task_4 = timeSlot.currentTask.EAT;
+
+                            week.get(currentDay).get(position + 1).task_1 = timeSlot.currentTask.EAT;
+                            week.get(currentDay).get(position + 1).task_2 = timeSlot.currentTask.EAT;
+                        }
+                        else {
+
+                        }
+
+                        adapter.clear();
+                        adapter.addAll(week.get(currentDay));
+                    }
+
                 }
             }
         }
