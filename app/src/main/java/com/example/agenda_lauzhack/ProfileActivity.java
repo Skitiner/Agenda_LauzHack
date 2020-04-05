@@ -151,6 +151,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
+        saveToFile();
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, true);
         intent.putExtra(LUNCH_TIME, false);
@@ -159,7 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetEatTimeButtonXmlCallback(View view) {
-
+        saveToFile();
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, false);
         intent.putExtra(LUNCH_TIME, true);

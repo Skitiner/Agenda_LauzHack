@@ -47,6 +47,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:backgroundTint="@color/green"
+            android:textColor="@color/black"
+            android:textSize="32dp"
             android:onClick="goToAgendaActivity"
             android:text="@string/Agenda" />
         <Space
