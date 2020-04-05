@@ -31,6 +31,9 @@
     <string name="same_day_title">Same Schedule</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="channel_name">notification_channel</string>
+    <string name="channel_description">notification</string>
+    <string name="key_enable_reminders" />
     <!--
     <string name="app_name">Agenda_LauzHack</string>
     <string name="Agenda">Agenda</string>

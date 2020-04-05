@@ -194,7 +194,7 @@ public class AgendaActivity extends AppCompatActivity  {
 
     }
 
-    private int conversionDayIndice() {
+    public static int conversionDayIndice() {
         int offset = 0;
         Calendar calendar = Calendar.getInstance();
         int day = calendar.get(Calendar.DAY_OF_WEEK);
