@@ -151,6 +151,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
+        TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
+
+        if (NBWorkEditText.getText().toString().isEmpty()) {
+        }
+        else if (WakeUpEditText.getText().toString().isEmpty()) {
+        }
+        else {
+            userProfile.nbWorkHours = NBWorkEditText.getText().toString();
+            userProfile.wakeUp = WakeUpEditText.getText().toString();
+            userProfile.sportRoutine = positionSport;
+        }
         saveToFile();
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, true);
@@ -160,6 +172,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetEatTimeButtonXmlCallback(View view) {
+        TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
+
+        if (NBWorkEditText.getText().toString().isEmpty()) {
+        }
+        else if (WakeUpEditText.getText().toString().isEmpty()) {
+        }
+        else {
+            userProfile.nbWorkHours = NBWorkEditText.getText().toString();
+            userProfile.wakeUp = WakeUpEditText.getText().toString();
+            userProfile.sportRoutine = positionSport;
+        }
         saveToFile();
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, false);

@@ -68,7 +68,7 @@ public class DaySlotsCalculation {
 
         while (nbMoreWorkSlotPerDay > 0) {
             memi = SearchWorkTime(nbWorkSlotsPerDay);
-            int nbpause = memi[nbWorkDay];
+            int nbpause = 0;
 
             for (int i = 0; i < nbWorkDay; i++) {
                 if (memi[i] == 0) {
