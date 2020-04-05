@@ -57,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToAgendaActivity(View view) {
         Intent agenda = new Intent(this, AgendaActivity.class);
+        agenda.putExtra(USER_PROFILE, userProfile);
         startActivity(agenda);
-
     }
   
     public void clickedProfileButtonXmlCallback(View view) {
