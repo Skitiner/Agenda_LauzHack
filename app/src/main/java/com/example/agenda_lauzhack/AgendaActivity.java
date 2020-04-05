@@ -45,16 +45,24 @@ public class AgendaActivity extends AppCompatActivity  {
 
     private boolean fixed_work;
     private boolean lunch_time;
+    private boolean first_save;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_agenda);
 
         Intent intent = getIntent();
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
-
+        first_save = true;
         userProfile = (Profile) intent.getSerializableExtra(MainActivity.USER_PROFILE);
+
+        View view = findViewById(R.id.save_schedule);
+        if(!fixed_work && !lunch_time)
+            view.setVisibility(View.INVISIBLE);
+        else
+            view.setVisibility(View.VISIBLE);
 
         if (savedInstanceState != null) {
             week = (ArrayList) savedInstanceState.getSerializable(WEEK_SAVE);
@@ -96,8 +104,6 @@ public class AgendaActivity extends AppCompatActivity  {
                 dailyTasks.add(tasks);
             }
         }
-
-        setContentView(R.layout.activity_agenda);
         schedule = findViewById(R.id.schedule);
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
@@ -107,7 +113,16 @@ public class AgendaActivity extends AppCompatActivity  {
         currentDay = 0;
         date_offset = 0;
 
-
+        //Go to first working day
+        if(fixed_work || lunch_time) {
+            int indice = (conversionDayIndice())%7;
+            while(userProfile.freeDay[indice]) {
+                View next = findViewById(R.id.nextDay);
+                changeDay(next);
+                Log.w("TEST", "day: " + currentDay);
+                indice = (conversionDayIndice()+currentDay)%7;
+            }
+        }
         adapter.addAll(week.get(currentDay));
         schedule.setAdapter(adapter);
         schedule.setSelection(6);
@@ -123,7 +138,8 @@ public class AgendaActivity extends AppCompatActivity  {
     }
 
     public void saveTimeSlots(View view) {
-        if(currentDay == 0) {
+        if(first_save) {
+            first_save = false;
             AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
             LayoutInflater inflater = getLayoutInflater();
 
@@ -169,8 +185,48 @@ public class AgendaActivity extends AppCompatActivity  {
 
     }
 
+    private int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
+    }
+
     private void setScheduleOverDays() {
+        int indice;
+
         for (int i = 0; i < 7; i++) {
+            indice = (conversionDayIndice() +i)%7;
+
+            if(userProfile.freeDay[indice] == true)
+                continue;
+
             for(int j = 0; j < 96; j++) {
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
@@ -183,11 +239,6 @@ public class AgendaActivity extends AppCompatActivity  {
         adapter.updateWeek();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_agenda, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -196,20 +247,18 @@ public class AgendaActivity extends AppCompatActivity  {
         outState.putSerializable(DAILY_TASK, dailyTasks);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.today_button:
+    public void goToday(View view) {
+        switch (view.getId()) {
+            case R.id.date:
                 currentDay = 0;
-                adapter.clear();
-                adapter.addAll(week.get(currentDay));
+                date_offset = 0;
+                adapter.updateAgenda();
                 SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
                 date = findViewById(R.id.date);
                 currentDate = new Date();
                 date.setText(formatter.format(currentDate));
                 break;
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void changeDay(View view) {
@@ -227,7 +276,6 @@ public class AgendaActivity extends AppCompatActivity  {
 
             date_offset--;
         }
-
         adapter.addAll(week.get(currentDay));
 
         // Start date

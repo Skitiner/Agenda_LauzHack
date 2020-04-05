@@ -46,6 +46,9 @@
             android:text="Saturday, 04.03.2020"
             android:textSize="18sp"
             android:textStyle="bold"
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="goToday"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/nextDay"
             app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +75,8 @@
             tools:layout_conversion_absoluteWidth="206dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
+            android:id="@+id/save_schedule"
+            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
@@ -80,6 +84,7 @@
             android:backgroundTint="@color/pastel"
             android:clickable="true"
             android:focusable="true"
+            android:visibility="visible"
             android:onClick="saveTimeSlots"
             app:srcCompat="@android:drawable/ic_menu_save" />
 

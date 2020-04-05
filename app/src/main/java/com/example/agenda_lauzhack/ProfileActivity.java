@@ -55,7 +55,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (userProfile != null) {
             positionSport = userProfile.sportRoutine;
-            NewFreeDay = userProfile.freeDay;
             setProfileInfo();
         }
     }
@@ -143,9 +142,11 @@ public class ProfileActivity extends AppCompatActivity {
 
         Button dayButton = findViewById(dayID);
 
-        NewFreeDay[position] = !userProfile.freeDay[position];
+        userProfile.freeDay[position] = !userProfile.freeDay[position];
 
         setDayColor(dayButton, userProfile.freeDay[position]);
+
+        saveToFile();
 
     }
 
@@ -153,6 +154,7 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, true);
         intent.putExtra(LUNCH_TIME, false);
+        intent.putExtra(USER_PROFILE, userProfile);
         startActivity(intent);
     }
 
@@ -161,6 +163,7 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, false);
         intent.putExtra(LUNCH_TIME, true);
+        intent.putExtra(USER_PROFILE, userProfile);
         startActivity(intent);
     }
 
@@ -187,7 +190,6 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             userProfile.nbWorkHours = NBWorkEditText.getText().toString();
-            userProfile.freeDay = NewFreeDay;
             userProfile.wakeUp = WakeUpEditText.getText().toString();
             userProfile.sportRoutine = positionSport;
 
