@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,10 +26,13 @@ import java.util.Locale;
 
 public class AgendaActivity extends AppCompatActivity  {
 
+    private final int NB_SLOTS_LUNCH = 6;
+    private final String WEEK_SAVE = "WEEK_SAVE";
+    private final String DAILY_TASK = "DAILY_TASK";
     private myAdapter adapter;
     private ListView schedule;
-    private ArrayList<ArrayList<timeSlot>> week;
-    private ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
+    private static ArrayList<ArrayList<timeSlot>> week;
+    private static ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
     private int currentDay;
     private Date currentDate;
     private TextView date;
@@ -45,7 +49,47 @@ public class AgendaActivity extends AppCompatActivity  {
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);;
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
 
-        adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
+        if (savedInstanceState != null) {
+            week = (ArrayList) savedInstanceState.getSerializable(WEEK_SAVE);
+            dailyTasks = (ArrayList) savedInstanceState.getSerializable(DAILY_TASK);
+        }
+
+        if(adapter == null)
+            adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
+
+        if (week == null || dailyTasks == null ){
+            week = new ArrayList<>();
+            dailyTasks = new ArrayList<>();
+
+            timeSlot.currentTask task;
+
+            for(int j = 0; j < 7; j++ ) {
+                ArrayList<timeSlot> mySlots = new ArrayList<>();
+                ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
+                for (int i = 0; i < 24; i++) {
+
+                    task = timeSlot.currentTask.FREE;
+
+                    timeSlot slot = new timeSlot();
+                    slot.time = i;
+                    slot.task_1 = task;
+                    slot.task_2 = task;
+                    slot.task_3 = task;
+                    slot.task_4 = task;
+
+                    tasks.add(slot.task_1);
+                    tasks.add(slot.task_2);
+                    tasks.add(slot.task_3);
+                    tasks.add(slot.task_4);
+
+                    mySlots.add(slot);
+
+                }
+                week.add(mySlots);
+                dailyTasks.add(tasks);
+            }
+        }
+
         setContentView(R.layout.activity_agenda);
         schedule = findViewById(R.id.schedule);
 
@@ -56,46 +100,22 @@ public class AgendaActivity extends AppCompatActivity  {
         currentDay = 0;
         date_offset = 0;
 
-        week = new ArrayList<>();
-        dailyTasks = new ArrayList<>();
 
-        timeSlot.currentTask task;
-
-        for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot> mySlots = new ArrayList<>();
-            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
-            for (int i = 0; i < 24; i++) {
-
-                task = timeSlot.currentTask.FREE;
-
-                timeSlot slot = new timeSlot();
-                slot.time = i;
-                slot.task_1 = task;
-                slot.task_2 = task;
-                slot.task_3 = task;
-                slot.task_4 = task;
-
-                tasks.add(slot.task_1);
-                tasks.add(slot.task_2);
-                tasks.add(slot.task_3);
-                tasks.add(slot.task_4);
-
-                mySlots.add(slot);
-
-            }
-            week.add(mySlots);
-            dailyTasks.add(tasks);
-        }
-
-        adapter.addAll(week.get(0));
+        adapter.addAll(week.get(currentDay));
         schedule.setAdapter(adapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_agenda, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WEEK_SAVE, week);
+        outState.putSerializable(DAILY_TASK, dailyTasks);
     }
 
     @Override
@@ -255,10 +275,10 @@ public class AgendaActivity extends AppCompatActivity  {
             public void onClick(View v) {
                 if(fixed_work) {
                     if (v.getId() == R.id.t_1) {
-                        if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX ||
-                                week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX ||
-                                week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX ||
-                                week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
+                        if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.currentTask.WORK_FIX ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+1) != timeSlot.currentTask.WORK_FIX ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+2) != timeSlot.currentTask.WORK_FIX ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+3) != timeSlot.currentTask.WORK_FIX) {
 
 
                             dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.WORK_FIX);
@@ -283,25 +303,21 @@ public class AgendaActivity extends AppCompatActivity  {
                 }
 
                 if(lunch_time) {
-                    if (v.getId() == R.id.t_1) {
-                        if (week.get(currentDay).get(position).task_1 != timeSlot.currentTask.WORK_FIX ||
-                                week.get(currentDay).get(position).task_2 != timeSlot.currentTask.WORK_FIX ||
-                                week.get(currentDay).get(position).task_3 != timeSlot.currentTask.WORK_FIX ||
-                                week.get(currentDay).get(position).task_4 != timeSlot.currentTask.WORK_FIX) {
-                            week.get(currentDay).get(position).task_1 = timeSlot.currentTask.EAT;
-                            week.get(currentDay).get(position).task_2 = timeSlot.currentTask.EAT;
-                            week.get(currentDay).get(position).task_3 = timeSlot.currentTask.EAT;
-                            week.get(currentDay).get(position).task_4 = timeSlot.currentTask.EAT;
-
-                            week.get(currentDay).get(position + 1).task_1 = timeSlot.currentTask.EAT;
-                            week.get(currentDay).get(position + 1).task_2 = timeSlot.currentTask.EAT;
+                    if (v.getId() != R.id.t_1)
+                    {
+                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.EAT) {
+                            for(int i = 0; i < NB_SLOTS_LUNCH; i++) {
+                                dailyTasks.get(currentDay).set(daily_task_pos-1 + i, timeSlot.currentTask.EAT);
+                            }
                         }
                         else {
-
+                            for(int i = -NB_SLOTS_LUNCH; i < NB_SLOTS_LUNCH; i++) {
+                                if(dailyTasks.get(currentDay).get(daily_task_pos-1+i) == timeSlot.currentTask.EAT)
+                                    dailyTasks.get(currentDay).set(daily_task_pos-1 + i, timeSlot.currentTask.FREE);
+                            }
                         }
+                        updateAgenda();
 
-                        adapter.clear();
-                        adapter.addAll(week.get(currentDay));
                     }
 
                 }
