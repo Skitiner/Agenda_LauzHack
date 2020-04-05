@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
         readFromFile();
 
+        if (userProfile == null){
+            userProfile = new Profile();
+        }
+
         if (!userProfile.licenceAccepted){
             Intent intent = new Intent(MainActivity.this, popupActivity.class);
             intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
