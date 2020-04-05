@@ -1,5 +1,6 @@
 package com.example.agenda_lauzhack;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,9 +10,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -34,7 +41,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
     };
 
-    Profile userProfile;
+    Profile userProfile = new Profile();
 
     private int positionSport;
     private boolean[] NewFreeDay;
@@ -43,8 +50,9 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
-        Intent intent = getIntent();
-        userProfile = (Profile) intent.getSerializableExtra(USER_PROFILE);
+
+        readFromFile();
+
         if (userProfile != null) {
             positionSport = userProfile.sportRoutine;
             NewFreeDay = userProfile.freeDay;
@@ -182,24 +190,65 @@ public class ProfileActivity extends AppCompatActivity {
             userProfile.freeDay = NewFreeDay;
             userProfile.wakeUp = WakeUpEditText.getText().toString();
             userProfile.sportRoutine = positionSport;
+
+            saveToFile();
+
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            startActivity(intent);
+
             Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
         }
-
-        // TODO: 04.04.2020 save sur le natel
-
     }
 
-    public void clickedBackToMenuButtonXmlCallback(View view) {
+    public void saveToFile(){
+        try {
+            File file = new File(getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+            //FileOutputStream fileOutputStream = ctx.openFileOutput(userprofileFileName, Context.MODE_PRIVATE);
+            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
-        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
-        startActivity(intent);
+            userProfile.Save(bufferedWriter);
 
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     public void clickedSeeUtilisationConditionButtonXmlCallback(View view) {
         Intent intent = new Intent(ProfileActivity.this, popupActivity.class);
         intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
     }
+
+    public void readFromFile() {
+        try {
+            Context ctx = getApplicationContext();
+            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String lineData = bufferedReader.readLine();
+
+            userProfile.decode(lineData);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clickedBackToMenuButtonXmlCallback (View view) {
+        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        startActivity(intent);
+    }
 }
+

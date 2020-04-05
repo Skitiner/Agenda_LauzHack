@@ -17,7 +17,7 @@
     <string name="friday">Fr</string>
     <string name="saturday">Sa</string>
     <string name="sunday">Su</string>
-    <string name="eatTime">Select your lunch time - ></string>
+    <string name="eatTime">Select your lunch time (1h30 for dinner and 1h30 for supper) - ></string>
     <string name="sport">Select your sport routine</string>
     <string name="forgetWorkHour">You forgot to enter a number of work hour !</string>       <!--à changer dans profileactivity aussi-->
     <string name="forgetWakeUp">You forgot to enter a wake up hour !</string>                <!-- à changer dans profileactivity aussi-->
@@ -46,7 +46,7 @@
     <string name="friday">Ve</string>
     <string name="saturday">Sa</string>
     <string name="sunday">Di</string>
-    <string name="eatTime">Selectionner vos heures de repas - ></string>
+    <string name="eatTime">Selectionner vos heures de repas (1h30 pour le diner et 1h30 pour le souper)- ></string>
     <string name="sport">Selectionner votre routine sportive</string>
     <string name="forgetWorkHour"> Vous avez oublié d\'entrer un nombre d\'heure de travail !</string>       à changer dans profileactivity aussi
     <string name="forgetWakeUp">Vous avez oublié d\'entrer une heure de réveil !</string>                 à changer dans profileactivity aussi
