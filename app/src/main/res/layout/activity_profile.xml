@@ -55,6 +55,7 @@ tools:context=".ProfileActivity">
         android:layout_width="match_parent"
         android:layout_height="80dp" />
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -69,6 +70,7 @@ tools:context=".ProfileActivity">
             android:id="@+id/NBWorkTextView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:textColor="@color/black"
             android:text="@string/NBWork"
             android:layout_weight="1"/>
 
@@ -81,6 +83,7 @@ tools:context=".ProfileActivity">
             android:id="@+id/NBWorkEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:ems="10"
             android:text=""
             android:inputType="number"
@@ -91,6 +94,13 @@ tools:context=".ProfileActivity">
             android:layout_height="wrap_content"
             android:layout_weight="2" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"
+        />
 
     <Space
     android:layout_width="match_parent"
@@ -110,9 +120,18 @@ tools:context=".ProfileActivity">
             android:id="@+id/FreeDayTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="@string/FreeDay"
             android:layout_weight="1"/>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -246,6 +265,13 @@ tools:context=".ProfileActivity">
         android:layout_width="match_parent"
         android:layout_height="20px" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -260,6 +286,7 @@ tools:context=".ProfileActivity">
             android:id="@+id/FixedWorkTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="@string/FixedWork"
             android:layout_weight="1"/>
 
@@ -284,7 +311,12 @@ tools:context=".ProfileActivity">
             android:layout_height="wrap_content"
             android:layout_weight="2" />
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="5dp"
+        android:background="@android:color/darker_gray"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -299,6 +331,7 @@ tools:context=".ProfileActivity">
             android:id="@+id/WakeupTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="@string/Wakeup"
             android:layout_weight="1"/>
 
@@ -311,6 +344,7 @@ tools:context=".ProfileActivity">
             android:id="@+id/WakeupEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:ems="10"
             android:text=""
             android:inputType="time"
@@ -321,10 +355,16 @@ tools:context=".ProfileActivity">
             android:layout_height="wrap_content"
             android:layout_weight="2" />
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"
+        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:orientation="horizontal">
 
         <Space
@@ -335,15 +375,16 @@ tools:context=".ProfileActivity">
         <TextView
             android:id="@+id/eatTimeTextView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="@string/eatTime"
-            android:layout_weight="1"/>
+            android:textColor="@color/black" />
 
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2" />
+
 
 
         <ImageButton
@@ -366,6 +407,13 @@ tools:context=".ProfileActivity">
         android:layout_width="match_parent"
         android:layout_height="20px" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginBottom="5dp"
+        android:background="@android:color/darker_gray"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -380,9 +428,18 @@ tools:context=".ProfileActivity">
             android:id="@+id/SportTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/black"
             android:text="@string/sport"
             android:layout_weight="1"/>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2" />
         <Space
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

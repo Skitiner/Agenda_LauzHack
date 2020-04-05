@@ -8,7 +8,7 @@
     <color name="red">#FFFF0000</color>             <!-- à changer dans profileactivity aussi-->
     <color name="darkBlue">#3F51B5</color>
     <color name="orange">#FFCC99</color>
-    <color name="gray">#DDD</color>
+    <color name="gray">#EEE</color>
     <color name="white">#FFF</color>
     <color name="pastel">#FFFFCC</color>
     <color name="salmonpink">#FFCCCC</color>
