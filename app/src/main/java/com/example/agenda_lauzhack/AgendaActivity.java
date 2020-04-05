@@ -239,11 +239,6 @@ public class AgendaActivity extends AppCompatActivity  {
         adapter.updateWeek();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_agenda, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -252,20 +247,18 @@ public class AgendaActivity extends AppCompatActivity  {
         outState.putSerializable(DAILY_TASK, dailyTasks);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.today_button:
+    public void goToday(View view) {
+        switch (view.getId()) {
+            case R.id.date:
                 currentDay = 0;
-                adapter.clear();
-                adapter.addAll(week.get(currentDay));
+                date_offset = 0;
+                adapter.updateAgenda();
                 SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
                 date = findViewById(R.id.date);
                 currentDate = new Date();
                 date.setText(formatter.format(currentDate));
                 break;
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void changeDay(View view) {
@@ -283,7 +276,6 @@ public class AgendaActivity extends AppCompatActivity  {
 
             date_offset--;
         }
-
         adapter.addAll(week.get(currentDay));
 
         // Start date
