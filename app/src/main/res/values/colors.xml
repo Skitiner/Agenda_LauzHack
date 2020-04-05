@@ -3,11 +3,14 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
-    <color name="lightBlue">#FFA4E1FF</color>
-    <color name="green">#FF00897B</color>           <!-- à changer dans profileactivity aussi-->
+    <color name="lightBlue">#DDFFFF</color>
+    <color name="green">#99FFB9</color>           <!-- à changer dans profileactivity aussi-->
     <color name="red">#FFFF0000</color>             <!-- à changer dans profileactivity aussi-->
     <color name="darkBlue">#3F51B5</color>
-    <color name="orange">#FFE38F14</color>
+    <color name="orange">#FFCC99</color>
     <color name="gray">#DDD</color>
     <color name="white">#FFF</color>
+    <color name="pastel">#FFFFCC</color>
+    <color name="salmonpink">#FFCCCC</color>
+    <color name="black">#000000</color>
 </resources>

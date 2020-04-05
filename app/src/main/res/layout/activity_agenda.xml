@@ -73,14 +73,15 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
-            android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/pastel"
             android:clickable="true"
-            android:onClick="saveTimeSlots"
             android:focusable="true"
-            app:srcCompat="@android:drawable/ic_menu_save"  />
+            android:onClick="saveTimeSlots"
+            app:srcCompat="@android:drawable/ic_menu_save" />
 
     </FrameLayout>
 

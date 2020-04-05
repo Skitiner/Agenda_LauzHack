@@ -19,19 +19,22 @@
         android:layout_margin="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="@color/pastel"
         android:clickable="true"
-        android:onClick="clickedProfileButtonXmlCallback"
         android:focusable="true"
+        android:onClick="clickedProfileButtonXmlCallback"
         app:srcCompat="@android:drawable/ic_menu_myplaces" />
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="80dp" />
+        android:layout_height="match_parent"
+        android:layout_weight="2"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_weight="2">
 
         <Space
             android:layout_width="match_parent"
@@ -41,11 +44,11 @@
         <Button
             android:id="@+id/agenda"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:backgroundTint="#FF00FFF2"
-            android:text="@string/Agenda"
-            android:onClick="goToAgendaActivity"/>
+            android:backgroundTint="@color/green"
+            android:onClick="goToAgendaActivity"
+            android:text="@string/Agenda" />
         <Space
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -55,6 +58,7 @@
 
     <Space
         android:layout_width="match_parent"
-        android:layout_height="80dp" />
+        android:layout_height="match_parent"
+        android:layout_weight="2"/>
 
 </LinearLayout>

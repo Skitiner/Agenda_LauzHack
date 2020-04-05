@@ -24,9 +24,10 @@ tools:context=".ProfileActivity">
             android:layout_margin="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/pastel"
             android:clickable="true"
-            android:onClick="clickedBackToMenuButtonXmlCallback"
             android:focusable="true"
+            android:onClick="clickedBackToMenuButtonXmlCallback"
             app:srcCompat="@android:drawable/ic_menu_revert" />
 
         <Space
@@ -42,9 +43,10 @@ tools:context=".ProfileActivity">
             android:layout_margin="16dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/pastel"
             android:clickable="true"
-            android:onClick="clickedSaveProfileButtonXmlCallback"
             android:focusable="true"
+            android:onClick="clickedSaveProfileButtonXmlCallback"
             app:srcCompat="@android:drawable/ic_menu_save" />
 
     </LinearLayout>
@@ -406,7 +408,7 @@ tools:context=".ProfileActivity">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:background="@color/red"
+            android:background="@color/lightBlue"
             android:onClick="clickedSportButtonXmlCallback"
             app:srcCompat="@mipmap/sloth_foreground" />
 
@@ -434,7 +436,7 @@ tools:context=".ProfileActivity">
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="4"
-            android:background="@color/red"
+            android:background="@color/lightBlue"
             android:onClick="clickedSportButtonXmlCallback"
             app:srcCompat="@mipmap/cheetah_foreground" />
 
@@ -461,7 +463,7 @@ tools:context=".ProfileActivity">
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:gravity="center"
-            android:textColor="@color/red"
+            android:textColor="@color/black"
             android:background="@color/lightBlue"
             android:text="@string/light" />
 
@@ -491,7 +493,7 @@ tools:context=".ProfileActivity">
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:gravity="center"
-            android:textColor="@color/red"
+            android:textColor="@color/black"
             android:background="@color/lightBlue"
             android:text="@string/intense" />
 

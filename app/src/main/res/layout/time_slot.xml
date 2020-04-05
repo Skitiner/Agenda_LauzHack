@@ -39,29 +39,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:textColor="@color/lightBlue"
-                android:background="@color/darkBlue"
+                android:background="@color/orange"
                 android:gravity="center"
-                android:text="Sport" />
+                android:text="Sport"/>
 
             <TextView
                 android:id="@+id/a_2"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="@color/orange"
-                android:text="Travail"
+                android:background="@color/salmonpink"
                 android:gravity="center"
-                android:textColor="@color/lightBlue" />
+                android:text="Travail" />
 
             <TextView
                 android:id="@+id/a_3"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:textColor="@color/darkBlue"
+                android:background="@color/green"
                 android:gravity="center"
-                android:background="@color/gray"
                 android:text="Free" />
 
             <TextView
@@ -69,10 +66,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:background="#8BC34A"
+                android:background="@color/pastel"
                 android:gravity="center"
-                android:text="Eat"
-                android:textColor="@color/lightBlue" />
+                android:text="Eat" />
 
         </LinearLayout>
 
