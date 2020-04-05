@@ -1,6 +1,7 @@
 package com.example.agenda_lauzhack;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,12 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.text.ParseException;
@@ -104,12 +107,70 @@ public class AgendaActivity extends AppCompatActivity  {
 
         adapter.addAll(week.get(currentDay));
         schedule.setAdapter(adapter);
+
+        //schedule.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        schedule.setSelection(6);
     }
 
     public void saveTimeSlots(View view) {
-        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
-        Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
-        startActivity(intent);
+        if(currentDay == 0) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+
+
+            builder.setMessage(R.string.same_day);
+            builder.setTitle(R.string.same_day_title);
+
+            builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    setScheduleOverDays();
+
+                    Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    View next = findViewById(R.id.nextDay);
+                    changeDay(next);
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+        else {
+            if(currentDay == 6) {
+                Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
+                startActivity(intent);
+                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                Toast.makeText(this, "Next Day", Toast.LENGTH_SHORT).show();
+            }
+
+            View next = findViewById(R.id.nextDay);
+            changeDay(next);
+
+        }
+
+    }
+
+    private void setScheduleOverDays() {
+        for (int i = 0; i < 7; i++) {
+            for(int j = 0; j < 96; j++) {
+                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work)
+                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+
+                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time)
+                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+            }
+        }
+
+        adapter.updateWeek();
     }
 
     @Override
@@ -250,7 +311,7 @@ public class AgendaActivity extends AppCompatActivity  {
             }
         }
 
-        private void updateAgenda() {
+        public void updateAgenda() {
             int position;
             for(int i = 0; i < 96; i +=4 ) {
                 position = i/4;
@@ -258,6 +319,21 @@ public class AgendaActivity extends AppCompatActivity  {
                 week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
                 week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
                 week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
+            }
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+        }
+
+        public void updateWeek() {
+            int position;
+            for(int j = 0; j < 7; j++) {
+                for (int i = 0; i < 96; i += 4) {
+                    position = i / 4;
+                    week.get(j).get(position).task_1 = dailyTasks.get(j).get(i);
+                    week.get(j).get(position).task_2 = dailyTasks.get(j).get(i + 1);
+                    week.get(j).get(position).task_3 = dailyTasks.get(j).get(i + 2);
+                    week.get(j).get(position).task_4 = dailyTasks.get(j).get(i + 3);
+                }
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));

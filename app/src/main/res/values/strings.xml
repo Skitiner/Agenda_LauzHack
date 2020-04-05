@@ -27,6 +27,10 @@
     <string name="moderated">moderated</string>
     <string name="intense">intense</string>
     <string name="utilisationCondition">General condition of utilisation</string>
+    <string name="same_day">Have you the same schedule for all your working days?</string>
+    <string name="same_day_title">Same Schedule</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <!--
     <string name="app_name">Agenda_LauzHack</string>
     <string name="Agenda">Agenda</string>
