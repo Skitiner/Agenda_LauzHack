@@ -22,6 +22,7 @@ public class DaySlotsCalculation {
 
         for (int i = 0; i < 7; i++) {
             slots_generated.get(i).set(0, timeSlot.currentTask.SPORT);
+
         }
         return slots_generated;
     }

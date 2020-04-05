@@ -50,12 +50,19 @@ public class AgendaActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_agenda);
 
         Intent intent = getIntent();
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
         first_save = true;
         userProfile = (Profile) intent.getSerializableExtra(MainActivity.USER_PROFILE);
+
+        View view = findViewById(R.id.save_schedule);
+        if(!fixed_work && !lunch_time)
+            view.setVisibility(View.INVISIBLE);
+        else
+            view.setVisibility(View.VISIBLE);
 
         if (savedInstanceState != null) {
             week = (ArrayList) savedInstanceState.getSerializable(WEEK_SAVE);
@@ -97,8 +104,6 @@ public class AgendaActivity extends AppCompatActivity  {
                 dailyTasks.add(tasks);
             }
         }
-
-        setContentView(R.layout.activity_agenda);
         schedule = findViewById(R.id.schedule);
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
