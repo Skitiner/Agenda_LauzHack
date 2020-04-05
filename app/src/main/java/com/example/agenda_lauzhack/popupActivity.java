@@ -12,9 +12,14 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.util.Scanner;
 
@@ -54,16 +59,39 @@ public class popupActivity extends AppCompatActivity {
         conditionTextView.setText(result);
     }
 
+    public void saveToFile(){
+        try {
+            File file = new File(getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+            //FileOutputStream fileOutputStream = ctx.openFileOutput(userprofileFileName, Context.MODE_PRIVATE);
+            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void clickedAcceptButtonXmlCallback(View view) {
         userProfile.licenceAccepted = true;
+
+        saveToFile();
+
         Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
-        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
     }
 
     public void clickedBackToProfileButtonXmlCallback(View view) {
         Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
-        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
     }
 
