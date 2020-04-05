@@ -29,7 +29,7 @@ public class Profile implements Serializable {
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
         this.wakeUp = "8";
         this.sportRoutine = 1;
-        calculation = false;
+        calculation = true;
         this.FileName = "userProfile.txt";
         initAgenda();
         k = 0;
@@ -166,6 +166,8 @@ public class Profile implements Serializable {
             } else if ("SLEEP".equals(agenda_back.get(i))) {
                 agenda.get(j).set(k, timeSlot.currentTask.SLEEP);
 
+            } else if ("PAUSE".equals(agenda_back.get(i))) {
+                agenda.get(j).set(k, timeSlot.currentTask.PAUSE);
             }
         }
 
