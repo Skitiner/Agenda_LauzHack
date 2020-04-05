@@ -1,0 +1,43 @@
+Conditions générales d’utilisations
+Les présentes conditions générales d’utilisation s’appliquent à l’ensemble de l’application MotiveMe. Nous nous réservons le droit de modifier ultérieurement les présentes conditions d’utilisation.
+Le fait d’utiliser cette application emporte acceptation pleine et entière des présentes conditions générales d’utilisation. Elles sont accessibles à tout moment depuis vos réglages.
+1. Définitions
+Dans les présentes conditions d’utilisation générales, vous pouvez et devez comprendre par les termes :
+* « cette application » : MotiveMe
+* « MotiveMe » : cette chouette application que vous venez de télécharger sur votre dispositif afin de rester motivé pendant ce confinement, et même quand vous avez simplement la paresse de bosser. 
+* « nous » : les personnes composant l’équipe qui, par un beau jour du mois d’avril, ont créé l’application MotiveMe pour participer au Lauzhack 2020. Vous pouvez trouver nos noms sur les inscriptions au concours.
+* « serveurs » : sous-traitants qui traitent et/ou stockent vos informations pour le bon fonctionnement de l’application. Eh non ! Nous ne parlons pas des serveurs des restaurants, qui peuvent d’ailleurs être intéressés par MotiveMe pour faire quelque chose de leurs journées. Faites donc passer le message ;-)
+* « vos données » : toutes les données à caractère personnel que vous nous communiquez volontairement en utilisant cette application.
+* « votre dispositif » : votre natel avec système d’exploitation Android sur lequel vous téléchargez et utilisez l’application.
+* « vous » : toute personne utilisant l’application MotiveMe. Donc oui, vous, c’est bel et bien vous. PS : nous savons que pour des questions de politesse, nous aurions dû parler de « vous » avant nous dans nos définitions. Hélas, ordre alphabétique s’impose. 
+
+2. Prestations
+Nous vous accordons le droit d’utiliser convenablement et sans distorsions frauduleuses ou négligentes l’application MotiveMe.  En contrepartie, vous, vous restez chez-vous et améliorez, dès à présent, votre rythme de vie.
+3. Propriété intellectuelle
+La dernière version de cette application, ainsi que son Code sont mis à votre disposition sur Devpost, en relation avec Lauzhack 2020.
+Sentez-vous libre de modifier et améliorer la présente version. Néanmoins, nous ne seront pas responsables des nouveaux problèmes que cela créera.
+
+4. Conditions d’accès
+Pour accéder et utiliser cette application, vous devez posséder un natel dont le système d’exploitation est Android®. Eh non ! Malheureusement, nous ne sommes toujours pas disponibles sur iOS ® (mais peut-être bientôt, qui sait ?).
+Pour utiliser cette application, vous n’avez pas besoin de payer ! La seule chose qu’il vous faut, c’est un natel et du temps (mais nous savons que vous en avez, vous êtes à la maison et vous n’avez encore rien organisé).
+5. Utilisation
+Vous vous engagez à faire une utilisation adéquate du logiciel, conforme à la bonne foi et au bon sens d’une personne diligente placé dans les mêmes circonstances. Aucune utilisation malveillante, frauduleuse, abusive et/ou négligente par vous, ne pourra ne nous être reprochée. Vous en assumez seul(e) les conséquences.
+
+6. Responsabilité
+Notre responsabilité est limitée à la faute grave ou intentionnelle, en vertu de l’art. 100 CO.
+En cas de force majeure, nous ne sommes pas tenus de garantir un accès à l’application, ne répondons pas de l’éventuel dommage causé et sommes libérés de toute responsabilité.
+7. Politique de confidentialité et respect de la vie privée
+Nous respectons votre vie privée. Cela dit, nous, ainsi que notre serveur, ne sommes pas magiciens et devons collecter, traiter et stocker vos données pour que l’application fonctionne. En utilisant MotiveMe, vous acceptez cette situation. Nous ne vous demandons évidemment pas d’accepter un traitement qui n’est pas raisonnable.
+8. Sécurité des données
+Nous avons fait notre possible, pendant le Lauzhack, pour garantir la sécurité de vos données. Néanmoins, en utilisant MotiveMe, vous acceptez ses éventuelles failles de sécurité et prenez soin de minimiser les informations personnelles que vous introduisez.
+Par ailleurs, vous êtes responsables de la sécurité sur votre dispositif, notamment en vous parant d’antivirus, antimalwares, évitant de télécharge tout et n’importe quoi (surtout maintenant où Internet est virulent), etc.
+Enfin, si vous souhaitez apporter votre aide à la sécurisation des données, veuillez nous en informer à l’adresse mail suivante : XXX
+9. Désinstallation de l’application
+Appuyez sur « désinstaller », vous savez mieux que nous comment votre propre natel fonctionne. Par contre, pour ce qui est de vos données, elles seront supprimées dans un délai de X.
+
+10. Réclamations, for et droit applicable
+Nous sommes étudiants et sommes encore en train d’apprendre de nos erreurs. Si vous souhaitez vous plaindre, vous pouvez le faire de manière constructive à l’adresse mail suivante : XXX. Evidemment, nous vous invitons à régler les litiges à l’amiable. Néanmoins, en cas de volonté litigieuse et procédurière, vous serez prié de le faire auprès de l’instance judiciaire Lausannoise, dans le canton de Vaud, en Suisse. Ainsi, vous acceptez que le for est à Lausanne et que tout litige se régit selon le droit suisse.
+
+2
+
+
