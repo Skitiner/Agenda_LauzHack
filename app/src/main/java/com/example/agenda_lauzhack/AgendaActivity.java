@@ -338,32 +338,27 @@ public class AgendaActivity extends AppCompatActivity  {
             switch (task) {
                 case SPORT:
                     textView.setText(R.string.Sport);
-                    textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
-                    textView.setTextColor(getResources().getColor(R.color.lightBlue, null));
+                    textView.setBackgroundColor(getResources().getColor(R.color.orange, null));
                     break;
 
                 case WORK:
                     textView.setText(R.string.work);
-                    textView.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
-                    textView.setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    textView.setBackgroundColor(getResources().getColor(R.color.salmonpink, null));
                     break;
 
                 case EAT:
                     textView.setText(R.string.eat);
-                    textView.setBackgroundColor(getResources().getColor(R.color.orange, null));
-                    textView.setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    textView.setBackgroundColor(getResources().getColor(R.color.pastel, null));
                     break;
 
                 case FREE:
                     textView.setText("-");
-                    textView.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                    textView.setTextColor(getResources().getColor(R.color.darkBlue, null));
+                    textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
                 case WORK_FIX:
                     textView.setText(R.string.fixed_work);
-                    textView.setBackgroundColor(getResources().getColor(R.color.red, null));
-                    textView.setTextColor(getResources().getColor(R.color.white, null));
+                    textView.setBackgroundColor(getResources().getColor(R.color.gray, null));
                     break;
 
             }

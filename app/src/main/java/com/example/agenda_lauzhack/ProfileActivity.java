@@ -109,26 +109,26 @@ public class ProfileActivity extends AppCompatActivity {
 
         if (positionSport==0){
             slothSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
-            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
-            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
             lightSportText.setTextColor(getResources().getColor(R.color.green, null));
-            moderatedSportText.setTextColor(getResources().getColor(R.color.red, null));
-            intenseSportText.setTextColor(getResources().getColor(R.color.red, null));
+            moderatedSportText.setTextColor(getResources().getColor(R.color.black, null));
+            intenseSportText.setTextColor(getResources().getColor(R.color.black, null));
         }
         else if (positionSport==1) {
-            slothSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            slothSportButton.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
             rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
-            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
-            lightSportText.setTextColor(getResources().getColor(R.color.red, null));
+            cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+            lightSportText.setTextColor(getResources().getColor(R.color.black, null));
             moderatedSportText.setTextColor(getResources().getColor(R.color.green, null));
-            intenseSportText.setTextColor(getResources().getColor(R.color.red, null));
+            intenseSportText.setTextColor(getResources().getColor(R.color.black, null));
         }
         else {
-            slothSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
-            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            slothSportButton.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
+            rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.lightBlue, null));
             cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
-            lightSportText.setTextColor(getResources().getColor(R.color.red, null));
-            moderatedSportText.setTextColor(getResources().getColor(R.color.red, null));
+            lightSportText.setTextColor(getResources().getColor(R.color.black, null));
+            moderatedSportText.setTextColor(getResources().getColor(R.color.black, null));
             intenseSportText.setTextColor(getResources().getColor(R.color.green, null));
         }
 

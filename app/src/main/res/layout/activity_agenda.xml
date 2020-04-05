@@ -80,11 +80,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/pastel"
             android:clickable="true"
-            android:onClick="saveTimeSlots"
             android:focusable="true"
             android:visibility="visible"
-            app:srcCompat="@android:drawable/ic_menu_save"  />
+            android:onClick="saveTimeSlots"
+            app:srcCompat="@android:drawable/ic_menu_save" />
 
     </FrameLayout>
 

@@ -7,11 +7,15 @@ import java.util.ArrayList;
 public class DaySlotsCalculation {
 
     private int nb_work_h;
+    private boolean[] free_day;
+    private int wake_up;
     private int sport_routine;
     private ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
 
     public DaySlotsCalculation(Profile user) {
         nb_work_h = Integer.parseInt(user.nbWorkHours);
+        free_day = user.freeDay;
+        wake_up = Integer.parseInt(user.wakeUp);
         sport_routine = user.sportRoutine;
         slots_generated = new ArrayList<>();
     }
