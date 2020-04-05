@@ -98,21 +98,33 @@ public class ProfileActivity extends AppCompatActivity {
         ImageButton slothSportButton = findViewById(R.id.sloth);
         ImageButton rabbitSportButton = findViewById(R.id.rabbit);
         ImageButton cheetahSportButton = findViewById(R.id.cheetah);
+        TextView lightSportText = findViewById(R.id.light);
+        TextView moderatedSportText = findViewById(R.id.moderated);
+        TextView intenseSportText = findViewById(R.id.intense);
 
         if (positionSport==0){
             slothSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
             rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
             cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            lightSportText.setTextColor(getResources().getColor(R.color.green, null));
+            moderatedSportText.setTextColor(getResources().getColor(R.color.red, null));
+            intenseSportText.setTextColor(getResources().getColor(R.color.red, null));
         }
         else if (positionSport==1) {
             slothSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
             rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
             cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
+            lightSportText.setTextColor(getResources().getColor(R.color.red, null));
+            moderatedSportText.setTextColor(getResources().getColor(R.color.green, null));
+            intenseSportText.setTextColor(getResources().getColor(R.color.red, null));
         }
         else {
             slothSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
             rabbitSportButton.setBackgroundColor(getResources().getColor(R.color.red, null));
             cheetahSportButton.setBackgroundColor(getResources().getColor(R.color.green, null));
+            lightSportText.setTextColor(getResources().getColor(R.color.red, null));
+            moderatedSportText.setTextColor(getResources().getColor(R.color.red, null));
+            intenseSportText.setTextColor(getResources().getColor(R.color.green, null));
         }
 
     }
@@ -180,5 +192,11 @@ public class ProfileActivity extends AppCompatActivity {
         intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
 
+    }
+
+    public void clickedSeeUtilisationConditionButtonXmlCallback(View view) {
+        Intent intent = new Intent(ProfileActivity.this, popupActivity.class);
+        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
+        startActivity(intent);
     }
 }

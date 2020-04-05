@@ -5,8 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +34,14 @@ public class popupActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        if (userProfile.licenceAccepted){
+            Button acceptButton = findViewById(R.id.acceptButton);
+            acceptButton.setVisibility(View.GONE);
+        }
+        else {
+            FloatingActionButton backToProfileButton = findViewById(R.id.backToProfile);
+            backToProfileButton.setVisibility(View.GONE);
+        }
     }
 
     public void setText() throws IOException {
@@ -45,6 +56,12 @@ public class popupActivity extends AppCompatActivity {
 
     public void clickedAcceptButtonXmlCallback(View view) {
         userProfile.licenceAccepted = true;
+        Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
+        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
+        startActivity(intent);
+    }
+
+    public void clickedBackToProfileButtonXmlCallback(View view) {
         Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
         intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
