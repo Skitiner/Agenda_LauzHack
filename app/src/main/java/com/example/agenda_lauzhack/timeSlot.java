@@ -3,7 +3,7 @@ package com.example.agenda_lauzhack;
 import java.io.Serializable;
 
 public class timeSlot implements Serializable {
-    public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX}
+    public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX, MORNING_ROUTINE, SLEEP}
 
     protected int time;
     protected currentTask task_1;

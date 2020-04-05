@@ -21,6 +21,15 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -56,7 +65,14 @@ public class AgendaActivity extends AppCompatActivity  {
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
         first_save = true;
-        userProfile = (Profile) intent.getSerializableExtra(MainActivity.USER_PROFILE);
+        userProfile = new Profile();
+
+        readFromFile();
+        dailyTasks = userProfile.agenda;
+
+        Log.w("DAILY", dailyTasks.toString());
+
+        Log.w("BAVE", "size=" + dailyTasks.size());
 
         View view = findViewById(R.id.save_schedule);
         if(!fixed_work && !lunch_time)
@@ -72,15 +88,13 @@ public class AgendaActivity extends AppCompatActivity  {
         if(adapter == null)
             adapter = new myAdapter(this.getApplicationContext(), R.layout.time_slot);
 
-        if (week == null || dailyTasks == null ){
+        if (week == null){
             week = new ArrayList<>();
-            dailyTasks = new ArrayList<>();
 
             timeSlot.currentTask task;
 
             for(int j = 0; j < 7; j++ ) {
                 ArrayList<timeSlot> mySlots = new ArrayList<>();
-                ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
                 for (int i = 0; i < 24; i++) {
 
                     task = timeSlot.currentTask.FREE;
@@ -92,16 +106,10 @@ public class AgendaActivity extends AppCompatActivity  {
                     slot.task_3 = task;
                     slot.task_4 = task;
 
-                    tasks.add(slot.task_1);
-                    tasks.add(slot.task_2);
-                    tasks.add(slot.task_3);
-                    tasks.add(slot.task_4);
-
                     mySlots.add(slot);
 
                 }
                 week.add(mySlots);
-                dailyTasks.add(tasks);
             }
         }
         schedule = findViewById(R.id.schedule);
@@ -123,7 +131,6 @@ public class AgendaActivity extends AppCompatActivity  {
                 indice = (conversionDayIndice()+currentDay)%7;
             }
         }
-        adapter.addAll(week.get(currentDay));
         schedule.setAdapter(adapter);
         schedule.setSelection(6);
 
@@ -134,6 +141,8 @@ public class AgendaActivity extends AppCompatActivity  {
             dailyTasks = myCalculation.slotCalculation(dailyTasks);
             adapter.updateWeek();
         }
+
+        adapter.updateWeek();
 
     }
 
@@ -294,6 +303,45 @@ public class AgendaActivity extends AppCompatActivity  {
         date.setText(dt);
     }
 
+    public void saveToFile(){
+        try {
+            File file = new File(getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+            //FileOutputStream fileOutputStream = ctx.openFileOutput(userprofileFileName, Context.MODE_PRIVATE);
+            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void readFromFile() {
+        try {
+            Context ctx = getApplicationContext();
+            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String lineData = bufferedReader.readLine();
+
+            userProfile.decode(lineData);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private class myAdapter extends ArrayAdapter<timeSlot> {
 
         private int time_layout;
@@ -375,6 +423,9 @@ public class AgendaActivity extends AppCompatActivity  {
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
+            userProfile.agenda = dailyTasks;
+            Log.w("TEST", userProfile.agenda.toString());
+            saveToFile();
         }
 
         public void updateWeek() {
@@ -390,6 +441,8 @@ public class AgendaActivity extends AppCompatActivity  {
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
+            userProfile.agenda = dailyTasks;
+            saveToFile();
         }
 
 
@@ -409,6 +462,7 @@ public class AgendaActivity extends AppCompatActivity  {
 
             @Override
             public void onClick(View v) {
+
                 if(fixed_work) {
                     if (v.getId() == R.id.t_1) {
                         if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.currentTask.WORK_FIX ||
@@ -464,6 +518,9 @@ public class AgendaActivity extends AppCompatActivity  {
                     }
 
                 }
+
+                userProfile.agenda = dailyTasks;
+                saveToFile();
             }
         }
     }
