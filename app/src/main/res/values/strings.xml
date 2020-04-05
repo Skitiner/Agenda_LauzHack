@@ -34,6 +34,10 @@
     <string name="channel_name">notification_channel</string>
     <string name="channel_description">notification</string>
     <string name="key_enable_reminders" />
+    <string name="morningRoutine">Morning Routine</string>
+    <string name="sleep">Sleep</string>
+    <string name="pause">Pause</string>
+
     <!--
     <string name="app_name">Agenda_LauzHack</string>
     <string name="Agenda">Agenda</string>

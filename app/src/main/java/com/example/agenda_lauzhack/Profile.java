@@ -166,6 +166,8 @@ public class Profile implements Serializable {
             } else if ("SLEEP".equals(agenda_back.get(i))) {
                 agenda.get(j).set(k, timeSlot.currentTask.SLEEP);
 
+            } else if ("PAUSE".equals(agenda_back.get(i))) {
+                agenda.get(j).set(k, timeSlot.currentTask.PAUSE);
             }
         }
 

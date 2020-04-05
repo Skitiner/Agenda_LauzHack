@@ -408,6 +408,18 @@ public class AgendaActivity extends AppCompatActivity  {
                     textView.setText(R.string.fixed_work);
                     textView.setBackgroundColor(getResources().getColor(R.color.gray, null));
                     break;
+                case MORNING_ROUTINE:
+                    textView.setText(R.string.morningRoutine);
+                    textView.setBackgroundColor(getResources().getColor(R.color.pastel, null));
+                    break;
+                case SLEEP:
+                    textView.setText(R.string.sleep);
+                    textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
+                    break;
+                case PAUSE:
+                    textView.setText(R.string.pause);
+                    textView.setBackgroundColor(getResources().getColor(R.color.black, null));
+                    break;
 
             }
         }
