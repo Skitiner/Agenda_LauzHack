@@ -167,13 +167,15 @@ public class AgendaActivity extends AppCompatActivity  {
         date_offset = 0;
 
         //Go to first working day
-        if(fixed_work || lunch_time) {
+        if((fixed_work || lunch_time)) {
             int indice = (conversionDayIndice())%7;
-            while(userProfile.freeDay[indice]) {
+            int i = 0;
+            while(userProfile.freeDay[indice] && i < 7) {
                 View next = findViewById(R.id.nextDay);
                 changeDay(next);
                 Log.w("TEST", "day: " + currentDay);
                 indice = (conversionDayIndice()+currentDay)%7;
+                i++;
             }
         }
         schedule.setAdapter(adapter);

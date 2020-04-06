@@ -320,7 +320,16 @@ public class ProfileActivity extends AppCompatActivity {
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
-        if (NBWorkEditText.getText().toString().isEmpty()) {
+        boolean allFreeDay = true;
+        for (int i = 0; i < NewFreeDay.length; i++){
+            if (!NewFreeDay[i]){
+                allFreeDay = false;
+            }
+        }
+        if (allFreeDay){
+            Toast.makeText(ProfileActivity.this, R.string.allFreeDay, Toast.LENGTH_SHORT).show();
+        }
+        else if (NBWorkEditText.getText().toString().isEmpty()) {
             Toast.makeText(ProfileActivity.this, R.string.forgetWorkHour, Toast.LENGTH_SHORT).show();
         }
         else if (WakeUpEditText.getText().toString().isEmpty()) {
