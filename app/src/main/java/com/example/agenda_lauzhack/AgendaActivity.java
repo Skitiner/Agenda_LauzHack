@@ -56,6 +56,7 @@ public class AgendaActivity extends AppCompatActivity  {
     private boolean lunch_time;
     private boolean first_save;
     private boolean popup;
+    private boolean iscalculation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +67,8 @@ public class AgendaActivity extends AppCompatActivity  {
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
         popup = intent.getBooleanExtra("POPUP", false);
+        iscalculation = intent.getBooleanExtra("CALCULCATION", false);
+
 
         if(popup) {
             AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
@@ -103,6 +106,7 @@ public class AgendaActivity extends AppCompatActivity  {
         userProfile = new Profile();
 
         readFromFile();
+        userProfile.calculation = iscalculation;
         dailyTasks = userProfile.agenda;
 
         Log.w("DAILY", dailyTasks.toString());
