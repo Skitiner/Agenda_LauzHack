@@ -50,7 +50,7 @@ public class popupActivity extends AppCompatActivity {
     }
 
     public void setText() throws IOException {
-        InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use Organise Moi.txt");
+        InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use.txt");
 
         Scanner s = new Scanner(is).useDelimiter("\\A");
         String result = s.hasNext() ? s.next() : "";
