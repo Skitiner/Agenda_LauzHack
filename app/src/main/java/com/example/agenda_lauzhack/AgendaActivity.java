@@ -55,6 +55,7 @@ public class AgendaActivity extends AppCompatActivity  {
     private boolean fixed_work;
     private boolean lunch_time;
     private boolean first_save;
+    private boolean popup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,40 @@ public class AgendaActivity extends AppCompatActivity  {
         Intent intent = getIntent();
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
+        popup = intent.getBooleanExtra("POPUP", false);
+
+        if(popup) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+
+
+            builder.setMessage("Would you start your next activity?");
+            builder.setTitle("Next Activity !");
+
+            builder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    setScheduleOverDays();
+
+                    Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNeutralButton(R.string.minutes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Toast.makeText(getApplicationContext(), "In 15min", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Toast.makeText(getApplicationContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+
         first_save = true;
         userProfile = new Profile();
 
