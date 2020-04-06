@@ -107,7 +107,13 @@ public class AgendaActivity extends AppCompatActivity  {
 
         readFromFile();
         userProfile.calculation = iscalculation;
-        dailyTasks = userProfile.agenda;
+        if (iscalculation){
+            dailyTasks = userProfile.agenda;
+        }
+        else {
+            dailyTasks = userProfile.agenda;
+            compare(userProfile.agenda);
+        }
 
         Log.w("DAILY", dailyTasks.toString());
 
@@ -574,6 +580,18 @@ public class AgendaActivity extends AppCompatActivity  {
                 saveToFile();
             }
         }
+    }
+
+    private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
+        int nbFixedWork = 0;
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < week_slots.get(0).size(); j++) {
+                if (!(week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT)){
+                    dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
+                }
+            }
+        }
+        return nbFixedWork;
     }
 }
 
