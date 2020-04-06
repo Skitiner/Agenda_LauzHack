@@ -287,6 +287,9 @@ public class AgendaActivity extends AppCompatActivity  {
 
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+
+                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE)
+                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
             }
         }
 
