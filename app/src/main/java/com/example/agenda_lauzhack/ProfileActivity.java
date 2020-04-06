@@ -233,6 +233,88 @@ public class ProfileActivity extends AppCompatActivity {
 
     }
 
+    public boolean isWakeHour(String time){
+        boolean ok = false;
+        boolean entier = true;
+        String hour = "0";
+        String min = "0";
+        int hourt;
+        int mint;
+        for (int i = 0; i < time.length(); i++){
+            if(time.charAt(i) != ':' && entier) {
+                hour += time.charAt(i);
+            }
+            else if (time.charAt(i) != ':'){
+                min += time.charAt(i);
+            }
+            else if (time.charAt(i) == ':'){
+                entier = false;
+            }
+        }
+        try {
+            hourt = Integer.parseInt(hour);
+            mint = Integer.parseInt(min);
+            ok = true;
+            if (hourt > 23 || hourt < 0){
+                ok = false;
+            }
+            if(mint > 30 && mint < 60){
+                hourt = (hourt + 1)%24;
+            }
+            else if (mint >= 60 || mint < 0){
+                ok = false;
+            }
+            if(ok){
+                userProfile.wakeUp = String.valueOf(hourt);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ok=false;
+        }
+        return ok;
+    }
+
+    public boolean isWorkHour(String time){
+        boolean ok = false;
+        boolean entier = true;
+        String hour = "0";
+        String min = "0";
+        int hourt;
+        int mint;
+         for (int i = 0; i < time.length(); i++){
+             if(time.charAt(i) != ':' && entier) {
+                 hour += time.charAt(i);
+             }
+             else if (time.charAt(i) != ':'){
+                 min += time.charAt(i);
+             }
+             else if (time.charAt(i) == ':'){
+                 entier = false;
+             }
+         }
+         try {
+             hourt = Integer.parseInt(hour);
+             mint = Integer.parseInt(min);
+             ok = true;
+             if (hourt > 70 || hourt < 0){
+                 ok = false;
+             }
+             if (mint > 30 && mint < 60){
+                 hourt = (hourt + 1)%24;
+             }
+             else if (mint >= 60 || mint < 0){
+                 ok = false;
+             }
+             if(ok){
+                 userProfile.nbWorkHours = String.valueOf(hourt);
+             }
+         } catch (Exception e) {
+             e.printStackTrace();
+             ok=false;
+         }
+        return ok;
+    }
+
     public void clickedSaveProfileButtonXmlCallback(View view) {
 
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
@@ -245,16 +327,22 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(ProfileActivity.this, R.string.forgetWakeUp, Toast.LENGTH_SHORT).show();
         }
         else {
-            userProfile.nbWorkHours = NBWorkEditText.getText().toString();
-            userProfile.wakeUp = WakeUpEditText.getText().toString();
-            userProfile.sportRoutine = positionSport;
+            boolean correctnbWork = isWorkHour(NBWorkEditText.getText().toString());
+            boolean correctwakeUp = isWakeHour(WakeUpEditText.getText().toString());
+            if (!correctnbWork) {
+                Toast.makeText(ProfileActivity.this, R.string.wrongnbWorkHours, Toast.LENGTH_SHORT).show();
+            } else if (!correctwakeUp) {
+                Toast.makeText(ProfileActivity.this, R.string.wrongwakeUp, Toast.LENGTH_SHORT).show();
+            } else {
+                userProfile.sportRoutine = positionSport;
 
-            saveToFile();
+                saveToFile();
 
-            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-            startActivity(intent);
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(intent);
 
-            Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+                Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

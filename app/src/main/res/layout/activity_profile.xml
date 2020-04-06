@@ -82,7 +82,7 @@
             android:textColor="@color/black"
             android:ems="10"
             android:text=""
-            android:inputType="number"
+            android:inputType="time"
             android:layout_weight="2"/>
 
         <Space
@@ -345,6 +345,7 @@
             android:text=""
             android:inputType="time"
             android:layout_weight="2"/>
+
 
         <Space
             android:layout_width="match_parent"
