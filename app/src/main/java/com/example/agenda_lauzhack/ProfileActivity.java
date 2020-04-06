@@ -348,6 +348,7 @@ public class ProfileActivity extends AppCompatActivity {
                 saveToFile();
 
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                //finish();
                 startActivity(intent);
 
                 Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
@@ -403,6 +404,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void clickedBackToMenuButtonXmlCallback (View view) {
         Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        //finish();
         startActivity(intent);
     }
 }
