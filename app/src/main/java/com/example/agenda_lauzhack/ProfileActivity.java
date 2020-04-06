@@ -53,10 +53,41 @@ public class ProfileActivity extends AppCompatActivity {
 
         readFromFile();
 
-        if (userProfile != null) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.getSerializable("nbworkHours") != null) {
+                userProfile.nbWorkHours = (String) savedInstanceState.getSerializable("nbworkHours");
+            }
+            if (savedInstanceState.getSerializable("wakeUp") != null) {
+                userProfile.wakeUp = (String) savedInstanceState.getSerializable("wakeUp");
+            }
+            if (savedInstanceState.getSerializable("freeDay") != null) {
+                NewFreeDay = (boolean[]) savedInstanceState.getSerializable("freeDay");
+            }
+            if (savedInstanceState.getSerializable("sportRoutine") != null) {
+                positionSport = (int) savedInstanceState.getSerializable("sportRoutine");
+            }
+        }
+        else {
             positionSport = userProfile.sportRoutine;
+            NewFreeDay = userProfile.freeDay;
+        }
+
+        if (userProfile != null) {
             setProfileInfo();
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        super.onSaveInstanceState(state);
+        TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
+        userProfile.nbWorkHours = NBWorkEditText.getText().toString();
+        userProfile.wakeUp = WakeUpEditText.getText().toString();
+        state.putSerializable("nbWorkHours", userProfile.nbWorkHours);
+        state.putSerializable("wakeUp", userProfile.wakeUp);
+        state.putSerializable("freeDay", NewFreeDay);
+        state.putSerializable("sportRoutine", positionSport);
     }
 
     private void setProfileInfo() {
@@ -90,13 +121,13 @@ public class ProfileActivity extends AppCompatActivity {
         Button saturdayButton = findViewById(R.id.saturday);
         Button sundayButton = findViewById(R.id.sunday);
 
-        setDayColor(mondayButton, userProfile.freeDay[0]);
-        setDayColor(tuesdayButton, userProfile.freeDay[1]);
-        setDayColor(wednesdayButton, userProfile.freeDay[2]);
-        setDayColor(thursdayButton, userProfile.freeDay[3]);
-        setDayColor(fridayButton, userProfile.freeDay[4]);
-        setDayColor(saturdayButton, userProfile.freeDay[5]);
-        setDayColor(sundayButton, userProfile.freeDay[6]);
+        setDayColor(mondayButton, NewFreeDay[0]);
+        setDayColor(tuesdayButton, NewFreeDay[1]);
+        setDayColor(wednesdayButton, NewFreeDay[2]);
+        setDayColor(thursdayButton, NewFreeDay[3]);
+        setDayColor(fridayButton, NewFreeDay[4]);
+        setDayColor(saturdayButton, NewFreeDay[5]);
+        setDayColor(sundayButton, NewFreeDay[6]);
     }
 
     private void setSport() {
@@ -142,15 +173,14 @@ public class ProfileActivity extends AppCompatActivity {
 
         Button dayButton = findViewById(dayID);
 
-        userProfile.freeDay[position] = !userProfile.freeDay[position];
+        NewFreeDay[position] = !NewFreeDay[position];
 
-        setDayColor(dayButton, userProfile.freeDay[position]);
-
-        saveToFile();
+        setDayColor(dayButton, NewFreeDay[position]);
 
     }
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
+        saveToFile();
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
@@ -172,6 +202,7 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetEatTimeButtonXmlCallback(View view) {
+        saveToFile();
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
