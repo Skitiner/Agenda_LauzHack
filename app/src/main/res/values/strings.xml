@@ -37,6 +37,9 @@
     <string name="morningRoutine">Morning Routine</string>
     <string name="sleep">Sleep</string>
     <string name="pause">Pause</string>
+    <string name="minutes">In 15min</string>
+    <string name="start">Start</string>
+    <string name="cancel">Cancel</string>
 
     <!--
     <string name="app_name">Agenda_LauzHack</string>
