@@ -28,7 +28,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/main_logo"
+        android:src="@mipmap/main_logo_low"
         android:layout_weight="2"/>
 
     <LinearLayout
