@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<PendingIntent> intentArray = new ArrayList<PendingIntent>();
 
         Calendar calendar = Calendar.getInstance();
-        timeSlot.currentTask task = userProfile.agenda.get(0).get(0);
+        timeSlot.currentTask task = timeSlot.currentTask.FREE;
 
         int time = 0;
         int k = 0;
