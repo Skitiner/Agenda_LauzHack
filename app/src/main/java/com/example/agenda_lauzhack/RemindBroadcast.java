@@ -33,7 +33,7 @@ public class RemindBroadcast extends BroadcastReceiver {
                         .bigText("Go Check in the application"))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .addAction(R.drawable.ic_launcher_background, "Start", pendingIntent)
+                .addAction(R.drawable.cheetah_background, "Start", pendingIntent)
                 .addAction(R.drawable.rabbit_background, "In 15 min", pendingIntent)
                 .addAction(R.drawable.rabbit_background, "Cancel", pendingIntent);
 
