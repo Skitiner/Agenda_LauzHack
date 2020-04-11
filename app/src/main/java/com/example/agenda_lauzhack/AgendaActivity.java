@@ -115,10 +115,6 @@ public class AgendaActivity extends AppCompatActivity  {
             compare(userProfile.agenda);
         }
 
-        Log.w("DAILY", dailyTasks.toString());
-
-        Log.w("BAVE", "size=" + dailyTasks.size());
-
         View view = findViewById(R.id.save_schedule);
         if(!fixed_work && !lunch_time)
             view.setVisibility(View.INVISIBLE);
