@@ -26,7 +26,7 @@ public class RemindBroadcast extends BroadcastReceiver {
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.rabbit_foreground)
+                .setSmallIcon(R.mipmap.organisemois)
                 .setContentTitle("NEW ACTIVITY !")
                 .setContentText("Go Check in the application")
                 .setStyle(new NotificationCompat.BigTextStyle()
