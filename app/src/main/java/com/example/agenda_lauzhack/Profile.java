@@ -1,6 +1,7 @@
 package com.example.agenda_lauzhack;
 
 import android.util.Log;
+import android.view.ViewDebug;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class Profile implements Serializable {
         this.licenceAccepted = false;
         this.nbWorkHours = "42";
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
-        this.wakeUp = "8";
+        this.wakeUp = "8.0";
         this.sportRoutine = 1;
         calculation = false;
         this.FileName = "userProfile.txt";
@@ -186,5 +187,111 @@ public class Profile implements Serializable {
         else
             current = current + charAt;
 
+    }
+
+    public boolean stringTimewakeUpToFloat(String time){
+        boolean ok;
+        boolean entier = true;
+        String hour = "0";
+        String min = "0";
+        float hourt;
+        float mint;
+
+        for (int i = 0; i < time.length(); i++){
+            if(time.charAt(i) != ':' && entier) {
+                hour += time.charAt(i);
+            }
+            else if (time.charAt(i) != ':'){
+                min += time.charAt(i);
+            }
+            else if (time.charAt(i) == ':'){
+                entier = false;
+            }
+        }
+        try {
+            hourt = Float.parseFloat(hour);
+            mint = Float.parseFloat(min);
+            ok = true;
+            if (hourt > 23 || hourt < 0){
+                ok = false;
+            }
+            if (mint >= 60 || mint < 0){
+                ok = false;
+            }
+            else {
+                hourt = hourt + roundFifty(mint/60);
+                while (hourt>=24){
+                    hourt -=24;
+                }
+            }
+            if(ok){
+                this.wakeUp = String.valueOf(hourt);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ok=false;
+        }
+        return ok;
+    }
+
+    public String floatStringToTimeString(String floatTime){
+        boolean entier = true;
+        String hour = "";
+        String min = "";
+
+        for (int i = 0; i < floatTime.length(); i++){
+            if(floatTime.charAt(i) != '.' && entier) {
+                hour += floatTime.charAt(i);
+            }
+            else if (floatTime.charAt(i) != '.'){
+                min += floatTime.charAt(i);
+            }
+            else if (floatTime.charAt(i) == '.'){
+                hour += ':';
+                entier = false;
+            }
+        }
+
+        int mint = Integer.parseInt(min)*60;
+        min = String.valueOf(mint);
+        if (min.length() > 2){
+            min = min.substring(0,2);
+        }
+        if (min.length()<2){
+            while(min.length()<2){
+                min += '0';
+            }
+        }
+        hour += min;
+        return hour;
+    }
+    private float roundFifty(float fmin){
+        float min = 0;
+        final float zero = 0;
+        final float one = 1;
+        final float two = 2;
+        final float three = 3;
+        final float four = 4;
+        final float five = 5;
+        final float seven = 7;
+        final float height = 8;
+
+        if (fmin >= zero && fmin < one/height){
+            min = 0;
+        }
+        else if (fmin >= one/height && fmin < three/height){
+            min = one/four;
+        }
+        else if (fmin >= three/height && fmin < five/height){
+            min = one/two;
+        }
+        else if (fmin >= five/height && fmin < seven/height){
+            min = three/four;
+        }
+        else if (fmin >= seven/height && fmin < 1){
+            min = 1;
+        }
+
+        return min;
     }
 }

@@ -11,7 +11,7 @@ public class DaySlotsCalculation {
     private int nb_work_h;
     private boolean[] free_day;
     private int[] freedaylist;
-    private int wake_up;
+    private float wake_up;
     private int sport_routine;
     private int offset;
     private int nbWorkDay;
@@ -35,7 +35,7 @@ public class DaySlotsCalculation {
                 n++;
             }
         }
-        wake_up = Integer.parseInt(user.wakeUp);
+        wake_up = Float.parseFloat(user.wakeUp);
         sport_routine = user.sportRoutine;
         slots_generated = new ArrayList<>();
     }
@@ -265,10 +265,10 @@ public class DaySlotsCalculation {
         for (int i = 0; i < freedaylist.length; i++) {
             for (int j = 0; j < 32; j++) {
                 if ((wake_up*4)-j-1 < 0) {
-                    this.slots_generated.get((freedaylist[i]-1+7)%7).set(slots_generated.get(0).size() + (wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    this.slots_generated.get((freedaylist[i]-1+7)%7).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
                 }
                 else {
-                    this.slots_generated.get(freedaylist[i]).set((wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
                 }
             }
         }
@@ -277,7 +277,7 @@ public class DaySlotsCalculation {
     private void setMorningRoutine() {
         for (int i = 0; i < freedaylist.length; i++) {
             for (int j = 0; j < 4; j++) {
-                this.slots_generated.get(freedaylist[i]).set((wake_up * 4) + j, timeSlot.currentTask.MORNING_ROUTINE);
+                this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) + j, timeSlot.currentTask.MORNING_ROUTINE);
             }
         }
     }
