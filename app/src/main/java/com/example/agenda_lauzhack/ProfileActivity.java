@@ -83,7 +83,7 @@ public class ProfileActivity extends AppCompatActivity {
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
         userProfile.nbWorkHours = NBWorkEditText.getText().toString();
-        userProfile.wakeUp = WakeUpEditText.getText().toString();
+        userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
         state.putSerializable("nbWorkHours", userProfile.nbWorkHours);
         state.putSerializable("wakeUp", userProfile.wakeUp);
         state.putSerializable("freeDay", NewFreeDay);
@@ -97,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity {
         setFreeDay();
 
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
-        WakeUpEditText.setText(userProfile.wakeUp);
+        WakeUpEditText.setText(userProfile.floatStringToTimeString(userProfile.wakeUp));
 
         setSport();
 
@@ -180,7 +180,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
-        saveToFile();
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
@@ -190,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             userProfile.nbWorkHours = NBWorkEditText.getText().toString();
-            userProfile.wakeUp = WakeUpEditText.getText().toString();
+            userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
         saveToFile();
@@ -202,7 +201,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetEatTimeButtonXmlCallback(View view) {
-        saveToFile();
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
@@ -212,7 +210,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             userProfile.nbWorkHours = NBWorkEditText.getText().toString();
-            userProfile.wakeUp = WakeUpEditText.getText().toString();
+            userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
         saveToFile();
@@ -231,47 +229,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         setSport();
 
-    }
-
-    public boolean isWakeHour(String time){
-        boolean ok = false;
-        boolean entier = true;
-        String hour = "0";
-        String min = "0";
-        int hourt;
-        int mint;
-        for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
-                hour += time.charAt(i);
-            }
-            else if (time.charAt(i) != ':'){
-                min += time.charAt(i);
-            }
-            else if (time.charAt(i) == ':'){
-                entier = false;
-            }
-        }
-        try {
-            hourt = Integer.parseInt(hour);
-            mint = Integer.parseInt(min);
-            ok = true;
-            if (hourt > 23 || hourt < 0){
-                ok = false;
-            }
-            if(mint > 30 && mint < 60){
-                hourt = (hourt + 1)%24;
-            }
-            else if (mint >= 60 || mint < 0){
-                ok = false;
-            }
-            if(ok){
-                userProfile.wakeUp = String.valueOf(hourt);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ok=false;
-        }
-        return ok;
     }
 
     public boolean isWorkHour(String time){
@@ -337,7 +294,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             boolean correctnbWork = isWorkHour(NBWorkEditText.getText().toString());
-            boolean correctwakeUp = isWakeHour(WakeUpEditText.getText().toString());
+            boolean correctwakeUp = userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             if (!correctnbWork) {
                 Toast.makeText(ProfileActivity.this, R.string.wrongnbWorkHours, Toast.LENGTH_SHORT).show();
             } else if (!correctwakeUp) {
