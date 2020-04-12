@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +52,8 @@ public class MainActivity extends AppCompatActivity {
 
         if(intentArray != null)
             removeAlarms();
-
-        intentArray = new ArrayList<PendingIntent>();
+        else
+            intentArray = new ArrayList<PendingIntent>();
 
         readFromFile();
         setAlarmOfTheDay();
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
         for(PendingIntent intent : intentArray) {
             mgrAlarm.cancel(intent);
         }
+
+        intentArray.clear();
     }
 
     @Override
@@ -107,8 +110,24 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("task", " " + task);
 
                     task = userProfile.agenda.get(i).get(j);
+                    Intent intentForService;
 
-                    Intent intentForService = new Intent(this, RemindBroadcast.class);
+                    switch (task) {
+                        case WORK:
+                            intentForService = new Intent(this, Broadcast_work.class);
+                            break;
+                        case WORK_FIX:
+                            intentForService = new Intent(this, Broadcast_work.class);
+                            break;
+                        case SPORT:
+                            intentForService = new Intent(this, Broadcast_sport.class);
+                            break;
+                        default:
+                            intentForService = new Intent(this, RemindBroadcast.class);
+                            break;
+                    }
+
+
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(this, k,
                             intentForService, PendingIntent.FLAG_CANCEL_CURRENT);

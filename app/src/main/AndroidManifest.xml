@@ -25,5 +25,7 @@
         </activity>
 
         <receiver android:name=".RemindBroadcast" />
+        <receiver android:name=".Broadcast_work" />
+        <receiver android:name=".Broadcast_sport" />
     </application>
 </manifest>
