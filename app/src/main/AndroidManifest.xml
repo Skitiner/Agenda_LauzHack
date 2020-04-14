@@ -27,5 +27,9 @@
         <receiver android:name=".RemindBroadcast" />
         <receiver android:name=".Broadcast_work" />
         <receiver android:name=".Broadcast_sport" />
+        <receiver android:name=".Broadcast_eat" />
+        <receiver android:name=".Broadcast_sleep" />
+        <receiver android:name=".Broadcast_wake_up" />
+        <receiver android:name=".Broadcast_break" />
     </application>
 </manifest>
