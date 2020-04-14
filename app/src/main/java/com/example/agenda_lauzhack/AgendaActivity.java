@@ -42,6 +42,7 @@ public class AgendaActivity extends AppCompatActivity  {
     private final int NB_SLOTS_LUNCH = 6;
     private final String WEEK_SAVE = "WEEK_SAVE";
     private final String DAILY_TASK = "DAILY_TASK";
+    private final String POPUP = "POPUP";
     private myAdapter adapter;
     private ListView schedule;
     private static ArrayList<ArrayList<timeSlot>> week;
@@ -66,41 +67,8 @@ public class AgendaActivity extends AppCompatActivity  {
         Intent intent = getIntent();
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
-        popup = intent.getBooleanExtra("POPUP", false);
+        popup = intent.getBooleanExtra(POPUP, false);
         iscalculation = intent.getBooleanExtra("CALCULCATION", false);
-
-
-        if(popup) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
-            LayoutInflater inflater = getLayoutInflater();
-
-
-            builder.setMessage("Would you start your next activity?");
-            builder.setTitle("Next Activity !");
-
-            builder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    setScheduleOverDays();
-
-                    Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
-                }
-            });
-            builder.setNeutralButton(R.string.minutes, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Toast.makeText(getApplicationContext(), "In 15min", Toast.LENGTH_SHORT).show();
-                }
-            });
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                    Toast.makeText(getApplicationContext(), "Canceled", Toast.LENGTH_SHORT).show();
-                }
-            });
-
-
-            AlertDialog dialog = builder.create();
-
-            dialog.show();
-        }
 
         first_save = true;
         userProfile = new Profile();
@@ -187,14 +155,44 @@ public class AgendaActivity extends AppCompatActivity  {
 
         adapter.updateWeek();
 
+        if(popup) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
+            LayoutInflater inflater = getLayoutInflater();
+
+
+            builder.setMessage("Would you start your next activity?");
+            builder.setTitle("Next Activity !");
+
+            builder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    setScheduleOverDays();
+
+                    Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNeutralButton(R.string.minutes, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Toast.makeText(getApplicationContext(), "In 15min", Toast.LENGTH_SHORT).show();
+                }
+            });
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    Toast.makeText(getApplicationContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+            AlertDialog dialog = builder.create();
+
+            dialog.show();
+        }
+
     }
 
     public void saveTimeSlots(View view) {
         if(first_save) {
             first_save = false;
             AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
-            LayoutInflater inflater = getLayoutInflater();
-
 
             builder.setMessage(R.string.same_day);
             builder.setTitle(R.string.same_day_title);

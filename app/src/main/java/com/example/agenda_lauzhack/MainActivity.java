@@ -106,8 +106,13 @@ public class MainActivity extends AppCompatActivity {
                 minutes = 15*(j%4);
 
                 if(userProfile.agenda.get(i).get(j) != task) {
-                    Log.w("Current", " " + userProfile.agenda.get(i).get(j));
-                    Log.w("task", " " + task);
+
+                    // No difference between WORK and WORK_FIX for the notifications
+                    if((task == timeSlot.currentTask.WORK || task == timeSlot.currentTask.WORK_FIX)
+                            && (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK || userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX) ) {
+                        task = userProfile.agenda.get(i).get(j);
+                        continue;
+                    }
 
                     task = userProfile.agenda.get(i).get(j);
                     Intent intentForService;
@@ -122,6 +127,18 @@ public class MainActivity extends AppCompatActivity {
                         case SPORT:
                             intentForService = new Intent(this, Broadcast_sport.class);
                             break;
+                        case EAT:
+                            intentForService = new Intent(this, Broadcast_eat.class);
+                            break;
+                        case SLEEP:
+                            intentForService = new Intent(this, Broadcast_sleep.class);
+                            break;
+                        case MORNING_ROUTINE:
+                            intentForService = new Intent(this, Broadcast_wake_up.class);
+                            break;
+                        case FREE:
+                            intentForService = new Intent(this, Broadcast_break.class);
+                            break;
                         default:
                             intentForService = new Intent(this, RemindBroadcast.class);
                             break;
@@ -135,9 +152,10 @@ public class MainActivity extends AppCompatActivity {
                     calendar = Calendar.getInstance();
                     calendar.setTimeInMillis(System.currentTimeMillis());
 
-
-                    if(i == 0 && !(hour >= calendar.get(Calendar.HOUR_OF_DAY) && minutes >= calendar.get(Calendar.MINUTE)))
+                    // Condition to not set notification before the actual time
+                    if(i == 0 && !(hour > calendar.get(Calendar.HOUR_OF_DAY) || (hour == calendar.get(Calendar.HOUR_OF_DAY) && minutes >= calendar.get(Calendar.MINUTE)))) {
                         continue;
+                    }
 
                     calendar.add(Calendar.DAY_OF_MONTH, i);
                     calendar.set(Calendar.HOUR_OF_DAY, hour);
