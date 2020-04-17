@@ -59,7 +59,7 @@ public class DaySlotsCalculation {
 
         int nbWorkTimeSlots = 0;
 
-        nbWorkTimeSlots = nb_work_h*4 - nbFixedWork;
+        nbWorkTimeSlots = nb_work_h - nbFixedWork;
 
         int nbWorkSlotsPerDay = nbWorkTimeSlots / nbWorkDay;
 

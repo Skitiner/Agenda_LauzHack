@@ -82,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onSaveInstanceState(state);
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
-        userProfile.nbWorkHours = NBWorkEditText.getText().toString();
+        userProfile.slotStringToTimeString(NBWorkEditText.getText().toString());
         userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
         state.putSerializable("nbWorkHours", userProfile.nbWorkHours);
         state.putSerializable("wakeUp", userProfile.wakeUp);
@@ -92,7 +92,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     private void setProfileInfo() {
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
-        NBWorkEditText.setText(userProfile.nbWorkHours);
+        NBWorkEditText.setText(userProfile.slotStringToTimeString(userProfile.nbWorkHours));
 
         setFreeDay();
 
@@ -188,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
-            userProfile.nbWorkHours = NBWorkEditText.getText().toString();
+            userProfile.slotStringToTimeString(NBWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
-            userProfile.nbWorkHours = NBWorkEditText.getText().toString();
+            userProfile.slotStringToTimeString(NBWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -293,7 +293,7 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(ProfileActivity.this, R.string.forgetWakeUp, Toast.LENGTH_SHORT).show();
         }
         else {
-            boolean correctnbWork = isWorkHour(NBWorkEditText.getText().toString());
+            boolean correctnbWork = userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
             boolean correctwakeUp = userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             if (!correctnbWork) {
                 Toast.makeText(ProfileActivity.this, R.string.wrongnbWorkHours, Toast.LENGTH_SHORT).show();
