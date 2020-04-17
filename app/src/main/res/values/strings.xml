@@ -41,7 +41,7 @@
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
     <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8)</string>
-    <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42 (&lt; 70))</string>
+    <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42 (&lt; 80))</string>
     <string name="allFreeDay">Why did you install this app ? Set at least one working day !</string>
 
     <!--
