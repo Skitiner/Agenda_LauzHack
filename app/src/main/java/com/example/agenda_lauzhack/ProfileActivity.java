@@ -82,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onSaveInstanceState(state);
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
-        userProfile.stringTimewakeUpToFloat(NBWorkEditText.getText().toString());
+        userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
         userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
         state.putSerializable("nbWorkHours", userProfile.nbWorkHours);
         state.putSerializable("wakeUp", userProfile.wakeUp);
@@ -188,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
-            userProfile.stringTimewakeUpToFloat(NBWorkEditText.getText().toString());
+            userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
-            userProfile.stringTimewakeUpToFloat(NBWorkEditText.getText().toString());
+            userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }

@@ -28,6 +28,7 @@ public class DaySlotsCalculation {
     private Context context;
     private Profile userProfile = new Profile();
     private ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
+    private IA Agent = new IA();
 
     public DaySlotsCalculation(Context context) {
 
@@ -87,7 +88,7 @@ public class DaySlotsCalculation {
         int nbMoreWorkSlotPerDay = nbWorkSlotsPerDay;
 
         while (nbMoreWorkSlotPerDay > 0) {
-            memi = SearchWorkTime(nbWorkSlotsPerDay);
+            memi = SearchWorkTime(nbMoreWorkSlotPerDay);
             int nbpause = 0;
 
             for (int i = 0; i < nbWorkDay; i++) {
