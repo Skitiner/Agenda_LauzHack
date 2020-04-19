@@ -16,6 +16,7 @@ public class DaySlotsCalculation {
     private int offset;
     private int nbWorkDay;
     private ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
+    private IA Agent = new IA();
 
     public DaySlotsCalculation(Profile user) {
         nb_work_h = Integer.parseInt(user.nbWorkHours);
@@ -67,7 +68,7 @@ public class DaySlotsCalculation {
         int nbMoreWorkSlotPerDay = nbWorkSlotsPerDay;
 
         while (nbMoreWorkSlotPerDay > 0) {
-            memi = SearchWorkTime(nbWorkSlotsPerDay);
+            memi = SearchWorkTime(nbMoreWorkSlotPerDay);
             int nbpause = 0;
 
             for (int i = 0; i < nbWorkDay; i++) {
