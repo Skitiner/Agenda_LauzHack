@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
         // ******* DEBUG MODE *****
 
-        Intent intentForService = new Intent(context, Broadcast_sport.class);
+        /*Intent intentForService = new Intent(context, Broadcast_sport.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intentForService, PendingIntent.FLAG_CANCEL_CURRENT);
@@ -103,10 +103,10 @@ public class MainActivity extends AppCompatActivity {
 
         calendar.add(Calendar.SECOND, 4);
 
-        mgrAlarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        mgrAlarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
 
         // ******* RELEASE MODE *****
-        /*int hour = 0;
+        int hour = 0;
         int minutes = 0;
         int k = 0;
         timeSlot.currentTask task = userProfile.agenda.get(0).get(0);
@@ -185,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-        }*/
+        }
 
 
     }
