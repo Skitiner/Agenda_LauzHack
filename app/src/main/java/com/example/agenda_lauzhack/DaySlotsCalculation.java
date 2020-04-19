@@ -83,6 +83,7 @@ public class DaySlotsCalculation {
         nbWorkTimeSlots = nb_work_h - nbFixedWork;
 
         int nbWorkSlotsPerDay = nbWorkTimeSlots / nbWorkDay;
+        int lostWorkTime = nbWorkTimeSlots % nbWorkDay;
 
         int[] memi;
         int nbMoreWorkSlotPerDay = nbWorkSlotsPerDay;
@@ -95,7 +96,7 @@ public class DaySlotsCalculation {
                 if (memi[i] == 0) {
                     // TODO: 05.04.2020 no possibilities found
                 } else {
-                    if(memi[nbWorkDay]<8) {
+                    if(memi[nbWorkDay]<10) {
                         for (int j = 0; j < memi[nbWorkDay]; j++) {
                             slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
                         }
@@ -103,7 +104,7 @@ public class DaySlotsCalculation {
                     else {
                         for (int j = 0; j < memi[nbWorkDay]; j++) {
                             if (j%9 == 8){
-                                slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.FREE);
+                                slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.PAUSE);
                                 nbpause++;
                             }
                             else {
@@ -115,6 +116,16 @@ public class DaySlotsCalculation {
             }
             memi[nbWorkDay] = memi[nbWorkDay] - nbpause/nbWorkDay;
             nbMoreWorkSlotPerDay = nbMoreWorkSlotPerDay - memi[nbWorkDay];
+        }
+
+        memi = SearchWorkTime(1);
+
+        for (int i = 0; i < lostWorkTime; i++) {
+            if (memi[i] == 0) {
+                // TODO: 05.04.2020 no possibilities found
+            } else {
+                slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.currentTask.WORK);
+            }
         }
 
     }

@@ -459,7 +459,7 @@ public class AgendaActivity extends AppCompatActivity  {
                     break;
                 case PAUSE:
                     textView.setText(R.string.pause);
-                    textView.setBackgroundColor(getResources().getColor(R.color.black, null));
+                    textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
             }
