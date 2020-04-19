@@ -1,8 +1,18 @@
 package com.example.agenda_lauzhack;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -15,11 +25,17 @@ public class DaySlotsCalculation {
     private int sport_routine;
     private int offset;
     private int nbWorkDay;
+    private Context context;
+    private Profile userProfile = new Profile();
     private ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
 
-    public DaySlotsCalculation(Profile user) {
-        nb_work_h = Integer.parseInt(user.nbWorkHours);
-        free_day = user.freeDay;
+    public DaySlotsCalculation(Context context) {
+
+        this.context = context;
+        readFromFile();
+
+        nb_work_h = Integer.parseInt(userProfile.nbWorkHours);
+        free_day = userProfile.freeDay;
         nbWorkDay=0;
         offset = conversionDayIndice();
         for (int i=0 ; i < free_day.length ; i++){
@@ -35,24 +51,28 @@ public class DaySlotsCalculation {
                 n++;
             }
         }
-        wake_up = Float.parseFloat(user.wakeUp);
-        sport_routine = user.sportRoutine;
+        wake_up = Float.parseFloat(userProfile.wakeUp);
+        sport_routine = userProfile.sportRoutine;
         slots_generated = new ArrayList<>();
     }
 
-    public ArrayList<ArrayList<timeSlot.currentTask>> slotCalculation(ArrayList<ArrayList<timeSlot.currentTask>> week_slots) {
+    public void slotCalculation() {
+
+        readFromFile();
 
         init();
 
         setMorningRoutine();
         setNight();
 
-        int nbFixedWork = compare(week_slots);
+        int nbFixedWork = compare(userProfile.agenda);
 
         setSport();
         setWork(nbFixedWork);
 
-        return slots_generated;
+        userProfile.agenda = slots_generated;
+
+        saveToFile();
     }
 
     public void setWork(int nbFixedWork){
@@ -354,5 +374,40 @@ public class DaySlotsCalculation {
         }
 
         return offset;
+    }
+
+    private void readFromFile() {
+        try {
+            FileInputStream fileInputStream = context.openFileInput(userProfile.FileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String lineData = bufferedReader.readLine();
+
+            userProfile.decode(lineData);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveToFile(){
+        try {
+            File file = new File(context.getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

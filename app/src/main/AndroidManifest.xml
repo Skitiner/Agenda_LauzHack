@@ -31,5 +31,10 @@
         <receiver android:name=".Broadcast_sleep" />
         <receiver android:name=".Broadcast_wake_up" />
         <receiver android:name=".Broadcast_break" />
+
+
+        <receiver android:name=".Cancel_broadcast" />
+        <receiver android:name=".Start_broadcast" />
+        <receiver android:name=".Postpone_broadcast" />
     </application>
 </manifest>

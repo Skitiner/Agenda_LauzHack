@@ -36,11 +36,10 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     public static final String USER_PROFILE = "USER_PROFILE";
-    Profile userProfile = new Profile();
-    private String CHANNEL_ID = "";
-    private int notificationId = 0;
-    private static ArrayList<PendingIntent> intentArray;
-    private AlarmManager mgrAlarm;
+    private static Profile userProfile = new Profile();
+    private String CHANNEL_ID = "CHANNEL_ID";
+    public static ArrayList<PendingIntent> intentArray;
+    private static AlarmManager mgrAlarm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
         mgrAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        if(intentArray != null)
-            removeAlarms();
-        else
-            intentArray = new ArrayList<PendingIntent>();
-
-        readFromFile();
-        setAlarmOfTheDay();
+        setAlarmOfTheDay(this);
 
         if (userProfile == null){
             userProfile = new Profile();
@@ -69,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void removeAlarms() {
+    private static void removeAlarms() {
         for(PendingIntent intent : intentArray) {
             mgrAlarm.cancel(intent);
         }
@@ -80,25 +73,44 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        readFromFile();
-        setAlarmOfTheDay();
+        setAlarmOfTheDay(this);
     }
 
-    private void setAlarmOfTheDay() {
+    protected static void setAlarmOfTheDay(Context context) {
+        readFromFile(context);
 
-        Toast.makeText(this, "Notifications activated", Toast.LENGTH_SHORT).show();
+        if(intentArray != null)
+            removeAlarms();
+        else
+            intentArray = new ArrayList<PendingIntent>();
+
+        Toast.makeText(context, "Notifications activated", Toast.LENGTH_SHORT).show();
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        timeSlot.currentTask task = userProfile.agenda.get(0).get(0);
-
         Log.w("AGENDA_notif", userProfile.agenda.toString());
 
+        // ******* DEBUG MODE *****
 
-        int hour = 0;
+        Intent intentForService = new Intent(context, Broadcast_sport.class);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
+                intentForService, PendingIntent.FLAG_CANCEL_CURRENT);
+
+        calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+
+        calendar.add(Calendar.SECOND, 4);
+
+        mgrAlarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
+        // ******* RELEASE MODE *****
+        /*int hour = 0;
         int minutes = 0;
         int k = 0;
+        timeSlot.currentTask task = userProfile.agenda.get(0).get(0);
+
         for(int i = 0; i < (userProfile.agenda).size(); i++){
             for(int j = 0; j < (userProfile.agenda.get(i)).size(); j++) {
                 k++;
@@ -119,34 +131,34 @@ public class MainActivity extends AppCompatActivity {
 
                     switch (task) {
                         case WORK:
-                            intentForService = new Intent(this, Broadcast_work.class);
+                            intentForService = new Intent(context, Broadcast_work.class);
                             break;
                         case WORK_FIX:
-                            intentForService = new Intent(this, Broadcast_work.class);
+                            intentForService = new Intent(context, Broadcast_work.class);
                             break;
                         case SPORT:
-                            intentForService = new Intent(this, Broadcast_sport.class);
+                            intentForService = new Intent(context, Broadcast_sport.class);
                             break;
                         case EAT:
-                            intentForService = new Intent(this, Broadcast_eat.class);
+                            intentForService = new Intent(context, Broadcast_eat.class);
                             break;
                         case SLEEP:
-                            intentForService = new Intent(this, Broadcast_sleep.class);
+                            intentForService = new Intent(context, Broadcast_sleep.class);
                             break;
                         case MORNING_ROUTINE:
-                            intentForService = new Intent(this, Broadcast_wake_up.class);
+                            intentForService = new Intent(context, Broadcast_wake_up.class);
                             break;
                         case FREE:
-                            intentForService = new Intent(this, Broadcast_break.class);
+                            intentForService = new Intent(context, Broadcast_break.class);
                             break;
                         default:
-                            intentForService = new Intent(this, RemindBroadcast.class);
+                            intentForService = new Intent(context, RemindBroadcast.class);
                             break;
                     }
 
 
 
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, k,
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(context, k,
                             intentForService, PendingIntent.FLAG_CANCEL_CURRENT);
 
                     calendar = Calendar.getInstance();
@@ -173,7 +185,7 @@ public class MainActivity extends AppCompatActivity {
 
 
             }
-        }
+        }*/
 
 
     }
@@ -184,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.channel_name);
             String description = getString(R.string.channel_description);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
@@ -195,10 +207,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void readFromFile() {
+    public static void readFromFile(Context context) {
         try {
-            Context ctx = getApplicationContext();
-            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
+            FileInputStream fileInputStream = context.openFileInput(userProfile.FileName);
             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
             BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             String lineData = bufferedReader.readLine();
@@ -214,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToAgendaActivity(View view) {
         Intent agenda = new Intent(this, AgendaActivity.class);
-        userProfile.calculation = true;
+        userProfile.calculation = false;
         agenda.putExtra("CALCULCATION", userProfile.calculation);
         agenda.putExtra(USER_PROFILE, userProfile);
         startActivity(agenda);

@@ -75,11 +75,10 @@ public class AgendaActivity extends AppCompatActivity  {
 
         readFromFile();
         userProfile.calculation = iscalculation;
-        if (iscalculation){
-            dailyTasks = userProfile.agenda;
-        }
-        else {
-            dailyTasks = userProfile.agenda;
+
+        dailyTasks = userProfile.agenda;
+
+        if (fixed_work || lunch_time){
             compare(userProfile.agenda);
         }
 
@@ -145,14 +144,6 @@ public class AgendaActivity extends AppCompatActivity  {
         schedule.setAdapter(adapter);
         schedule.setSelection(6);
 
-        // Calculation of optimal schedule
-        if(userProfile != null && userProfile.calculation) {
-
-            DaySlotsCalculation myCalculation = new DaySlotsCalculation(userProfile);
-            dailyTasks = myCalculation.slotCalculation(dailyTasks);
-            adapter.updateWeek();
-        }
-
         adapter.updateWeek();
 
         if(popup) {
@@ -165,25 +156,31 @@ public class AgendaActivity extends AppCompatActivity  {
 
             builder.setPositiveButton(R.string.start, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    setScheduleOverDays();
-
-                    Toast.makeText(getApplicationContext(), "Started", Toast.LENGTH_SHORT).show();
+                    Intent start = new Intent(AgendaActivity.this, Start_broadcast.class);
+                    sendBroadcast(start);
                 }
             });
             builder.setNeutralButton(R.string.minutes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    Toast.makeText(getApplicationContext(), "In 15min", Toast.LENGTH_SHORT).show();
+                    Intent postpone = new Intent(AgendaActivity.this, Postpone_broadcast.class);
+                    sendBroadcast(postpone);
                 }
             });
             builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    Toast.makeText(getApplicationContext(), "Canceled", Toast.LENGTH_SHORT).show();
+                    Intent cancel = new Intent(AgendaActivity.this, Cancel_broadcast.class);
+                    sendBroadcast(cancel);
                 }
             });
-
-
             AlertDialog dialog = builder.create();
-
+            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialogInterface) {
+                    readFromFile();
+                    dailyTasks = userProfile.agenda;
+                    adapter.updateWeek();
+                }
+            });
             dialog.show();
         }
 
@@ -500,7 +497,6 @@ public class AgendaActivity extends AppCompatActivity  {
             userProfile.agenda = dailyTasks;
             saveToFile();
         }
-
 
         private class textViewOnClickListener implements View.OnClickListener {
 

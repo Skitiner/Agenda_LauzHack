@@ -10,22 +10,23 @@ import androidx.core.app.NotificationManagerCompat;
 
 public class Broadcast_sleep  extends BroadcastReceiver {
 
-    private String CHANNEL_ID = "";
-    private int notificationId = 0;
+    private String CHANNEL_ID = "CHANNEL_ID";
+    private int notificationId = 150;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        Intent start = new Intent(context, AgendaActivity.class);
-        start.putExtra("POPUP", true);
+        Intent start_intent = new Intent(context, Start_broadcast.class);
+        start_intent.putExtra("ID", notificationId);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, start, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 8, start_intent, 0);
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.organisemois)
                 .setContentTitle("Time to sleep")
                 .setContentText("If you want to sleep 8h you should go to bed now.")
+                .setAutoCancel(true)
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText("If you want to sleep 8h you should go to bed now."))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
