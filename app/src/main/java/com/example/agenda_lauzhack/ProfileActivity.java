@@ -304,6 +304,9 @@ public class ProfileActivity extends AppCompatActivity {
 
                 saveToFile();
 
+                DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
+                daySlotsCalculation.slotCalculation();
+
                 Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
                 finish();
                 startActivity(intent);
@@ -319,9 +322,6 @@ public class ProfileActivity extends AppCompatActivity {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-            //FileOutputStream fileOutputStream = ctx.openFileOutput(userprofileFileName, Context.MODE_PRIVATE);
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
             userProfile.Save(bufferedWriter);
 
