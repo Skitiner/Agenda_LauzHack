@@ -20,42 +20,55 @@ import java.io.InputStreamReader;
 import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
 public class Broadcast_sport extends BroadcastReceiver {
-    private String CHANNEL_ID = "";
-    private int notificationId = 0;
+    private String CHANNEL_ID = "CHANNEL_ID";
+    private int notificationId = 152;
     Profile userProfile = new Profile();
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Intent start = new Intent(context, AgendaActivity.class);
-        start.putExtra("POPUP", true);
+        Intent click_intent = new Intent(context, AgendaActivity.class);
+        click_intent.putExtra("POPUP", true);
+
+        Intent start_intent = new Intent(context, Start_broadcast.class);
+        start_intent.putExtra("ID", notificationId);
+
+        Intent postpone_intent = new Intent(context, Postpone_broadcast.class);
+        postpone_intent.putExtra("ID", notificationId);
+
+        Intent cancel_intent = new Intent(context, Cancel_broadcast.class);
+        cancel_intent.putExtra("ID", notificationId);
 
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, start, 0);
+        PendingIntent click = PendingIntent.getActivity(context, 3, click_intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent startAct = PendingIntent.getBroadcast(context, 4, start_intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent postpone = PendingIntent.getBroadcast(context,5, postpone_intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        PendingIntent cancel = PendingIntent.getBroadcast(context, 6, cancel_intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         readFromFile(context);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.organisemois)
                 .setContentTitle("Sport time !")
-                .setContentText("Go Check in the application")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Go Check in the application"))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent)
-                .addAction(R.drawable.cheetah_background, "Start", pendingIntent)
-                .addAction(R.drawable.rabbit_background, "In 15 min", pendingIntent)
-                .addAction(R.drawable.rabbit_background, "Cancel", pendingIntent);
+                .setContentIntent(click)
+                .setAutoCancel(true)
+                .addAction(R.drawable.cheetah_background, "Start", startAct)
+                .addAction(R.drawable.rabbit_background, "In 15 min", postpone)
+                .addAction(R.drawable.rabbit_background, "Cancel", cancel);
 
         switch (userProfile.sportRoutine) {
             case 0:
-                builder.setSmallIcon(R.mipmap.sloth_foreground);
+                builder.setContentText(context.getString(R.string.notif_sport_easy));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_easy)));
                 break;
             case 1:
-                builder.setSmallIcon(R.mipmap.rabbit_foreground);
+                builder.setContentText(context.getString(R.string.notif_sport_hard));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard)));
                 break;
             case 2:
-                builder.setSmallIcon(R.mipmap.cheetah_foreground);
+                builder.setContentText(context.getString(R.string.notif_sport_hard));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard)));
                 break;
-
         }
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

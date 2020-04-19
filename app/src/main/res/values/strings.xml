@@ -43,6 +43,8 @@
     <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8)</string>
     <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42 (&lt; 80))</string>
     <string name="allFreeDay">Why did you install this app ? Set at least one working day !</string>
+    <string name="notif_sport_easy">Could be good to walk for example.</string>
+    <string name="notif_sport_hard">Could be good to run for example.</string>
 
     <!--
     <string name="app_name">Agenda_LauzHack</string>

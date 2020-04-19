@@ -10,16 +10,15 @@ import androidx.core.app.NotificationManagerCompat;
 
 public class Broadcast_wake_up  extends BroadcastReceiver {
 
-    private String CHANNEL_ID = "";
-    private int notificationId = 0;
+    private String CHANNEL_ID = "CHANNEL_ID";
+    private int notificationId = 151;
 
     @Override
     public void onReceive(Context context, Intent intent) {
 
         Intent start = new Intent(context, AgendaActivity.class);
-        start.putExtra("POPUP", true);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, start, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 7, start, 0);
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
@@ -28,11 +27,10 @@ public class Broadcast_wake_up  extends BroadcastReceiver {
                 .setContentText("Go in the application to check the planning of the day.")
                 .setStyle(new NotificationCompat.BigTextStyle()
                         .bigText("Go in the application to check the planning of the day."))
+                .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .addAction(R.drawable.cheetah_background, "I am awake", pendingIntent)
-                .addAction(R.drawable.rabbit_background, "15 min more", pendingIntent)
-                .addAction(R.drawable.rabbit_background, "Cancel", pendingIntent);
+                .addAction(R.drawable.cheetah_background, "I am awake", pendingIntent);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
