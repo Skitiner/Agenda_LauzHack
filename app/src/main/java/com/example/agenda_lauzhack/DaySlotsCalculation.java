@@ -96,19 +96,23 @@ public class DaySlotsCalculation {
                 if (memi[i] == 0) {
                     // TODO: 05.04.2020 no possibilities found
                 } else {
-                    if(memi[nbWorkDay]<10) {
+                    if(memi[nbWorkDay]<9) {
                         for (int j = 0; j < memi[nbWorkDay]; j++) {
                             slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
                         }
                     }
                     else {
-                        for (int j = 0; j < memi[nbWorkDay]; j++) {
-                            if (j%9 == 8){
-                                slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.PAUSE);
-                                nbpause++;
-                            }
-                            else {
-                                slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
+                        for (int k=2; k<12; k++) {
+                            if (memi[nbWorkDay] < 8 * k) {
+                                for (int j = 0; j < memi[nbWorkDay]; j++) {
+                                    if ((j % (memi[nbWorkDay] / k) == (memi[nbWorkDay] / k) - 1) && memi[nbWorkDay] > j+2) {
+                                        slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.PAUSE);
+                                        nbpause++;
+                                    } else {
+                                        slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
+                                    }
+                                }
+                                break;
                             }
                         }
                     }
@@ -136,46 +140,16 @@ public class DaySlotsCalculation {
         int[] memi;
         int [] memip = new int[nbWorkDay+1];
 
-        memi = FreeTime(6*4, 23*4, nbWorkSlotsPerDay, true);
-        for (int i = 0; i<nbWorkDay; i++){
-            memip[i]=memi[i];
-        }
-        memip[nbWorkDay] = nbWorkSlotsPerDay;
-        memiComplete = ismemiComplete(memi);
-
-        if (!memiComplete && nbWorkSlotsPerDay/2 > 2){
-            memi = FreeTime(6*4, 23*4, nbWorkSlotsPerDay/2, true);
-            for (int i = 0; i<nbWorkDay; i++){
-                memip[i]=memi[i];
+        for (int j = nbWorkSlotsPerDay;j > 2; j--) {
+            memi = FreeTime(6 * 4, 23 * 4, j, true);
+            for (int i = 0; i < nbWorkDay; i++) {
+                memip[i] = memi[i];
             }
-            memip[nbWorkDay] = nbWorkSlotsPerDay/2;
+            memip[nbWorkDay] = nbWorkSlotsPerDay;
             memiComplete = ismemiComplete(memi);
-        }
-
-        if (!memiComplete && nbWorkSlotsPerDay/3 > 2){
-            memi = FreeTime(6*4, 23*4, nbWorkSlotsPerDay/3, true);
-            for (int i = 0; i<nbWorkDay; i++){
-                memip[i]=memi[i];
+            if (memiComplete){
+                break;
             }
-            memip[nbWorkDay] = nbWorkSlotsPerDay/3;
-            memiComplete = ismemiComplete(memi);
-        }
-
-        if (!memiComplete && nbWorkSlotsPerDay/4 > 2){
-            memi = FreeTime(6*4, 23*4, nbWorkSlotsPerDay/4, true);
-            for (int i = 0; i<nbWorkDay; i++){
-                memip[i]=memi[i];
-            }
-            memip[nbWorkDay] = nbWorkSlotsPerDay/4;
-            memiComplete = ismemiComplete(memi);
-        }
-
-        if (!memiComplete && nbWorkSlotsPerDay/5 > 2){
-            memi = FreeTime(6*4, 23*4, nbWorkSlotsPerDay/5, true);
-            for (int i = 0; i<nbWorkDay; i++){
-                memip[i]=memi[i];
-            }
-            memip[nbWorkDay] = nbWorkSlotsPerDay/5;
         }
 
         return memip;
