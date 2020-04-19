@@ -82,7 +82,7 @@ public class ProfileActivity extends AppCompatActivity {
         super.onSaveInstanceState(state);
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
-        userProfile.slotStringToTimeString(NBWorkEditText.getText().toString());
+        userProfile.stringTimewakeUpToFloat(NBWorkEditText.getText().toString());
         userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
         state.putSerializable("nbWorkHours", userProfile.nbWorkHours);
         state.putSerializable("wakeUp", userProfile.wakeUp);
@@ -188,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
-            userProfile.slotStringToTimeString(NBWorkEditText.getText().toString());
+            userProfile.stringTimewakeUpToFloat(NBWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -209,7 +209,7 @@ public class ProfileActivity extends AppCompatActivity {
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
-            userProfile.slotStringToTimeString(NBWorkEditText.getText().toString());
+            userProfile.stringTimewakeUpToFloat(NBWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -322,9 +322,6 @@ public class ProfileActivity extends AppCompatActivity {
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-            //FileOutputStream fileOutputStream = ctx.openFileOutput(userprofileFileName, Context.MODE_PRIVATE);
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
             userProfile.Save(bufferedWriter);
 
