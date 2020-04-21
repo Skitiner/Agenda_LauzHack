@@ -124,11 +124,13 @@ public class DaySlotsCalculation {
 
         memi = SearchWorkTime(1);
 
-        for (int i = 0; i < lostWorkTime; i++) {
-            if (memi[i] == 0) {
-                // TODO: 05.04.2020 no possibilities found
-            } else {
-                slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.currentTask.WORK);
+        if (lostWorkTime>0) {
+            for (int i = 0; i < lostWorkTime; i++) {
+                if (memi[i] == 0) {
+                    // TODO: 05.04.2020 no possibilities found
+                } else {
+                    slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.currentTask.WORK);
+                }
             }
         }
 
@@ -140,7 +142,7 @@ public class DaySlotsCalculation {
         int[] memi;
         int [] memip = new int[nbWorkDay+1];
 
-        for (int j = nbWorkSlotsPerDay;j > 2; j--) {
+        for (int j = nbWorkSlotsPerDay;j > 0; j--) {
             memi = FreeTime(6 * 4, 23 * 4, j, true);
             for (int i = 0; i < nbWorkDay; i++) {
                 memip[i] = memi[i];
