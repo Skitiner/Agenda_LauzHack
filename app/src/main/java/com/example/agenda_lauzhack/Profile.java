@@ -7,6 +7,7 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class Profile implements Serializable {
     private static final String TAG = "Profile";
@@ -22,6 +23,7 @@ public class Profile implements Serializable {
     protected int k;
     protected String current;
     protected ArrayList<String> agenda_back;
+    protected Calendar settingDay;
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -33,6 +35,9 @@ public class Profile implements Serializable {
         calculation = false;
         this.FileName = "userProfile.txt";
         initAgenda();
+        settingDay = Calendar.getInstance();
+        settingDay.setTimeInMillis(System.currentTimeMillis());
+        Log.w("VALUE", String.valueOf(settingDay.getTimeInMillis()));
         k = 0;
         current = new String();
     }
@@ -81,6 +86,8 @@ public class Profile implements Serializable {
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(this.sportRoutine));
             bufferedWriter.write("/");
+            bufferedWriter.write(String.valueOf(settingDay.getTimeInMillis()));
+            bufferedWriter.write("/");
             bufferedWriter.write(agenda.toString());
             bufferedWriter.write("/");
 
@@ -96,6 +103,7 @@ public class Profile implements Serializable {
         String wU="";
         agenda_back = new ArrayList<>();
         String sR="";
+        String timeMillis = "";
         int j = 0;
         int n = 0;
 
@@ -113,7 +121,9 @@ public class Profile implements Serializable {
                              break;
                     case 4 : sR += lineData.charAt(i);
                              break;
-                    case 5 :
+                    case 5 : timeMillis += lineData.charAt(i);
+                            break;
+                    case 6 :
                             getAgenda(lineData.charAt(i));
                             break;
 
@@ -138,7 +148,8 @@ public class Profile implements Serializable {
         }
         this.wakeUp = wU;
         this.sportRoutine = Integer.parseInt(sR);
-
+        this.settingDay = Calendar.getInstance();
+        this.settingDay.setTimeInMillis(Long.parseLong(timeMillis));
     }
 
     private void writeInAgenda() {

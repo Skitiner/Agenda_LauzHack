@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Scanner;
 
 public class ProfileActivity extends AppCompatActivity {
@@ -301,6 +302,8 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, R.string.wrongwakeUp, Toast.LENGTH_SHORT).show();
             } else {
                 userProfile.sportRoutine = positionSport;
+                userProfile.settingDay = Calendar.getInstance();
+                userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 
                 saveToFile();
 
