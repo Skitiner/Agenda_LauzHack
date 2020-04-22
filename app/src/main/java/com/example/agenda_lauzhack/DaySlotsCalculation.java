@@ -122,9 +122,8 @@ public class DaySlotsCalculation {
             nbMoreWorkSlotPerDay = nbMoreWorkSlotPerDay - memi[nbWorkDay];
         }
 
-        memi = SearchWorkTime(1);
-
         if (lostWorkTime>0) {
+            memi = SearchWorkTime(1);
             for (int i = 0; i < lostWorkTime; i++) {
                 if (memi[i] == 0) {
                     // TODO: 05.04.2020 no possibilities found
@@ -142,15 +141,18 @@ public class DaySlotsCalculation {
         int[] memi;
         int [] memip = new int[nbWorkDay+1];
 
-        for (int j = nbWorkSlotsPerDay;j > 0; j--) {
-            memi = FreeTime(6 * 4, 23 * 4, j, true);
+        for (int j = nbWorkSlotsPerDay; j > 0; j--) {
+            memi = FreeTime(0, 23 * 4, j, true);
             for (int i = 0; i < nbWorkDay; i++) {
                 memip[i] = memi[i];
             }
-            memip[nbWorkDay] = nbWorkSlotsPerDay;
+            memip[nbWorkDay] = j;
             memiComplete = ismemiComplete(memi);
             if (memiComplete){
                 break;
+            }
+            else{
+                memip[nbWorkDay] = 0;
             }
         }
 
@@ -209,7 +211,7 @@ public class DaySlotsCalculation {
         }
 
         if (!memiComplete){
-            memi = FreeTime(5*4, 23*4, nbSportSlotsPerDay, true);
+            memi = FreeTime(0, 23*4, nbSportSlotsPerDay, true);
         }
 
         return memi;
@@ -235,11 +237,11 @@ public class DaySlotsCalculation {
         if (ascend){
             for (int j = 0; j < nbWorkDay; j++) {
                 freeTimeSlotCounter=0;
-                for (int i = timeSlotMin; i < timeSlotMax; i++) {
+                for (int i = timeSlotMin; i <= timeSlotMax; i++) {
                     if (slots_generated.get(freedaylist[j]).get(i) == timeSlot.currentTask.FREE){
                         freeTimeSlotCounter ++;
-                        if (freeTimeSlotCounter > timeSpace){
-                            memi[j] = i - timeSpace;
+                        if (freeTimeSlotCounter >= timeSpace){
+                            memi[j] = i - timeSpace + 1;
                             break;
                         }
                     }
@@ -252,10 +254,10 @@ public class DaySlotsCalculation {
         else {
             for (int j = 0; j < nbWorkDay; j++) {
                 freeTimeSlotCounter=0;
-                for (int i = timeSlotMax; i > timeSlotMin; i--) {
+                for (int i = timeSlotMax; i >= timeSlotMin; i--) {
                     if (slots_generated.get(freedaylist[j]).get(i) == timeSlot.currentTask.FREE){
                         freeTimeSlotCounter ++;
-                        if (freeTimeSlotCounter > timeSpace){
+                        if (freeTimeSlotCounter >= timeSpace){
                             memi[j] = i;
                             break;
                         }
