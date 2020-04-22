@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.w("HOUR", " " + calendar.get(Calendar.HOUR_OF_DAY));
                     Log.w("MINUTE", " " + calendar.get(Calendar.MINUTE));
 
-                    mgrAlarm.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    mgrAlarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     intentArray.add(pendingIntent);
 
                 }

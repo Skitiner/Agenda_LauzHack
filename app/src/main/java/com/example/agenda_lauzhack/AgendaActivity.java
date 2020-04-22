@@ -1,9 +1,14 @@
 package com.example.agenda_lauzhack;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.transition.Fade;
+import android.transition.Scene;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +25,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -37,7 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class AgendaActivity extends AppCompatActivity  {
+public class AgendaActivity extends AppCompatActivity {
 
     private final int NB_SLOTS_LUNCH = 6;
     private final String WEEK_SAVE = "WEEK_SAVE";
@@ -76,7 +84,7 @@ public class AgendaActivity extends AppCompatActivity  {
         readFromFile();
         userProfile.calculation = iscalculation;
 
-        dailyTasks = userProfile.agenda;
+        setWeekSlots();
 
         if (fixed_work || lunch_time){
             compare(userProfile.agenda);
@@ -126,6 +134,7 @@ public class AgendaActivity extends AppCompatActivity  {
         date = findViewById(R.id.date);
         currentDate = new Date();
         date.setText(formatter.format(currentDate));
+
         currentDay = 0;
         date_offset = 0;
 
@@ -184,6 +193,22 @@ public class AgendaActivity extends AppCompatActivity  {
             dialog.show();
         }
 
+    }
+
+    private void setWeekSlots() {
+        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day;
+
+        int offset_indice = offset%7;
+
+        dailyTasks = new ArrayList<>(userProfile.agenda);
+
+        for (int i = 0; i < 7; i++) {
+            dailyTasks.set(i, userProfile.agenda.get((i + offset_indice)%7));
+        }
     }
 
     public void saveTimeSlots(View view) {
@@ -313,6 +338,7 @@ public class AgendaActivity extends AppCompatActivity  {
 
     public void changeDay(View view) {
         adapter.clear();
+
         if(view.getId() == R.id.nextDay){
             currentDay++;
             currentDay %= 7;
@@ -344,15 +370,12 @@ public class AgendaActivity extends AppCompatActivity  {
         date.setText(dt);
     }
 
-    public void saveToFile(){
+    private void saveToFile(){
         try {
             File file = new File(getFilesDir(), userProfile.FileName);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-            //FileOutputStream fileOutputStream = ctx.openFileOutput(userprofileFileName, Context.MODE_PRIVATE);
-            //OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            //BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
             userProfile.Save(bufferedWriter);
 
@@ -366,7 +389,7 @@ public class AgendaActivity extends AppCompatActivity  {
         }
     }
 
-    public void readFromFile() {
+    private void readFromFile() {
         try {
             Context ctx = getApplicationContext();
             FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
