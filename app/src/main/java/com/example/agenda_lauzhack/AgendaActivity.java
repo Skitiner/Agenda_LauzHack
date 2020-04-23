@@ -65,7 +65,6 @@ public class AgendaActivity extends AppCompatActivity {
     private boolean lunch_time;
     private boolean first_save;
     private boolean popup;
-    private boolean iscalculation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +75,11 @@ public class AgendaActivity extends AppCompatActivity {
         fixed_work = intent.getBooleanExtra(ProfileActivity.FIXED_WORK, false);
         lunch_time = intent.getBooleanExtra(ProfileActivity.LUNCH_TIME, false);
         popup = intent.getBooleanExtra(POPUP, false);
-        iscalculation = intent.getBooleanExtra("CALCULCATION", false);
 
         first_save = true;
         userProfile = new Profile();
 
         readFromFile();
-        userProfile.calculation = iscalculation;
 
         setWeekSlots();
 
@@ -195,6 +192,7 @@ public class AgendaActivity extends AppCompatActivity {
 
     }
 
+    // Fonction pour adapter le dailyTask au jour actuel
     private void setWeekSlots() {
         int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
@@ -206,8 +204,12 @@ public class AgendaActivity extends AppCompatActivity {
 
         dailyTasks = new ArrayList<>(userProfile.agenda);
 
+        Log.w("SET_DAY", String.valueOf(setting_day));
+        Log.w("ACT_DAY", String.valueOf(actual_day));
+
         for (int i = 0; i < 7; i++) {
-            dailyTasks.set(i, userProfile.agenda.get((i + offset_indice)%7));
+            int indice = (i + offset_indice)%7;
+            dailyTasks.set(i, userProfile.agenda.get(indice));
         }
     }
 
@@ -300,13 +302,11 @@ public class AgendaActivity extends AppCompatActivity {
                 continue;
 
             for(int j = 0; j < 96; j++) {
+                Log.w("BUG", " " + currentDay);
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
 
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time)
-                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
-
-                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
             }
         }
@@ -338,20 +338,41 @@ public class AgendaActivity extends AppCompatActivity {
 
     public void changeDay(View view) {
         adapter.clear();
+        if (view == null)
+            return;
 
-        if(view.getId() == R.id.nextDay){
+        if (view.getId() == R.id.nextDay) {
             currentDay++;
             currentDay %= 7;
             date_offset++;
-        }
-        else if(view.getId() == R.id.previousDay){
-            if(currentDay == 0)
+
+            int indice = (conversionDayIndice() + currentDay)%7;
+            int i = 0;
+
+            if(lunch_time || fixed_work) {
+                while (userProfile.freeDay[indice] && i < 7) {
+                    Log.w("FREE DAY", " " + i);
+                    currentDay++;
+                    currentDay %= 7;
+                    date_offset++;
+                    i++;
+                    indice = (conversionDayIndice() + currentDay) % 7;
+                }
+
+                if (i == 7) {
+                    currentDay = 0;
+                    date_offset = 0;
+                }
+            }
+        } else if (view.getId() == R.id.previousDay) {
+            if (currentDay == 0)
                 currentDay = 6;
             else
                 currentDay--;
 
             date_offset--;
         }
+
         adapter.addAll(week.get(currentDay));
 
         // Start date
@@ -499,9 +520,11 @@ public class AgendaActivity extends AppCompatActivity {
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
-            userProfile.agenda = dailyTasks;
-            Log.w("TEST", userProfile.agenda.toString());
-            saveToFile();
+
+            if(lunch_time || fixed_work) {
+                userProfile.agenda = dailyTasks;
+                saveToFile();
+            }
         }
 
         public void updateWeek() {
@@ -517,8 +540,11 @@ public class AgendaActivity extends AppCompatActivity {
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
-            userProfile.agenda = dailyTasks;
-            saveToFile();
+
+            if(lunch_time || fixed_work) {
+                userProfile.agenda = dailyTasks;
+                saveToFile();
+            }
         }
 
         private class textViewOnClickListener implements View.OnClickListener {
@@ -594,8 +620,10 @@ public class AgendaActivity extends AppCompatActivity {
 
                 }
 
-                userProfile.agenda = dailyTasks;
-                saveToFile();
+                if(lunch_time || fixed_work) {
+                    userProfile.agenda = dailyTasks;
+                    saveToFile();
+                }
             }
         }
     }

@@ -197,7 +197,6 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, true);
         intent.putExtra(LUNCH_TIME, false);
-        intent.putExtra(USER_PROFILE, userProfile);
         startActivity(intent);
     }
 
@@ -218,7 +217,6 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AgendaActivity.class);
         intent.putExtra(FIXED_WORK, false);
         intent.putExtra(LUNCH_TIME, true);
-        intent.putExtra(USER_PROFILE, userProfile);
         startActivity(intent);
     }
 
