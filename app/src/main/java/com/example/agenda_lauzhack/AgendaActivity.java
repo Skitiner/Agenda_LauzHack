@@ -244,10 +244,10 @@ public class AgendaActivity extends AppCompatActivity {
             if(currentDay == 6) {
                 Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
                 startActivity(intent);
-                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.Saved, Toast.LENGTH_SHORT).show();
             }
             else {
-                Toast.makeText(this, "Next Day", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.next_day, Toast.LENGTH_SHORT).show();
             }
 
             View next = findViewById(R.id.nextDay);

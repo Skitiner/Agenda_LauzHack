@@ -92,20 +92,21 @@ public class DaySlotsCalculation {
             memi = SearchWorkTime(nbMoreWorkSlotPerDay);
             int nbpause = 0;
 
-            for (int i = 0; i < nbWorkDay; i++) {
-                if (memi[i] == 0) {
-                    // TODO: 05.04.2020 no possibilities found
-                } else {
-                    if(memi[nbWorkDay]<9) {
+            if(!ismemiComplete(memi)){
+                Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+                break;
+            }
+            else {
+                for (int i = 0; i < nbWorkDay; i++) {
+                    if (memi[nbWorkDay] < 9) {
                         for (int j = 0; j < memi[nbWorkDay]; j++) {
                             slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
                         }
-                    }
-                    else {
-                        for (int k=2; k<12; k++) {
+                    } else {
+                        for (int k = 2; k < 12; k++) {
                             if (memi[nbWorkDay] < 8 * k) {
                                 for (int j = 0; j < memi[nbWorkDay]; j++) {
-                                    if ((j % (memi[nbWorkDay] / k) == (memi[nbWorkDay] / k) - 1) && memi[nbWorkDay] > j+2) {
+                                    if ((j % (memi[nbWorkDay] / k) == (memi[nbWorkDay] / k) - 1) && memi[nbWorkDay] > j + 2) {
                                         slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.PAUSE);
                                         nbpause++;
                                     } else {
@@ -117,9 +118,9 @@ public class DaySlotsCalculation {
                         }
                     }
                 }
+                memi[nbWorkDay] = memi[nbWorkDay] - nbpause / nbWorkDay;
+                nbMoreWorkSlotPerDay = nbMoreWorkSlotPerDay - memi[nbWorkDay];
             }
-            memi[nbWorkDay] = memi[nbWorkDay] - nbpause/nbWorkDay;
-            nbMoreWorkSlotPerDay = nbMoreWorkSlotPerDay - memi[nbWorkDay];
         }
 
         if (lostWorkTime>0) {
@@ -142,7 +143,7 @@ public class DaySlotsCalculation {
         int [] memip = new int[nbWorkDay+1];
 
         for (int j = nbWorkSlotsPerDay; j > 0; j--) {
-            memi = FreeTime(0, 23 * 4, j, true);
+            memi = FreeTime(6*4, 19 * 4, j, true);
             for (int i = 0; i < nbWorkDay; i++) {
                 memip[i] = memi[i];
             }
@@ -153,6 +154,21 @@ public class DaySlotsCalculation {
             }
             else{
                 memip[nbWorkDay] = 0;
+            }
+        }
+        if (!memiComplete) {
+            for (int j = nbWorkSlotsPerDay; j > 0; j--) {
+                memi = FreeTime(0, (24 * 4)-1, j, true);
+                for (int i = 0; i < nbWorkDay; i++) {
+                    memip[i] = memi[i];
+                }
+                memip[nbWorkDay] = j;
+                memiComplete = ismemiComplete(memi);
+                if (memiComplete) {
+                    break;
+                } else {
+                    memip[nbWorkDay] = 0;
+                }
             }
         }
 
@@ -180,13 +196,13 @@ public class DaySlotsCalculation {
 
         memi = SearchSportTime(nbSportSlotsPerDay);
 
-        for (int i = 0; i < nbWorkDay; i++){
-            if (memi[i] == 0){
-                // TODO: 05.04.2020 no possibilities found
-            }
-            else{
+        if(!ismemiComplete(memi)){
+            Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+        }
+        else {
+            for (int i = 0; i < nbWorkDay; i++) {
                 for (int j = 0; j < nbSportSlotsPerDay; j++) {
-                    slots_generated.get(freedaylist[i]).set(memi[i]+j, timeSlot.currentTask.SPORT);
+                    slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.SPORT);
                 }
             }
         }

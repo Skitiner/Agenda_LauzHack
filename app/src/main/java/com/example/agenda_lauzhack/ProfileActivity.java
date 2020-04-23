@@ -310,11 +310,11 @@ public class ProfileActivity extends AppCompatActivity {
                 DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
                 daySlotsCalculation.slotCalculation();
 
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                finish();
-                startActivity(intent);
-
                 Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
             }
         }
     }
