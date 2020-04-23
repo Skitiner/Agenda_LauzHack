@@ -300,13 +300,11 @@ public class AgendaActivity extends AppCompatActivity {
                 continue;
 
             for(int j = 0; j < 96; j++) {
+                Log.w("BUG", " " + currentDay);
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
 
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time)
-                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
-
-                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
             }
         }
