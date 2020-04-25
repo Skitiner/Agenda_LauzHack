@@ -628,29 +628,32 @@ public class AgendaActivity extends AppCompatActivity {
                 }
 
                 if(lunch_time) {
-                    if (v.getId() != R.id.t_1)
-                    {
-                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.EAT) {
-                            for(int i = 0; i < NB_SLOTS_LUNCH; i++) {
-                                if((daily_task_pos-1+i) >=  dailyTasks.get(currentDay).size()) {
-                                    break;
-                                }
-                                dailyTasks.get(currentDay).set(daily_task_pos-1 + i, timeSlot.currentTask.EAT);
-                            }
+                    if (v.getId() == R.id.t_1) {
+                        if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.currentTask.EAT ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+1) != timeSlot.currentTask.EAT ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+2) != timeSlot.currentTask.EAT ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+3) != timeSlot.currentTask.EAT) {
+
+
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.EAT);
                         }
                         else {
-                            for(int i = -NB_SLOTS_LUNCH; i < NB_SLOTS_LUNCH; i++) {
-
-                                if((daily_task_pos-1+i) >=  dailyTasks.get(currentDay).size()) {
-                                    break;
-                                }
-                                if(dailyTasks.get(currentDay).get(daily_task_pos-1+i) == timeSlot.currentTask.EAT)
-                                    dailyTasks.get(currentDay).set(daily_task_pos-1+i, timeSlot.currentTask.FREE);
-                            }
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
                         }
-                        updateAgenda();
 
+                    } else {
+                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.EAT)
+                            dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.EAT);
+                        else
+                            dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
                     }
+                    updateAgenda();
 
                 }
 
