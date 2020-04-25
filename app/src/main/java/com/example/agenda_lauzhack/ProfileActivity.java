@@ -181,6 +181,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetFixedWorkButtonXmlCallback(View view) {
+
+        int nb_free_day = 0;
+        for(int i = 0; i < 7; i++) {
+            if(!NewFreeDay[i])
+                nb_free_day++;
+        }
+
+        if (nb_free_day == 0) {
+            Toast.makeText(this, R.string.allFreeDay, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
@@ -201,6 +213,18 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void clickedSetEatTimeButtonXmlCallback(View view) {
+
+        int nb_free_day = 0;
+        for(int i = 0; i < 7; i++) {
+            if(!NewFreeDay[i])
+                nb_free_day++;
+        }
+
+        if (nb_free_day == 0) {
+            Toast.makeText(this, R.string.allFreeDay, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 

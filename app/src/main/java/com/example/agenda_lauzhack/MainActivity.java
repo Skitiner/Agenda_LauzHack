@@ -84,15 +84,10 @@ public class MainActivity extends AppCompatActivity {
         else
             intentArray = new ArrayList<PendingIntent>();
 
-        Toast.makeText(context, "Notifications activated", Toast.LENGTH_SHORT).show();
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
 
-        Log.w("AGENDA_notif", userProfile.agenda.toString());
-
         // ******* DEBUG MODE *****
-
         /*Intent intentForService = new Intent(context, Broadcast_sport.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,

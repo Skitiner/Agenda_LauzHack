@@ -65,6 +65,9 @@ public class AgendaActivity extends AppCompatActivity {
     private boolean lunch_time;
     private boolean first_save;
     private boolean popup;
+    private boolean settingFinish = false;
+    private int nb_day_to_set;
+    private int day_already_setted;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +86,15 @@ public class AgendaActivity extends AppCompatActivity {
 
         setWeekSlots();
 
+        nb_day_to_set = 0;
+        for(int i = 0; i < 7; i++) {
+            if(!userProfile.freeDay[i])
+                nb_day_to_set++;
+        }
+
         if (fixed_work || lunch_time){
             compare(userProfile.agenda);
         }
-
         View view = findViewById(R.id.save_schedule);
         if(!fixed_work && !lunch_time)
             view.setVisibility(View.INVISIBLE);
@@ -142,13 +150,16 @@ public class AgendaActivity extends AppCompatActivity {
             while(userProfile.freeDay[indice] && i < 7) {
                 View next = findViewById(R.id.nextDay);
                 changeDay(next);
-                Log.w("TEST", "day: " + currentDay);
                 indice = (conversionDayIndice()+currentDay)%7;
                 i++;
             }
         }
         schedule.setAdapter(adapter);
-        schedule.setSelection(6);
+
+        if(lunch_time || fixed_work)
+            schedule.setSelection(6);
+        else
+            schedule.setSelection(Calendar.getInstance().get(Calendar.HOUR_OF_DAY)-1);
 
         adapter.updateWeek();
 
@@ -214,8 +225,25 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     public void saveTimeSlots(View view) {
-        if(first_save) {
+        day_already_setted++;
+
+        if(day_already_setted >= nb_day_to_set)
+            settingFinish = true;
+
+        if(settingFinish) {
+            Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
+            startActivity(intent);
+            adapter.updateWeek();
+            Toast.makeText(this, R.string.Saved, Toast.LENGTH_SHORT).show();
+            finish();
+        }
+        else {
+            Toast.makeText(this, R.string.next_day, Toast.LENGTH_SHORT).show();
+        }
+
+        if(first_save && !settingFinish) {
             first_save = false;
+
             AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
 
             builder.setMessage(R.string.same_day);
@@ -242,16 +270,7 @@ public class AgendaActivity extends AppCompatActivity {
 
             dialog.show();
         }
-        else {
-            if(currentDay == 6) {
-                Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
-                startActivity(intent);
-                Toast.makeText(this, R.string.Saved, Toast.LENGTH_SHORT).show();
-            }
-            else {
-                Toast.makeText(this, R.string.next_day, Toast.LENGTH_SHORT).show();
-            }
-
+        else if (!settingFinish){
             View next = findViewById(R.id.nextDay);
             changeDay(next);
 
@@ -351,17 +370,14 @@ public class AgendaActivity extends AppCompatActivity {
 
             if(lunch_time || fixed_work) {
                 while (userProfile.freeDay[indice] && i < 7) {
-                    Log.w("FREE DAY", " " + i);
                     currentDay++;
                     currentDay %= 7;
                     date_offset++;
                     i++;
                     indice = (conversionDayIndice() + currentDay) % 7;
                 }
-
-                if (i == 7) {
-                    currentDay = 0;
-                    date_offset = 0;
+                if(i == 7) {
+                    settingFinish = true;
                 }
             }
         } else if (view.getId() == R.id.previousDay) {
@@ -369,10 +385,28 @@ public class AgendaActivity extends AppCompatActivity {
                 currentDay = 6;
             else
                 currentDay--;
-
             date_offset--;
+
+            int indice = (conversionDayIndice() + currentDay)%7;
+            int i = 0;
+
+            if(lunch_time || fixed_work) {
+                while (userProfile.freeDay[indice] && i < 7) {
+                    if (currentDay == 0)
+                        currentDay = 6;
+                    else
+                        currentDay--;
+                    date_offset--;
+                    i++;
+                    indice = (conversionDayIndice() + currentDay) % 7;
+                }
+                if(i == 7) {
+                    settingFinish = true;
+                }
+            }
         }
 
+        Log.w("CURRENT DAY", " " +currentDay);
         adapter.addAll(week.get(currentDay));
 
         // Start date
