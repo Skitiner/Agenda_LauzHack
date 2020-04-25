@@ -220,8 +220,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToAgendaActivity(View view) {
         Intent agenda = new Intent(this, AgendaActivity.class);
-        userProfile.calculation = false;
-        agenda.putExtra("CALCULCATION", userProfile.calculation);
         agenda.putExtra(USER_PROFILE, userProfile);
         startActivity(agenda);
     }

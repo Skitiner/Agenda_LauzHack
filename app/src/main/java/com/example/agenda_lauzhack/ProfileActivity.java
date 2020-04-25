@@ -3,6 +3,7 @@ package com.example.agenda_lauzhack;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -22,6 +23,8 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Scanner;
+
+import static com.example.agenda_lauzhack.AgendaActivity.conversionDayIndice;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -176,6 +179,16 @@ public class ProfileActivity extends AppCompatActivity {
 
         NewFreeDay[position] = !NewFreeDay[position];
 
+        int indice = ((7-conversionDayIndice()) + position)%7;
+
+        for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
+            if(userProfile.agenda.get(indice).get(i) == timeSlot.currentTask.WORK_FIX || userProfile.agenda.get(indice).get(i) == timeSlot.currentTask.EAT) {
+                userProfile.agenda.get(indice).set(i, timeSlot.currentTask.FREE);
+            }
+        }
+        userProfile.freeDay = NewFreeDay;
+
+        saveToFile();
         setDayColor(dayButton, NewFreeDay[position]);
 
     }
