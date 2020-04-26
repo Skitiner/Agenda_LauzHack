@@ -48,8 +48,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mgrAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
-
         setAlarmOfTheDay(this);
+
+        planningCalculation();
 
         if (userProfile == null){
             userProfile = new Profile();
@@ -59,6 +60,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, popupActivity.class);
             intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
             startActivity(intent);
+        }
+    }
+
+    private void planningCalculation() {
+        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
+        int offset = (int)(365*year_offset + 0.25*(year_offset+4)) + actual_day - setting_day;
+
+        if(offset >= 7) {
+            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
+            daySlotsCalculation.slotCalculation();
         }
     }
 
@@ -105,22 +119,24 @@ public class MainActivity extends AppCompatActivity {
         int minutes = 0;
         int k = 0;
         timeSlot.currentTask task = userProfile.agenda.get(0).get(0);
+        Boolean canceled = userProfile.canceled_slots.get(0).get(0);
 
         for(int i = 0; i < (userProfile.agenda).size(); i++){
             for(int j = 0; j < (userProfile.agenda.get(i)).size(); j++) {
                 k++;
                 hour = j/4;
                 minutes = 15*(j%4);
-
-                if(userProfile.agenda.get(i).get(j) != task) {
+                Log.w("CANC", canceled + " " + userProfile.canceled_slots.get(i).get(j));
+                if(userProfile.agenda.get(i).get(j) != task || userProfile.canceled_slots.get(i).get(j) != canceled) {
 
                     // No difference between WORK and WORK_FIX for the notifications
                     if((task == timeSlot.currentTask.WORK || task == timeSlot.currentTask.WORK_FIX)
-                            && (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK || userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX) ) {
+                            && (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK || userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX)
+                            && userProfile.canceled_slots.get(i).get(j) == canceled) {
                         task = userProfile.agenda.get(i).get(j);
                         continue;
                     }
-
+                    canceled = userProfile.canceled_slots.get(i).get(j);
                     task = userProfile.agenda.get(i).get(j);
                     Intent intentForService;
 

@@ -60,9 +60,8 @@ public class DaySlotsCalculation {
     public void slotCalculation() {
 
         readFromFile();
-
         init();
-
+        remove_canceled_days();
         setMorningRoutine();
         setNight();
 
@@ -74,6 +73,14 @@ public class DaySlotsCalculation {
         userProfile.agenda = slots_generated;
 
         saveToFile();
+    }
+
+    private void remove_canceled_days() {
+        for (int i = 0; i < 7; i++) {
+            for(int j = 0; j < 96; j++) {
+                userProfile.canceled_slots.get(i).set(j, Boolean.FALSE);
+            }
+        }
     }
 
     public void setWork(int nbFixedWork){
@@ -329,21 +336,10 @@ public class DaySlotsCalculation {
 
         for(int j = 0; j < 7; j++ ) {
             ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
-            for (int i = 0; i < 24; i++) {
+            for (int i = 0; i < 96; i++) {
 
                 task = timeSlot.currentTask.FREE;
-
-                timeSlot slot = new timeSlot();
-                slot.time = i;
-                slot.task_1 = task;
-                slot.task_2 = task;
-                slot.task_3 = task;
-                slot.task_4 = task;
-
-                tasks.add(slot.task_1);
-                tasks.add(slot.task_2);
-                tasks.add(slot.task_3);
-                tasks.add(slot.task_4);
+                tasks.add(task);
 
             }
             this.slots_generated.add(tasks);
