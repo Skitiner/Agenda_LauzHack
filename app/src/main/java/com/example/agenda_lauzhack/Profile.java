@@ -20,13 +20,17 @@ public class Profile implements Serializable {
     protected boolean calculation;
     protected String FileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
+    protected ArrayList<ArrayList<Boolean>> canceled_slots;
     protected int k;
     protected String current;
+    protected String cancel_current;
     protected ArrayList<String> agenda_back;
+    protected ArrayList<String> cancel_back;
     protected Calendar settingDay;
 
     public Profile(){
         agenda_back = new ArrayList<>();
+        cancel_back = new ArrayList<>();
         this.licenceAccepted = false;
         this.nbWorkHours = "168";
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
@@ -37,34 +41,29 @@ public class Profile implements Serializable {
         initAgenda();
         settingDay = Calendar.getInstance();
         settingDay.setTimeInMillis(System.currentTimeMillis());
-        Log.w("VALUE", String.valueOf(settingDay.getTimeInMillis()));
         k = 0;
         current = new String();
+        cancel_current = new String();
     }
 
     private void initAgenda() {
         agenda = new ArrayList<>();
+        canceled_slots = new ArrayList<>();
+
         timeSlot.currentTask task;
         for(int j = 0; j < 7; j++ ) {
             ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
-            for (int i = 0; i < 24; i++) {
+            ArrayList<Boolean> cancel = new ArrayList<>();
 
+            for (int i = 0; i < 96; i++) {
                 task = timeSlot.currentTask.FREE;
-
-                timeSlot slot = new timeSlot();
-                slot.time = i;
-                slot.task_1 = task;
-                slot.task_2 = task;
-                slot.task_3 = task;
-                slot.task_4 = task;
-
-                tasks.add(slot.task_1);
-                tasks.add(slot.task_2);
-                tasks.add(slot.task_3);
-                tasks.add(slot.task_4);
+                tasks.add(task);
+                cancel.add(Boolean.FALSE);
             }
             agenda.add(tasks);
+            canceled_slots.add(cancel);
         }
+
     }
 
     public void Save(BufferedWriter bufferedWriter){
@@ -90,10 +89,14 @@ public class Profile implements Serializable {
             bufferedWriter.write("/");
             bufferedWriter.write(agenda.toString());
             bufferedWriter.write("/");
+            bufferedWriter.write(canceled_slots.toString());
+            bufferedWriter.write("/");
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        Log.w("CANCELED SAVE", canceled_slots.toString());
     }
 
     public void decode(String lineData) {
@@ -102,6 +105,7 @@ public class Profile implements Serializable {
         Character[] fD= new Character[] {'0','0','0','0','0','0','0'};
         String wU="";
         agenda_back = new ArrayList<>();
+        cancel_back = new ArrayList<>();
         String sR="";
         String timeMillis = "";
         int j = 0;
@@ -127,6 +131,9 @@ public class Profile implements Serializable {
                             getAgenda(lineData.charAt(i));
                             break;
 
+                    case 7 : getCanceled(lineData.charAt(i));
+                            break;
+
                 }
             }
             else {
@@ -135,6 +142,7 @@ public class Profile implements Serializable {
         }
 
         writeInAgenda();
+        writeCanceled();
 
         this.licenceAccepted = Boolean.parseBoolean(lA);
         this.nbWorkHours = nW;
@@ -150,6 +158,34 @@ public class Profile implements Serializable {
         this.sportRoutine = Integer.parseInt(sR);
         this.settingDay = Calendar.getInstance();
         this.settingDay.setTimeInMillis(Long.parseLong(timeMillis));
+
+        Log.w("CANCELED READ", canceled_slots.toString());
+    }
+
+    private void getCanceled(char charAt) {
+        if(charAt == '[' || charAt == ' ' || charAt == ']')
+            return;
+        else if(charAt == ',') {
+            cancel_back.add(cancel_current);
+            cancel_current = new String();
+            k++;
+        }
+        else
+            cancel_current = cancel_current + charAt;
+    }
+
+    private void writeCanceled() {
+        for(int i = 0; i < cancel_back.size(); i++) {
+            int j = i/96;
+            int k = i%96;
+
+            if ("true".equals(cancel_back.get(i))) {
+                canceled_slots.get(j).set(k, Boolean.TRUE);
+
+            } else if ("false".equals(cancel_back.get(i))) {
+                canceled_slots.get(j).set(k, Boolean.FALSE);
+            }
+        }
     }
 
     private void writeInAgenda() {

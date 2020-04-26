@@ -8,10 +8,13 @@
     <color name="red">#FFFF0000</color>             <!-- à changer dans profileactivity aussi-->
     <color name="darkBlue">#3F51B5</color>
     <color name="orange">#FFCC99</color>
+    <color name="orange_canceled">#EEBB88</color>
     <color name="gray">#EEE</color>
+    <color name="gray_canceled">#DDD</color>
     <color name="white">#FFF</color>
     <color name="pastel">#FFFFCC</color>
     <color name="salmonpink">#FFCCCC</color>
+    <color name="salmonpink_canceled">#EEBBBB</color>
     <color name="black">#000000</color>
     <color name="pastelviolet">#FFE77AFA</color>
     <color name="organisemois_background">#DDFFFF</color>

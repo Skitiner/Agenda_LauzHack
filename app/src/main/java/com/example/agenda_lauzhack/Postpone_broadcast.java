@@ -45,8 +45,9 @@ public class Postpone_broadcast extends BroadcastReceiver {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         int startI = calendar.get(Calendar.HOUR_OF_DAY)*4 + calendar.get(Calendar.MINUTE)/15;
+        int converted_indice = convertedIndice();
 
-        ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(0));
+        ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
 
         // Determinate the time boudaries of the block to postpone
         int endI = startI;
@@ -56,10 +57,20 @@ public class Postpone_broadcast extends BroadcastReceiver {
         }
 
         for(int i = startI; i < (endI + 1); i++) {
-            userProfile.agenda.get(0).set(i, dailyTasks.get(i-1));
+            userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
         }
         saveToFile();
         setAlarmOfTheDay(context);
+    }
+
+    private int convertedIndice() {
+        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        return offset%7;
     }
 
     private void saveToFile(){

@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.transition.Fade;
 import android.transition.Scene;
@@ -55,6 +56,7 @@ public class AgendaActivity extends AppCompatActivity {
     private ListView schedule;
     private static ArrayList<ArrayList<timeSlot>> week;
     private static ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
+    private static ArrayList<ArrayList<Boolean>> cancel_day_taks;
     private int currentDay;
     private Date currentDate;
     private TextView date;
@@ -209,11 +211,12 @@ public class AgendaActivity extends AppCompatActivity {
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
         int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
-        int offset = 365*year_offset + actual_day - setting_day;
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
 
         int offset_indice = offset%7;
 
         dailyTasks = new ArrayList<>(userProfile.agenda);
+        cancel_day_taks = new ArrayList<>(userProfile.canceled_slots);
 
         Log.w("SET_DAY", String.valueOf(setting_day));
         Log.w("ACT_DAY", String.valueOf(actual_day));
@@ -221,6 +224,7 @@ public class AgendaActivity extends AppCompatActivity {
         for (int i = 0; i < 7; i++) {
             int indice = (i + offset_indice)%7;
             dailyTasks.set(i, userProfile.agenda.get(indice));
+            cancel_day_taks.set(i, userProfile.canceled_slots.get(indice));
         }
     }
 
@@ -492,25 +496,34 @@ public class AgendaActivity extends AppCompatActivity {
 
 
             ((TextView) row.findViewById(R.id.t_1)).setText(getItem(position).time + "h");
-            setItemApparence((TextView) row.findViewById(R.id.a_1), getItem(position).task_1);
-            setItemApparence((TextView) row.findViewById(R.id.a_2), getItem(position).task_2);
-            setItemApparence((TextView) row.findViewById(R.id.a_3), getItem(position).task_3);
-            setItemApparence((TextView) row.findViewById(R.id.a_4), getItem(position).task_4);
+            setItemApparence((TextView) row.findViewById(R.id.a_1), getItem(position).task_1, position, 0);
+            setItemApparence((TextView) row.findViewById(R.id.a_2), getItem(position).task_2, position, 1);
+            setItemApparence((TextView) row.findViewById(R.id.a_3), getItem(position).task_3, position, 2);
+            setItemApparence((TextView) row.findViewById(R.id.a_4), getItem(position).task_4, position, 3);
 
 
             return row;
         }
 
-        private void setItemApparence(TextView textView, timeSlot.currentTask task) {
+        private void setItemApparence(TextView textView, timeSlot.currentTask task, int position, int task_num) {
+
+            int slot_indice = position*4 + task_num;
+            textView.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
+
             switch (task) {
                 case SPORT:
                     textView.setText(R.string.Sport);
                     textView.setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                        textView.setBackgroundColor(getResources().getColor(R.color.orange_canceled, null));
+
                     break;
 
                 case WORK:
                     textView.setText(R.string.work);
                     textView.setBackgroundColor(getResources().getColor(R.color.salmonpink, null));
+                    if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                        textView.setBackgroundColor(getResources().getColor(R.color.salmonpink_canceled, null));
                     break;
 
                 case EAT:
@@ -526,6 +539,8 @@ public class AgendaActivity extends AppCompatActivity {
                 case WORK_FIX:
                     textView.setText(R.string.fixed_work);
                     textView.setBackgroundColor(getResources().getColor(R.color.gray, null));
+                    if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                        textView.setBackgroundColor(getResources().getColor(R.color.gray_canceled, null));
                     break;
                 case MORNING_ROUTINE:
                     textView.setText(R.string.morningRoutine);
@@ -541,6 +556,9 @@ public class AgendaActivity extends AppCompatActivity {
                     break;
 
             }
+
+            if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
         public void updateAgenda() {

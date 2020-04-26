@@ -44,9 +44,8 @@ public class Broadcast_eat  extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(click)
-                .addAction(R.drawable.cheetah_background, "Start", startAct)
-                .addAction(R.drawable.rabbit_background, "In 15 min", postpone)
-                .addAction(R.drawable.rabbit_background, "Cancel", cancel);
+                .addAction(R.drawable.cheetah_background, "Ok", startAct)
+                .addAction(R.drawable.rabbit_background, "In 15 min", postpone);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
