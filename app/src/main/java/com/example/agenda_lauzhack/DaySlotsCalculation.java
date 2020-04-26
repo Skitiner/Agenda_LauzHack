@@ -167,7 +167,7 @@ public class DaySlotsCalculation {
         int [] memip = new int[nbWorkDay+1];
 
         for (int j = nbWorkSlotsPerDay; j > 0; j--) {
-            memi = FreeTime(6*4, 19 * 4, j, true);
+            memi = FreeTime(6*4, 21 * 4, j, true);
             for (int i = 0; i < nbWorkDay; i++) {
                 memip[i] = memi[i];
             }
