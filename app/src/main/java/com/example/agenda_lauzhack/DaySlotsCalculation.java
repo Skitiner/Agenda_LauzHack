@@ -57,7 +57,7 @@ public class DaySlotsCalculation {
         slots_generated = new ArrayList<>();
     }
 
-    public void slotCalculation() {
+    public int slotCalculation() {
 
         readFromFile();
 
@@ -68,15 +68,31 @@ public class DaySlotsCalculation {
 
         int nbFixedWork = compare(userProfile.agenda);
 
-        setSport();
-        setWork(nbFixedWork);
+        int OK = 0;
+        if (!(nbFixedWork > Integer.valueOf(userProfile.nbWorkHours))) {
+            Boolean Sport = setSport();
+            Boolean Work = setWork(nbFixedWork);
 
-        userProfile.agenda = slots_generated;
+            if (!Sport){
+                OK = 1;
+            }
+            else if (!Work){
+                OK = 1;
+            }
+        }
+        else {
+            OK = 2;
+        }
 
-        saveToFile();
+        if(OK == 0){
+            userProfile.agenda = slots_generated;
+
+            saveToFile();
+        }
+        return OK;
     }
 
-    public void setWork(int nbFixedWork){
+    public Boolean setWork(int nbFixedWork){
 
         int nbWorkTimeSlots = 0;
 
@@ -85,7 +101,7 @@ public class DaySlotsCalculation {
         int nbWorkSlotsPerDay = nbWorkTimeSlots / nbWorkDay;
         int lostWorkTime = nbWorkTimeSlots % nbWorkDay;
 
-        int[] memi;
+        int[] memi = new int[nbWorkDay+1];
         int nbMoreWorkSlotPerDay = nbWorkSlotsPerDay;
 
         while (nbMoreWorkSlotPerDay > 0) {
@@ -93,7 +109,7 @@ public class DaySlotsCalculation {
             int nbpause = 0;
 
             if(!ismemiComplete(memi)){
-                Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
                 break;
             }
             else {
@@ -123,7 +139,7 @@ public class DaySlotsCalculation {
             }
         }
 
-        if (lostWorkTime>0) {
+        if (lostWorkTime>0 && ismemiComplete(memi)) {
             memi = SearchWorkTime(1);
             for (int i = 0; i < lostWorkTime; i++) {
                 if (memi[i] == 0) {
@@ -134,6 +150,7 @@ public class DaySlotsCalculation {
             }
         }
 
+        return ismemiComplete(memi);
     }
 
     private int[] SearchWorkTime(int nbWorkSlotsPerDay){
@@ -175,7 +192,7 @@ public class DaySlotsCalculation {
         return memip;
     }
 
-    public void setSport(){
+    public Boolean setSport(){
         int nbSportTimeSlots = 0;
         switch (sport_routine){
             case 0:
@@ -197,7 +214,7 @@ public class DaySlotsCalculation {
         memi = SearchSportTime(nbSportSlotsPerDay);
 
         if(!ismemiComplete(memi)){
-            Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
         }
         else {
             for (int i = 0; i < nbWorkDay; i++) {
@@ -206,6 +223,7 @@ public class DaySlotsCalculation {
                 }
             }
         }
+        return ismemiComplete(memi);
     }
 
     private int[] SearchSportTime(int nbSportSlotsPerDay){
