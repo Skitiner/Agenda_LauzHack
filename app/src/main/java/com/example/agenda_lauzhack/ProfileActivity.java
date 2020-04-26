@@ -343,13 +343,21 @@ public class ProfileActivity extends AppCompatActivity {
                 saveToFile();
 
                 DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
-                daySlotsCalculation.slotCalculation();
+                int isOK = daySlotsCalculation.slotCalculation();
 
-                Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+                if (isOK == 0) {
+                    Toast.makeText(ProfileActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+                    Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+                else if (isOK == 1){
+                    Toast.makeText(ProfileActivity.this, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+                }
+                else if (isOK == 2){
+                    Toast.makeText(ProfileActivity.this, R.string.too_lots_of_fixedwork, Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

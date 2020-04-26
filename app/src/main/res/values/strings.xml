@@ -46,7 +46,8 @@
     <string name="notif_sport_easy">Could be good to walk for example.</string>
     <string name="notif_sport_hard">Could be good to run for example.</string>
     <string name="next_day">Next Day</string>
-    <string name="bad_parameters">The parameters you enter didn\'t allow the generation of a correct planning.</string>
+    <string name="bad_parameters">The parameters you enter didn\'t allow the generation of a correct planning. \n Please free your time.</string>
+    <string name="too_lots_of_fixedwork">The number of work hours per week you enter is smaller than your quantity of fixed work. \n Please correct it.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
