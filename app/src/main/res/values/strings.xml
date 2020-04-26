@@ -17,14 +17,14 @@
     <string name="friday">Fr</string>
     <string name="saturday">Sa</string>
     <string name="sunday">Su</string>
-    <string name="eatTime">5. Select your lunch time (1h30 for dinner and 1h30 for supper)</string>
-    <string name="sport">6. Select your sport routine</string>
+    <string name="eatTime">"5. Select your lunch time: "</string>
+    <string name="sport">6. Select your sport routine:</string>
     <string name="forgetWorkHour">You forgot to enter a number of work hour !</string>       <!--à changer dans profileactivity aussi-->
     <string name="forgetWakeUp">You forgot to enter a wake up hour !</string>                <!-- à changer dans profileactivity aussi-->
     <string name="Saved">Correctly saved !</string>                                          <!--à changer dans profileactivity aussi-->
-    <string name="accept">Accept the general condition of utilisation !</string>
-    <string name="light">light</string>
-    <string name="moderated">moderated</string>
+    <string name="accept">Please, read and accept the general condition of utilisation.</string>
+    <string name="light">Light</string>
+    <string name="moderated">mMderated</string>
     <string name="intense">intense</string>
     <string name="utilisationCondition">General condition of utilisation</string>
     <string name="same_day">Have you the same schedule for all your working days?</string>
@@ -40,13 +40,13 @@
     <string name="minutes">In 15min</string>
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
-    <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8)</string>
-    <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42 (&lt; 80))</string>
+    <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8:00)</string>
+    <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42:00)</string>
     <string name="allFreeDay">Why did you install this app ? Set at least one working day !</string>
     <string name="notif_sport_easy">Could be good to walk for example.</string>
     <string name="notif_sport_hard">Could be good to run for example.</string>
     <string name="next_day">Next Day</string>
-    <string name="bad_parameters">The parameters you enter didn\'t allow the generation of a correct planning !</string>
+    <string name="bad_parameters">The parameters you enter didn\'t allow the generation of a correct planning.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
