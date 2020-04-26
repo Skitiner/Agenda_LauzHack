@@ -61,7 +61,7 @@ public class popupActivity extends AppCompatActivity {
         Scanner s = new Scanner(is_utf).useDelimiter("\\A");
         String result = s.hasNext() ? s.next() : "";
 
-        result = result.replaceAll("\\uFFFD", "\u00A9");
+        result = result.replaceAll("\\uFFFD", "\u00AE");
 
         TextView conditionTextView = findViewById(R.id.utilisationCondition);
         conditionTextView.setTextColor(getResources().getColor(R.color.black, null));
