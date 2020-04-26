@@ -24,11 +24,11 @@ public class Broadcast_sleep  extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.organisemois)
-                .setContentTitle("Time to sleep")
-                .setContentText("If you want to sleep 8h you should go to bed now.")
+                .setContentTitle(context.getString(R.string.time_sleep))
+                .setContentText(context.getString(R.string.go_to_bed_notif))
                 .setAutoCancel(true)
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("If you want to sleep 8h you should go to bed now."))
+                        .bigText(context.getString(R.string.go_to_bed_notif)))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
                 .addAction(R.drawable.cheetah_background, "Ok", pendingIntent);

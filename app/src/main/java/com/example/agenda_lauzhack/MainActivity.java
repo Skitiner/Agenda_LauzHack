@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         // ******* DEBUG MODE *****
-        /*Intent intentForService = new Intent(context, Broadcast_sport.class);
+        /*Intent intentForService = new Intent(context, Broadcast_eat.class);
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
                 intentForService, PendingIntent.FLAG_CANCEL_CURRENT);

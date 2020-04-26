@@ -23,14 +23,14 @@ public class Broadcast_wake_up  extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.organisemois)
-                .setContentTitle("WAKE UP !")
-                .setContentText("Go in the application to check the planning of the day.")
+                .setContentTitle(context.getString(R.string.wakeup_notif))
+                .setContentText(context.getString(R.string.check_notif))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Go in the application to check the planning of the day."))
+                        .bigText(context.getString(R.string.check_notif)))
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(pendingIntent)
-                .addAction(R.drawable.cheetah_background, "I am awake", pendingIntent);
+                .addAction(R.drawable.cheetah_background, context.getString(R.string.awake_notif), pendingIntent);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

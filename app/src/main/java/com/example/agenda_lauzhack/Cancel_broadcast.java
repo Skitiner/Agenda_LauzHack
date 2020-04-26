@@ -36,8 +36,6 @@ public class Cancel_broadcast extends BroadcastReceiver {
         NotificationManagerCompat.from(context).cancel(id);
 
         cancelTask();
-
-        Toast.makeText(context, "Canceled", Toast.LENGTH_SHORT).show();
     }
 
     private void cancelTask() {

@@ -45,18 +45,18 @@ public class Broadcast_work extends BroadcastReceiver {
         PendingIntent cancel = PendingIntent.getBroadcast(context, 2, cancel_intent, PendingIntent.FLAG_CANCEL_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.organisemois)
+                .setSmallIcon(R.mipmap.organise_work)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.organisemois))
                 .setContentTitle("Time to work !")
-                .setContentText("Go Check in the application")
+                .setContentText(context.getString(R.string.check_notif))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Go Check in the application"))
+                        .bigText(context.getString(R.string.check_notif)))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(click)
                 .setAutoCancel(true)
-                .addAction(R.drawable.cheetah_background, "Start", startAct)
-                .addAction(R.drawable.rabbit_background, "In 15 min", postpone)
-                .addAction(R.drawable.rabbit_background, "Cancel", cancel);
+                .addAction(R.drawable.cheetah_background, context.getString(R.string.start), startAct)
+                .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone)
+                .addAction(R.drawable.rabbit_background, context.getString(R.string.cancel), cancel);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

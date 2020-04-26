@@ -33,11 +33,11 @@ public class Broadcast_break  extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.organisemois)
-                .setContentTitle("Do a break, you deserve it :)")
+                .setContentTitle(context.getString(R.string.do_break_notif))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(click)
                 .addAction(R.drawable.cheetah_background, "Ok", start)
-                .addAction(R.drawable.rabbit_background, "15 min more", postpone);
+                .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

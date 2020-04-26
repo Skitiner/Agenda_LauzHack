@@ -49,4 +49,11 @@
     <string name="bad_parameters">Les paramètres que vous avez entrés ne permettent pas la génération d\'un agenda.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="too_lots_of_fixedwork">Le nombre d\'heure de travail par semaine que vous avez entre est plus petit que votre quantite d\'heure fixe de travaille. \n S\'il vous plait, corrigez le.</string>
+    <string name="eat_notif">C\'est l\'heure du repas :p</string>
+    <string name="do_break_notif">Faites une pause, vous le méritez :)</string>
+    <string name="time_sleep">Temps pour dormir</string>
+    <string name="check_notif">Allez voir dans l\'application</string>
+    <string name="go_to_bed_notif">Pour dormir 8h, vous devriez allez vous coucher.</string>
+    <string name="awake_notif">Je suis réveillé</string>
+    <string name="wakeup_notif">Debout !</string>
 </resources>

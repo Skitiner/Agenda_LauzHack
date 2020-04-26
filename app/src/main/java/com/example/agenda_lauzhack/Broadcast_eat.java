@@ -36,16 +36,16 @@ public class Broadcast_eat  extends BroadcastReceiver {
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.organisemois)
-                .setContentTitle("EAT time :p")
-                .setContentText("Go Check in the application")
+                .setSmallIcon(R.mipmap.organise_eat)
+                .setContentTitle(context.getString(R.string.eat_notif))
+                .setContentText(context.getString(R.string.check_notif))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText("Go Check in the application"))
+                        .bigText(context.getString(R.string.check_notif)))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(click)
                 .addAction(R.drawable.cheetah_background, "Ok", startAct)
-                .addAction(R.drawable.rabbit_background, "In 15 min", postpone);
+                .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone);
 
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);

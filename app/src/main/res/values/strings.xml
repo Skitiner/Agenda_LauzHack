@@ -51,6 +51,13 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="eat_notif">Time to eat :p</string>
+    <string name="check_notif">Go Check in the application</string>
+    <string name="do_break_notif">Do a break, you deserve it :)</string>
+    <string name="time_sleep">Time to sleep</string>
+    <string name="go_to_bed_notif">If you want to sleep 8h you should go to bed now.</string>
+    <string name="awake_notif">I am awake</string>
+    <string name="wakeup_notif">WAKE UP !</string>
 
     <!--
     <string name="app_name">Agenda_LauzHack</string>
