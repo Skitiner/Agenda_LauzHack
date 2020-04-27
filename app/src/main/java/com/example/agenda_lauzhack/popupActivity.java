@@ -55,10 +55,10 @@ public class popupActivity extends AppCompatActivity {
     }
 
     public void setText() throws IOException {
-        InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use.txt");
-        InputStreamReader is_utf = new InputStreamReader(is, StandardCharsets.UTF_8);
+        InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use versionGP.txt");
+        //InputStreamReader is_utf = new InputStreamReader(is, StandardCharsets.UTF_8);
 
-        Scanner s = new Scanner(is_utf).useDelimiter("\\A");
+        Scanner s = new Scanner(is).useDelimiter("\\A");
         String result = s.hasNext() ? s.next() : "";
 
         result = result.replaceAll("\\uFFFD", "\u00AE");
