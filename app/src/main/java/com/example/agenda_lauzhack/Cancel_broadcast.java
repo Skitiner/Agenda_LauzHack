@@ -57,6 +57,8 @@ public class Cancel_broadcast extends BroadcastReceiver {
         }
 
         saveToFile();
+
+        MainActivity.setAlarmOfTheDay(context);
     }
 
     private int convertedIndice() {

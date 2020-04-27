@@ -22,6 +22,8 @@ import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 public class Broadcast_sport extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 152;
+    private static int life_time = 5*60000;
+
     Profile userProfile = new Profile();
 
     @Override
@@ -52,6 +54,7 @@ public class Broadcast_sport extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(click)
                 .setAutoCancel(true)
+                .setTimeoutAfter(life_time)
                 .addAction(R.drawable.cheetah_background, context.getString(R.string.start), startAct)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.cancel), cancel);

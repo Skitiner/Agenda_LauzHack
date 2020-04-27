@@ -12,6 +12,7 @@ public class Broadcast_break  extends BroadcastReceiver {
 
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 148;
+    private static int life_time = 5*60000;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -36,6 +37,7 @@ public class Broadcast_break  extends BroadcastReceiver {
                 .setContentTitle(context.getString(R.string.do_break_notif))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(click)
+                .setTimeoutAfter(life_time)
                 .addAction(R.drawable.cheetah_background, "Ok", start)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone);
 

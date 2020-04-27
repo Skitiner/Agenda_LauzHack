@@ -12,6 +12,5 @@ public class Start_broadcast extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         int id = intent.getIntExtra("ID", 0);
         NotificationManagerCompat.from(context).cancel(id);
-        Toast.makeText(context, "Started", Toast.LENGTH_SHORT).show();
     }
 }

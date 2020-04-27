@@ -22,6 +22,7 @@ import static android.app.Notification.PRIORITY_MAX;
 public class Broadcast_work extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 153;
+    private static int life_time = 5*60000;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -54,6 +55,7 @@ public class Broadcast_work extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(click)
                 .setAutoCancel(true)
+                .setTimeoutAfter(life_time)
                 .addAction(R.drawable.cheetah_background, context.getString(R.string.start), startAct)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.cancel), cancel);

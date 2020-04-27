@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -94,8 +95,22 @@ public class AgendaActivity extends AppCompatActivity {
                 nb_day_to_set++;
         }
 
+        Button nextDay = findViewById(R.id.nextDay);
+        Button previousDay = findViewById(R.id.previousDay);
+
         if (fixed_work || lunch_time){
             compare(userProfile.agenda);
+
+            nextDay.setClickable(false);
+            nextDay.setVisibility(View.INVISIBLE);
+            previousDay.setClickable(false);
+            previousDay.setVisibility(View.INVISIBLE);
+        }
+        else {
+            nextDay.setClickable(true);
+            nextDay.setVisibility(View.VISIBLE);
+            previousDay.setClickable(true);
+            previousDay.setVisibility(View.VISIBLE);
         }
         View view = findViewById(R.id.save_schedule);
         if(!fixed_work && !lunch_time)
@@ -685,14 +700,29 @@ public class AgendaActivity extends AppCompatActivity {
 
     private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
         int nbFixedWork = 0;
+
+        int offset_indice = convertedIndice();
+
         for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < week_slots.get(0).size(); j++) {
-                if (!(week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT)){
+            int indice = (i + offset_indice)%7;
+
+            for (int j = 0; j < week_slots.get(indice).size(); j++) {
+                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT)){
                     dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
                 }
             }
         }
         return nbFixedWork;
+    }
+
+    private int convertedIndice() {
+        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        return offset%7;
     }
 }
 

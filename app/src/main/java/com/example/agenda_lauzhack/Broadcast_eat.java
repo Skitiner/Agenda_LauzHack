@@ -12,6 +12,7 @@ public class Broadcast_eat  extends BroadcastReceiver {
 
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 149;
+    private static int life_time = 5*60000;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -44,6 +45,7 @@ public class Broadcast_eat  extends BroadcastReceiver {
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setContentIntent(click)
+                .setTimeoutAfter(life_time)
                 .addAction(R.drawable.cheetah_background, "Ok", startAct)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone);
 
