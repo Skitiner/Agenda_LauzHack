@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class popupActivity extends AppCompatActivity {
@@ -56,6 +57,13 @@ public class popupActivity extends AppCompatActivity {
 
     public void setText() throws IOException {
         InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use versionGP.txt");
+        String a = Locale.getDefault().getLanguage();
+        if (Locale.getDefault().getLanguage().equals("en")) {
+            is = getApplicationContext().getAssets().open("General terms and conditions of use versionGP.txt");
+        }
+        else if(Locale.getDefault().getLanguage().equals("fr")){
+            is = getApplicationContext().getAssets().open("Conditions générales d'utilisation versionGP.txt");
+        }
         //InputStreamReader is_utf = new InputStreamReader(is, StandardCharsets.UTF_8);
 
         Scanner s = new Scanner(is).useDelimiter("\\A");
