@@ -364,6 +364,8 @@ public class ProfileActivity extends AppCompatActivity {
 
     public void saveToFile(){
         try {
+            //Context ctx = getApplicationContext();
+            //ctx.deleteFile(userProfile.FileName);
             File file = new File(getFilesDir(), userProfile.FileName);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
