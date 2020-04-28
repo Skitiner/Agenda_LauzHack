@@ -701,7 +701,7 @@ public class AgendaActivity extends AppCompatActivity {
         return nbFixedWork;
     }
 
-   private int convertedIndice() {
+    private int convertedIndice() {
         int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
@@ -711,4 +711,3 @@ public class AgendaActivity extends AppCompatActivity {
         return offset%7;
     }
 }
-
