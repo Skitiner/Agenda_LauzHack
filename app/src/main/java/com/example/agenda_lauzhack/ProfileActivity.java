@@ -363,7 +363,6 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void saveToFile(){
-        Log.w("SAVED PROFILE", "SAVED");
         try {
             //Context ctx = getApplicationContext();
             //ctx.deleteFile(userProfile.FileName);

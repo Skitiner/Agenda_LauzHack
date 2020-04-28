@@ -273,10 +273,10 @@ public class AgendaActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     setScheduleOverDays();
-
+                    saveToFile();
                     Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
                     startActivity(intent);
-                    Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
             builder.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
