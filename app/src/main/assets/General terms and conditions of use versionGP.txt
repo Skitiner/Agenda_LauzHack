@@ -7,13 +7,14 @@ In these general terms of use it should be understood by the terms:
 ➢ “Organise-MOIs": the app downloaded to keep you motivated to work and helping you to schedule your weeks. 
 ➢ “Profile”: the button at the top right of the screen when Organise-MOIs is open.
 ➢ “This app": Organise-MOIs and its code.
-➢ “We/us": the team that, in April, created the OrganiseMOIs app to participate in LauzHack against COVID-19. You can contact us at the following e-mail address: organise.mois@gmail.com.
+➢ “We/us": the team that, in April, created the Organise-MOIs app to participate in LauzHack against COVID-19. You can contact us at the following e-mail address: organise.mois@gmail.com.
 ➢ “You": any person using and/or enjoying the Organise-MOIs app. 
 ➢ “Your data": all the personal data that you enter in the app.
-➢ “Your device": your mobile phone with Android® 6.0, Marshmallow API 23, as operating system on which you download and use the app.
+➢ “Your device": your mobile phone with at least Android® 6.0, Marshmallow API 23, as operating system on which you download and use the app.
 
 2. Services
 We grant you the right to use the Organise-MOIs app properly and without fraudulent distortions or negligent behaviors.  
+
 3. Intellectual Property
 You acknowledge that the Organise-MOIs’ Code is exclusively owned by the team Organise-MOIs. Therefore, it may not, in particular, be copied, reproduced, rebroadcast or commercially exploited in all or any part. 
 

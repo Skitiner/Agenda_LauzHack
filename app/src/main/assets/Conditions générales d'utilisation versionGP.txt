@@ -10,7 +10,7 @@ Dans ces conditions générales d'utilisation, il faut comprendre les termes :
 ➢ "Profil" : le bouton en haut à droite de l'écran lorsque Organise-MOIs est ouvert.
 ➢ "Vos données" : toutes les données personnelles que vous entrez dans l'application.
 ➢ "Vous" : toute personne utilisant et/ou profitant de l'application Organise-MOIs. 
-➢ "Votre appareil" : votre téléphone portable avec Android® 6.0, Marshmallow API 23, comme système d'exploitation sur lequel vous téléchargez et utilisez l'application.
+➢ "Votre appareil" : votre téléphone portable avec au moins Android® 6.0, Marshmallow API 23, comme système d'exploitation sur lequel vous téléchargez et utilisez l'application.
 
 2.	Services
 Nous vous accordons le droit d'utiliser l'application Organise-MOIs correctement et sans distorsions frauduleuses ou comportements négligents.  
