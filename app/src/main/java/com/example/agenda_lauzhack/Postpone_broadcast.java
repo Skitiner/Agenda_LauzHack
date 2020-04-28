@@ -48,7 +48,8 @@ public class Postpone_broadcast extends BroadcastReceiver {
         int converted_indice = convertedIndice();
 
         ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
-
+        Log.w("DAILY", dailyTasks.toString());
+        Log.w("DAILY", converted_indice + " ");
         // Determinate the time boudaries of the block to postpone
         int endI = startI;
 
@@ -69,6 +70,7 @@ public class Postpone_broadcast extends BroadcastReceiver {
 
         int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+        Log.w("OFFSET", offset + " ");
 
         return offset%7;
     }

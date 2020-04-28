@@ -86,7 +86,6 @@ public class AgendaActivity extends AppCompatActivity {
         userProfile = new Profile();
 
         readFromFile();
-
         setWeekSlots();
 
         nb_day_to_set = 0;
@@ -211,7 +210,7 @@ public class AgendaActivity extends AppCompatActivity {
                 @Override
                 public void onDismiss(DialogInterface dialogInterface) {
                     readFromFile();
-                    dailyTasks = userProfile.agenda;
+                    setWeekSlots();
                     adapter.updateWeek();
                 }
             });
@@ -715,7 +714,7 @@ public class AgendaActivity extends AppCompatActivity {
         return nbFixedWork;
     }
 
-    private int convertedIndice() {
+   private int convertedIndice() {
         int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 

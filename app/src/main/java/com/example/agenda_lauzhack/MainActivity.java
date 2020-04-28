@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mgrAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+        setLogo();
         setAlarmOfTheDay(this);
 
         planningCalculation();
@@ -60,6 +62,42 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, popupActivity.class);
             intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
             startActivity(intent);
+        }
+    }
+
+    private void setLogo() {
+        readFromFile(this);
+
+        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        int slot_indice = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*4 + Calendar.getInstance().get(Calendar.MINUTE)/15;
+
+        ImageView logo = findViewById(R.id.logo_image);
+
+        switch (userProfile.agenda.get(offset).get(slot_indice)) {
+            case EAT:
+                logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_eat));
+                break;
+
+            case WORK:
+                logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_work));
+                break;
+
+            case SPORT:
+                logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_sport));
+                break;
+
+            case WORK_FIX:
+                logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_work));
+                break;
+
+            default:
+                logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_def));
+                break;
         }
     }
 
@@ -87,7 +125,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        setAlarmOfTheDay(this);
+        setLogo();
+        //setAlarmOfTheDay(this);
     }
 
     protected static void setAlarmOfTheDay(Context context) {

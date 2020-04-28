@@ -87,6 +87,7 @@ public class DaySlotsCalculation {
             userProfile.agenda = slots_generated;
 
             saveToFile();
+            MainActivity.setAlarmOfTheDay(context);
         }
         return OK;
     }
