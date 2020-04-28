@@ -78,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
 
         ImageView logo = findViewById(R.id.logo_image);
 
+        if (userProfile.canceled_slots.get(offset).get(slot_indice) == Boolean.TRUE) {
+            logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_def));
+            return;
+        }
+
         switch (userProfile.agenda.get(offset).get(slot_indice)) {
             case EAT:
                 logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_eat));
