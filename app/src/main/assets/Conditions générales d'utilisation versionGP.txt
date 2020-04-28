@@ -1,0 +1,50 @@
+﻿Conditions générales d'utilisation
+Ces conditions générales d'utilisation s'appliquent à l'ensemble de l'application Organise-MOIs. Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment.
+En utilisant cette application, vous acceptez pleinement ces conditions d'utilisation dans leur intégralité. Elles sont accessibles à tout moment à partir du menu.
+
+1.	Définitions
+Dans ces conditions générales d'utilisation, il faut comprendre les termes :
+➢ "Cette application" : Organise-MOIs et son code.
+➢ "Nous/l’équipe Organise-MOIs" : l'équipe qui, en avril, a créé l'application Organise-MOIs à l’occasion du LauzHack against COVID-19. Vous pouvez nous contacter à l'adresse électronique suivante : organise.mois@gmail.com.
+➢ "Organise-MOIs" : l'application téléchargée pour vous motiver à travailler et vous aider à planifier vos semaines. 
+➢ "Profil" : le bouton en haut à droite de l'écran lorsque Organise-MOIs est ouvert.
+➢ "Vos données" : toutes les données personnelles que vous entrez dans l'application.
+➢ "Vous" : toute personne utilisant et/ou profitant de l'application Organise-MOIs. 
+➢ "Votre appareil" : votre téléphone portable avec Android® 6.0, Marshmallow API 23, comme système d'exploitation sur lequel vous téléchargez et utilisez l'application.
+
+2.	Services
+Nous vous accordons le droit d'utiliser l'application Organise-MOIs correctement et sans distorsions frauduleuses ou comportements négligents.  
+
+3.	Propriété intellectuelle
+Vous reconnaissez que le code de l’application Organise-MOIs est la propriété exclusive de l'équipe Organise-MOIs. Il ne peut donc, notamment, être copié, reproduit, rediffusé ou exploité commercialement en tout ou partie. 
+
+4.	Conditions d'accès
+Pour accéder et utiliser cette application, vous devez posséder un appareil avec (au moins) Android® 6.0, Marshmallow API 23. Malheureusement, nous ne sommes pas encore disponibles sur iOS ®.
+Pour utiliser cette application, pour le moment, vous n'avez pas besoin de payer (sauf en ce qui concerne l'appareil sur lequel vous installez l'application et l’accès à internet pour pouvoir télécharger Organise-MOIs). 
+
+5.	Utilisation
+Vous vous engagez à faire un usage approprié de l'application conformément à la bonne foi et au bon sens d'une personne diligente placée dans les mêmes circonstances. Aucune utilisation malveillante, frauduleuse, abusive et/ou négligente ne peut nous être reprochée. Vous en assumez les conséquences et la responsabilité.
+
+6.	Responsabilité
+NOTRE RESPONSABILITÉ EST LIMITÉE À LA NÉGLIGENCE GRAVE OU À LA FAUTE INTENTIONNELLE, CONFORMÉMENT À L'ARTICLE 100, PARAGRAPHE 1, DU CODE SUISSE DES OBLIGATIONS.
+En cas de force majeure, nous ne sommes pas tenus de garantir l'accès à l'application, nous ne sommes pas responsables des dommages causés et sommes dégagés de toute responsabilité.
+Enfin, nous ne sommes pas responsables de la fin de l'application, au sens de l'article 9 des présentes Conditions générales d'utilisation. 
+
+7.	Confidentialité et politique de protection de la vie privée
+Nous respectons votre vie privée. En utilisant cette application, vous acceptez que vos données soient stockées dans votre appareil. Toutefois, nous n'y avons pas accès. 
+
+8.	Sécurité et stockage des données 
+Pour l'instant, nous avons fait tout notre possible pour garantir la sécurité de vos données. Néanmoins, en utilisant Organise-MOIs, vous acceptez ses éventuelles failles de sécurité et veillez à minimiser les informations personnelles et/ou confidentielles que vous saisissez.
+Toutes vos données sont stockées dans votre propre appareil. EN UTILISANT CETTE APPLICATION, VOUS ASSUMEZ L'ENTIÈRE RESPONSABILITÉ CONCERNANT LA SÉCURITÉ DE VOTRE APPAREIL ET DES DONNÉES QUI Y SONT STOCKÉES. Par conséquent, vous êtes tenu de protéger votre téléphone portable, notamment en installant un logiciel antivirus, un logiciel anti-malware, en évitant de télécharger des contenus non fiables, en utilisant une connexion internet sécurisée, etc.
+
+9.	Résiliation et désinstallation de l'application
+Vous êtes libre d'arrêter et de désinstaller l'application à tout moment. Nous nous réservons également le droit de mettre fin ou de suspendre l'accès à Organise-MOIs à tout moment, à notre discrétion et sans préavis.
+Pour désinstaller l'application, cliquez sur "désinstaller". En ce qui concerne vos données, elles seront supprimées avec l'application puisqu'elles sont uniquement stockées dans votre téléphone portable.
+
+10.	Réclamations, for et droit applicable
+Nous sommes des étudiants et nous apprenons encore de nos erreurs. Si vous souhaitez vous plaindre, vous pouvez le faire de manière constructive à l'adresse suivante : organise.mois@gmail.com. Bien entendu, nous vous invitons à régler les litiges à l'amiable. Néanmoins, en cas de volonté litigieuse et procédurière, vous serez respectueusement prié de le faire auprès de l’autorité compétente à Lausanne, dans le canton de Vaud, en Suisse. Ainsi, vous acceptez que le lieu de juridiction soit Lausanne et que tout litige soit régi exclusivement par le droit suisse.
+
+Lausanne, le 27 Avril 2020
+
+
+						      The team		                 Organise-MOIs
