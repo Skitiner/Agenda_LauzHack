@@ -135,7 +135,6 @@ public class AgendaActivity extends AppCompatActivity {
                 for (int i = 0; i < 24; i++) {
 
                     task = timeSlot.currentTask.FREE;
-
                     timeSlot slot = new timeSlot();
                     slot.time = i;
                     slot.task_1 = task;
@@ -211,12 +210,15 @@ public class AgendaActivity extends AppCompatActivity {
                 public void onDismiss(DialogInterface dialogInterface) {
                     readFromFile();
                     setWeekSlots();
-                    adapter.updateWeek();
                 }
             });
             dialog.show();
         }
 
+    }
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 
     // Fonction pour adapter le dailyTask au jour actuel
@@ -249,6 +251,10 @@ public class AgendaActivity extends AppCompatActivity {
             Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
             startActivity(intent);
             adapter.updateWeek();
+
+            userProfile.agenda = dailyTasks;
+            saveToFile();
+
             Toast.makeText(this, R.string.Saved, Toast.LENGTH_SHORT).show();
             finish();
         }
@@ -347,7 +353,6 @@ public class AgendaActivity extends AppCompatActivity {
         adapter.updateWeek();
     }
 
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -440,6 +445,7 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     private void saveToFile(){
+
         try {
             File file = new File(getFilesDir(), userProfile.FileName);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -582,11 +588,6 @@ public class AgendaActivity extends AppCompatActivity {
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
-
-            if(lunch_time || fixed_work) {
-                userProfile.agenda = dailyTasks;
-                saveToFile();
-            }
         }
 
         public void updateWeek() {
@@ -602,11 +603,6 @@ public class AgendaActivity extends AppCompatActivity {
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
-
-            if(lunch_time || fixed_work) {
-                userProfile.agenda = dailyTasks;
-                saveToFile();
-            }
         }
 
         private class textViewOnClickListener implements View.OnClickListener {
@@ -683,11 +679,6 @@ public class AgendaActivity extends AppCompatActivity {
                     }
                     updateAgenda();
 
-                }
-
-                if(lunch_time || fixed_work) {
-                    userProfile.agenda = dailyTasks;
-                    saveToFile();
                 }
             }
         }
