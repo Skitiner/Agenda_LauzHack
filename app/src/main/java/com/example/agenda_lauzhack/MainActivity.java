@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         mgrAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
         setLogo();
-        //setAlarmOfTheDay(this);
+        setAlarmOfTheDay(this);
 
         planningCalculation();
 
@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         setLogo();
+        setAlarmOfTheDay(this);
     }
 
     protected static void setAlarmOfTheDay(Context context) {
@@ -143,19 +144,6 @@ public class MainActivity extends AppCompatActivity {
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-
-        // ******* DEBUG MODE *****
-        /*Intent intentForService = new Intent(context, Broadcast_work.class);
-
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0,
-                intentForService, PendingIntent.FLAG_CANCEL_CURRENT);
-
-        calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-
-        calendar.add(Calendar.SECOND, 4);
-
-        mgrAlarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);*/
 
         // ******* RELEASE MODE *****
         int hour = 0;
@@ -215,11 +203,13 @@ public class MainActivity extends AppCompatActivity {
                         case FREE:
                             intentForService = new Intent(context, Broadcast_break.class);
                             break;
+                        case PAUSE:
+                            intentForService = new Intent(context, Broadcast_break.class);
+                            break;
                         default:
                             intentForService = new Intent(context, RemindBroadcast.class);
                             break;
                     }
-
 
 
                     PendingIntent pendingIntent = PendingIntent.getBroadcast(context, k,
@@ -229,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
                     calendar.setTimeInMillis(System.currentTimeMillis());
 
                     // Condition to not set notification before the actual time
-                    if(i == 0 && !(hour > calendar.get(Calendar.HOUR_OF_DAY) || (hour == calendar.get(Calendar.HOUR_OF_DAY) && minutes >= calendar.get(Calendar.MINUTE)))) {
+                    if(i == 0 && !(hour > calendar.get(Calendar.HOUR_OF_DAY) || (hour == calendar.get(Calendar.HOUR_OF_DAY) && minutes > calendar.get(Calendar.MINUTE)))) {
                         continue;
                     }
 
