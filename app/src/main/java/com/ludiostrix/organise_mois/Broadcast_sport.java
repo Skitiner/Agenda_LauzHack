@@ -1,12 +1,9 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -16,8 +13,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
 
 public class Broadcast_sport extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";

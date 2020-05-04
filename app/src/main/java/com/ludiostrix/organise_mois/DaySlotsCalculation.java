@@ -1,8 +1,6 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
 import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

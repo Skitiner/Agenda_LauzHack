@@ -1,7 +1,6 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
 import android.util.Log;
-import android.view.ViewDebug;
 
 import java.io.BufferedWriter;
 import java.io.IOException;

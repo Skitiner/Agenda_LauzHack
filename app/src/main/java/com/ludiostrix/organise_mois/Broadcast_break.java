@@ -1,4 +1,4 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;

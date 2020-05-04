@@ -1,12 +1,8 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -22,7 +18,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-import static com.example.agenda_lauzhack.MainActivity.setAlarmOfTheDay;
+import static com.ludiostrix.organise_mois.MainActivity.setAlarmOfTheDay;
 
 public class Postpone_broadcast extends BroadcastReceiver {
 

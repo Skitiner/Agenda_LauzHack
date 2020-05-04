@@ -1,4 +1,4 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
 import org.junit.Test;
 

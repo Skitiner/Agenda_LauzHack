@@ -1,23 +1,13 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-
-import java.text.ParseException;
-
-import static android.app.Notification.EXTRA_NOTIFICATION_ID;
-import static android.app.Notification.PRIORITY_HIGH;
-import static android.app.Notification.PRIORITY_MAX;
 
 public class Broadcast_work extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";

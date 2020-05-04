@@ -1,30 +1,17 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.icu.text.DateFormat;
-import android.icu.text.SimpleDateFormat;
-import android.icu.text.SymbolTable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Switch;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -131,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         setLogo();
-        setAlarmOfTheDay(this);
     }
 
     protected static void setAlarmOfTheDay(Context context) {
@@ -228,9 +214,6 @@ public class MainActivity extends AppCompatActivity {
                     calendar.set(Calendar.MINUTE, minutes);
                     calendar.set(Calendar.SECOND, 0);
 
-                    Log.w("DAY", " " + calendar.get(Calendar.DAY_OF_MONTH));
-                    Log.w("HOUR", " " + calendar.get(Calendar.HOUR_OF_DAY));
-                    Log.w("MINUTE", " " + calendar.get(Calendar.MINUTE));
 
                     mgrAlarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                     intentArray.add(pendingIntent);

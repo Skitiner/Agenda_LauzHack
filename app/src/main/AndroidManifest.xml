@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.agenda_lauzhack">
+    package="com.ludiostrix.organise_mois">
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
@@ -13,10 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
 
-        <activity android:name=".popupActivity"></activity>
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".AgendaActivity"/>
-        <activity android:name=".MainActivity">
+        <activity android:name="com.ludiostrix.organise_mois.popupActivity"></activity>
+        <activity android:name="com.ludiostrix.organise_mois.ProfileActivity"/>
+        <activity android:name="com.ludiostrix.organise_mois.AgendaActivity"/>
+        <activity android:name="com.ludiostrix.organise_mois.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -24,17 +24,17 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".RemindBroadcast" />
-        <receiver android:name=".Broadcast_work" />
-        <receiver android:name=".Broadcast_sport" />
-        <receiver android:name=".Broadcast_eat" />
-        <receiver android:name=".Broadcast_sleep" />
-        <receiver android:name=".Broadcast_wake_up" />
-        <receiver android:name=".Broadcast_break" />
+        <receiver android:name="com.ludiostrix.organise_mois.RemindBroadcast" />
+        <receiver android:name="com.ludiostrix.organise_mois.Broadcast_work" />
+        <receiver android:name="com.ludiostrix.organise_mois.Broadcast_sport" />
+        <receiver android:name="com.ludiostrix.organise_mois.Broadcast_eat" />
+        <receiver android:name="com.ludiostrix.organise_mois.Broadcast_sleep" />
+        <receiver android:name="com.ludiostrix.organise_mois.Broadcast_wake_up" />
+        <receiver android:name="com.ludiostrix.organise_mois.Broadcast_break" />
 
 
-        <receiver android:name=".Cancel_broadcast" />
-        <receiver android:name=".Start_broadcast" />
-        <receiver android:name=".Postpone_broadcast" />
+        <receiver android:name="com.ludiostrix.organise_mois.Cancel_broadcast" />
+        <receiver android:name="com.ludiostrix.organise_mois.Start_broadcast" />
+        <receiver android:name="com.ludiostrix.organise_mois.Postpone_broadcast" />
     </application>
 </manifest>

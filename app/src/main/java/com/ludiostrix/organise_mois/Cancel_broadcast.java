@@ -1,13 +1,9 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.io.BufferedReader;
@@ -19,7 +15,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Cancel_broadcast extends BroadcastReceiver {

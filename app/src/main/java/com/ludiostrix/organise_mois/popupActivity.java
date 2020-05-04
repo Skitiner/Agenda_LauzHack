@@ -1,31 +1,22 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.io.StringWriter;
-import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -56,13 +47,13 @@ public class popupActivity extends AppCompatActivity {
     }
 
     public void setText() throws IOException {
-        InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use versionGP.txt");
+        InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use.txt");
         String a = Locale.getDefault().getLanguage();
         if (Locale.getDefault().getLanguage().equals("en")) {
-            is = getApplicationContext().getAssets().open("General terms and conditions of use versionGP.txt");
+            is = getApplicationContext().getAssets().open("General terms and conditions of use.txt");
         }
         else if(Locale.getDefault().getLanguage().equals("fr")){
-            is = getApplicationContext().getAssets().open("Conditions générales d'utilisation versionGP.txt");
+            is = getApplicationContext().getAssets().open("Conditions générales d'utilisation.txt");
         }
         //InputStreamReader is_utf = new InputStreamReader(is, StandardCharsets.UTF_8);
 

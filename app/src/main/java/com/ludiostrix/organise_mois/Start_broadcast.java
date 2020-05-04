@@ -1,9 +1,8 @@
-package com.example.agenda_lauzhack;
+package com.ludiostrix.organise_mois;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
