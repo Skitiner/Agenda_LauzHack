@@ -1,4 +1,4 @@
-﻿General terms and conditions of use
+General terms and conditions of use
 These general terms of use apply to the entire Organise-MOIs app. We reserve our right to modify these terms of use at any time.
 By using this app, you fully accept these terms and conditions of use in their integrality. They are accessible at any time from the menu.
 
@@ -7,10 +7,10 @@ In these general terms of use it should be understood by the terms:
 ➢ “Organise-MOIs": the app downloaded to keep you motivated to work and helping you to schedule your weeks. 
 ➢ “Profile”: the button at the top right of the screen when Organise-MOIs is open.
 ➢ “This app": Organise-MOIs and its code.
-➢ “We/us": the team that, in April 2020, created the Organise-MOIs app. You can contact us at the following e-mail address: organise.mois@gmail.com.
+➢ “We/us": the team that, in April, created the Organise-MOIs app to participate in LauzHack against COVID-19. You can contact us at the following e-mail address: organise.mois@gmail.com.
 ➢ “You": any person using and/or enjoying the Organise-MOIs app. 
 ➢ “Your data": all the personal data that you enter in the app.
-➢ “Your device": your mobile phone with (at least) Android® 6.0, Marshmallow API 23, as operating system on which you download and use the app.
+➢ “Your device": your mobile phone with at least Android® 6.0, Marshmallow API 23, as operating system on which you download and use the app.
 
 2. Services
 We grant you the right to use the Organise-MOIs app properly and without fraudulent distortions or negligent behaviors.  

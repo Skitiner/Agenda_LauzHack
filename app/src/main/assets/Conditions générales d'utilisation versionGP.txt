@@ -1,16 +1,16 @@
-﻿Conditions générales d'utilisation
+Conditions générales d'utilisation
 Ces conditions générales d'utilisation s'appliquent à l'ensemble de l'application Organise-MOIs. Nous nous réservons le droit de modifier ces conditions d'utilisation à tout moment.
 En utilisant cette application, vous acceptez pleinement ces conditions d'utilisation dans leur intégralité. Elles sont accessibles à tout moment à partir du menu.
 
 1.	Définitions
 Dans ces conditions générales d'utilisation, il faut comprendre les termes :
 ➢ "Cette application" : Organise-MOIs et son code.
-➢ "Nous/l’équipe Organise-MOIs" : l'équipe qui, en avril 2020, a créé l'application Organise-MOIs. Vous pouvez nous contacter à l'adresse électronique suivante : organise.mois@gmail.com.
+➢ "Nous/l’équipe Organise-MOIs" : l'équipe qui, en avril, a créé l'application Organise-MOIs à l’occasion du LauzHack against COVID-19. Vous pouvez nous contacter à l'adresse électronique suivante : organise.mois@gmail.com.
 ➢ "Organise-MOIs" : l'application téléchargée pour vous motiver à travailler et vous aider à planifier vos semaines. 
 ➢ "Profil" : le bouton en haut à droite de l'écran lorsque Organise-MOIs est ouvert.
 ➢ "Vos données" : toutes les données personnelles que vous entrez dans l'application.
 ➢ "Vous" : toute personne utilisant et/ou profitant de l'application Organise-MOIs. 
-➢ "Votre appareil" : votre téléphone portable avec (au moins) Android® 6.0, Marshmallow API 23, comme système d'exploitation sur lequel vous téléchargez et utilisez l'application.
+➢ "Votre appareil" : votre téléphone portable avec au moins Android® 6.0, Marshmallow API 23, comme système d'exploitation sur lequel vous téléchargez et utilisez l'application.
 
 2.	Services
 Nous vous accordons le droit d'utiliser l'application Organise-MOIs correctement et sans distorsions frauduleuses ou comportements négligents.  
