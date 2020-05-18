@@ -46,7 +46,7 @@ public class popupActivity extends AppCompatActivity {
         }
     }
 
-    // idsbvèoinhdi
+    // Set text for general terms
     public void setText() throws IOException {
         InputStream is = getApplicationContext().getAssets().open("General terms and conditions of use.txt");
         String a = Locale.getDefault().getLanguage();
