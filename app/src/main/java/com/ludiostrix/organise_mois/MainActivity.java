@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
         int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
-        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+        int offset = (365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3)))%7;
 
         int slot_indice = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*4 + Calendar.getInstance().get(Calendar.MINUTE)/15;
 

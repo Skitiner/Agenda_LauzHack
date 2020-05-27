@@ -83,6 +83,8 @@ public class DaySlotsCalculation {
 
         if(OK == 0){
             userProfile.agenda = slots_generated;
+            userProfile.settingDay = Calendar.getInstance();
+            userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 
             saveToFile();
             MainActivity.setAlarmOfTheDay(context);
