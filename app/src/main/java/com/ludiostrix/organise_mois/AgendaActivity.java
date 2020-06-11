@@ -613,6 +613,19 @@ public class AgendaActivity extends AppCompatActivity {
             adapter.addAll(week.get(currentDay));
         }
 
+        public void updateWeekAgenda() {
+            int position;
+            for(int i = 0; i < 96; i +=4 ) {
+                position = i/4;
+                dailyTasks.get(currentDay).set(i, week.get(currentDay).get(position).task_1);
+                dailyTasks.get(currentDay).set(i+1, week.get(currentDay).get(position).task_2);
+                dailyTasks.get(currentDay).set(i+2, week.get(currentDay).get(position).task_3);
+                dailyTasks.get(currentDay).set(i+3, week.get(currentDay).get(position).task_4);
+            }
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+        }
+
         public void updateWeek() {
             int position;
             for(int j = 0; j < 7; j++) {
@@ -705,8 +718,13 @@ public class AgendaActivity extends AppCompatActivity {
 
                 }
                 if (!lunch_time && ! fixed_work) {
-
-                    eventCreation(v);
+                    if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
+                        dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
+                        updateAgenda();
+                    }
+                    else {
+                        eventCreation(v);
+                    }
                 }
             }
         }
@@ -947,8 +965,7 @@ public class AgendaActivity extends AppCompatActivity {
                 week.get(currentDay).get(i).new_task_4 = eventName;
             }
         }
-        adapter.clear();
-        adapter.addAll(week.get(currentDay));
+        adapter.updateWeekAgenda();
     }
 
     public float stringTimeToFloat(String time){
