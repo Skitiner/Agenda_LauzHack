@@ -26,6 +26,7 @@ public class Profile implements Serializable {
     protected ArrayList<String> agenda_back;
     protected ArrayList<String> cancel_back;
     protected Calendar settingDay;
+    public ArrayList<newEvent> savedEvent;
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -43,6 +44,8 @@ public class Profile implements Serializable {
         k = 0;
         current = new String();
         cancel_current = new String();
+
+        this.savedEvent = new ArrayList<>();
     }
 
     private void initAgenda() {
