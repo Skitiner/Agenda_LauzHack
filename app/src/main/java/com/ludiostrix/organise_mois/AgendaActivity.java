@@ -828,7 +828,7 @@ public class AgendaActivity extends AppCompatActivity {
                         int colorIndex = 0;
 
                         for (int i = 0; i < color.size(); i++){
-                            if (color.get(i) == userProfile.savedEvent.get(event).color){
+                            if (color.get(i).equals(userProfile.savedEvent.get(event).color)){
                                 colorIndex = i;
                                 break;
                             }
