@@ -251,6 +251,7 @@ public class Profile implements Serializable {
     }
 
     private void writeSavedEvent() {
+        savedEvent.clear();
         newEvent e = new newEvent();
         for (int i = 0; i < event_back.size(); i++) {
             if (i % 2 == 0) {

@@ -179,10 +179,20 @@ public class ProfileActivity extends AppCompatActivity {
         int indice = ((7-conversionDayIndice()) + position)%7;
 
         for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
-            if(userProfile.agenda.get(indice).get(i) == timeSlot.currentTask.WORK_FIX || userProfile.agenda.get(indice).get(i) == timeSlot.currentTask.EAT) {
+            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.FREE) {
                 userProfile.agenda.get(indice).set(i, timeSlot.currentTask.FREE);
             }
         }
+
+        int pos;
+        for(int i = 0; i < 96; i +=4 ) {
+            pos = i/4;
+            userProfile.fullAgenda.get(indice).get(pos).task_1 =  userProfile.agenda.get(indice).get(i);
+            userProfile.fullAgenda.get(indice).get(pos).task_2 =  userProfile.agenda.get(indice).get(i+1);
+            userProfile.fullAgenda.get(indice).get(pos).task_3 =  userProfile.agenda.get(indice).get(i+2);
+            userProfile.fullAgenda.get(indice).get(pos).task_4 =  userProfile.agenda.get(indice).get(i+3);
+        }
+
         userProfile.freeDay = NewFreeDay;
 
         saveToFile();

@@ -338,7 +338,7 @@ public class DaySlotsCalculation {
         int nbFixedWork = 0;
         for (int i = 0; i < free_day.length; i++) {
             for (int j = 0; j < week_slots.get(0).size(); j++) {
-                if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT){
+                if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT || week_slots.get(i).get(j) == timeSlot.currentTask.NEWEVENT){
                     this.slots_generated.get(i).set(j,week_slots.get(i).get(j));
                     if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX){
                         nbFixedWork++;

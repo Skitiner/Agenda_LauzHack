@@ -63,6 +63,7 @@
     <string name="forgetEventName">Please, enter an event name first.</string>
     <string name="forgetEventStart">Please, enter an event start time first.</string>
     <string name="forgetEventStop">Please, enter an event stop time first.</string>
+    <string name="wrongEventStartStop">The starting time should be earlier than the end time.</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->

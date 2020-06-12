@@ -863,7 +863,10 @@ public class AgendaActivity extends AppCompatActivity {
                         float startTime = stringTimeToFloat(startTimeET.getText().toString());
                         float stopTime = stringTimeToFloat(stopTimeET.getText().toString());
 
-                        if (startTime != -1 && stopTime != -1) {
+                        if (startTime >= stopTime){
+                            Toast.makeText(AgendaActivity.this, R.string.wrongEventStartStop, Toast.LENGTH_SHORT).show();
+                        }
+                        else if (startTime != -1 && stopTime != -1) {
 
                             if (event < 0) {
                                 newEvent nE = new newEvent();
@@ -1097,7 +1100,7 @@ public class AgendaActivity extends AppCompatActivity {
             int indice = (i + offset_indice)%7;
 
             for (int j = 0; j < week_slots.get(indice).size(); j++) {
-                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT)){
+                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT || week_slots.get(indice).get(j) == timeSlot.currentTask.NEWEVENT)){
                     dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
                 }
             }

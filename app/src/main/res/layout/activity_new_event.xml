@@ -53,8 +53,10 @@
                 android:layout_weight="3"
                 android:hint="@string/eventNameExample"
                 android:textColorHint="@color/darkgray"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
                 android:textSize="15dp"
                 android:gravity="center"
+                android:inputType="textPersonName"
                 android:ems="10"
                 android:completionThreshold="1"/>
 
