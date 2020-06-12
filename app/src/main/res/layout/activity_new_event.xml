@@ -244,14 +244,14 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/green"
+                    android:id="@+id/pink"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/green"/>
+                    android:background="@color/pink"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -259,14 +259,14 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/red"
+                    android:id="@+id/violet"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/red"/>
+                    android:background="@color/violet"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -274,14 +274,14 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/orange"
+                    android:id="@+id/lightDarkBlue"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/orange"/>
+                    android:background="@color/lightDarkBlue"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -289,14 +289,14 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/gray"
+                    android:id="@+id/blue"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/gray"/>
+                    android:background="@color/blue"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -304,14 +304,14 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/pastel"
+                    android:id="@+id/turquoise"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/pastel"/>
+                    android:background="@color/turquoise"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -319,14 +319,14 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/salmonpink"
+                    android:id="@+id/lemonGreen"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/salmonpink"/>
+                    android:background="@color/lemonGreen"/>
 
                 <Space
                     android:layout_width="match_parent"
@@ -334,19 +334,20 @@
                     android:layout_weight="9" />
 
                 <Button
-                    android:id="@+id/pastelviolet"
+                    android:id="@+id/lightGreen"
                     style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="8"
                     android:text=""
                     android:textColor="@color/black"
-                    android:background="@color/pastelviolet"/>
+                    android:background="@color/lightGreen"/>
 
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="9" />
+
             </LinearLayout>
         </LinearLayout>
 

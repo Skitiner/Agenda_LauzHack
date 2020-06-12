@@ -83,6 +83,16 @@ public class DaySlotsCalculation {
 
         if(OK == 0){
             userProfile.agenda = slots_generated;
+            int pos;
+            for (int indice = 0; indice < slots_generated.size(); indice++) {
+                for (int i = 0; i < 96; i += 4) {
+                    pos = i / 4;
+                    userProfile.fullAgenda.get(indice).get(pos).task_1 = userProfile.agenda.get(indice).get(i);
+                    userProfile.fullAgenda.get(indice).get(pos).task_2 = userProfile.agenda.get(indice).get(i + 1);
+                    userProfile.fullAgenda.get(indice).get(pos).task_3 = userProfile.agenda.get(indice).get(i + 2);
+                    userProfile.fullAgenda.get(indice).get(pos).task_4 = userProfile.agenda.get(indice).get(i + 3);
+                }
+            }
             userProfile.settingDay = Calendar.getInstance();
             userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 

@@ -73,15 +73,15 @@ public class AgendaActivity extends AppCompatActivity {
 
     private final ArrayList<Integer> colorIds = new ArrayList() {
         {
-            add(R.id.green); add(R.id.red); add(R.id.orange); add(R.id.gray);
-            add(R.id.pastel); add(R.id.salmonpink); add(R.id.pastelviolet);
+            add(R.id.pink); add(R.id.violet); add(R.id.lightDarkBlue); add(R.id.blue); add(R.id.turquoise);
+            add(R.id.lemonGreen); add(R.id.lightGreen);
         }
     };
 
     private final ArrayList<Integer> color = new ArrayList() {
         {
-            add(R.color.green); add(R.color.red); add(R.color.orange); add(R.color.gray);
-            add(R.color.pastel); add(R.color.salmonpink); add(R.color.pastelviolet);
+            add(R.color.pink); add(R.color.violet); add(R.color.lightDarkBlue); add(R.color.blue); add(R.color.turquoise);
+            add(R.color.lemonGreen); add(R.color.lightGreen);
         }
     };
 
@@ -721,12 +721,15 @@ public class AgendaActivity extends AppCompatActivity {
 
                 }
                 if (!lunch_time && ! fixed_work) {
-                    if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
-                        dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
-                        updateAgenda();
-                        userProfile.agenda = dailyTasks;
-                        userProfile.fullAgenda = week;
-                        saveToFile();
+                    if (!(v.getId() == R.id.t_1)){
+                        if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
+                            dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
+                            updateAgenda();
+                            userProfile.agenda = dailyTasks;
+                            userProfile.fullAgenda = week;
+                            saveToFile();
+                            plan();
+                        }
                     }
                     else {
                         eventCreation(v);
@@ -890,19 +893,7 @@ public class AgendaActivity extends AppCompatActivity {
                             userProfile.agenda = dailyTasks;
                             userProfile.fullAgenda = week;
                             saveToFile();
-                            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
-                            int isOK = daySlotsCalculation.slotCalculation();
-
-                            if (isOK == 0) {
-                                Toast.makeText(AgendaActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
-                            }
-                            else if (isOK == 1){
-                                Toast.makeText(AgendaActivity.this, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
-                            }
-                            else if (isOK == 2){
-                                Toast.makeText(AgendaActivity.this, R.string.too_lots_of_fixedwork, Toast.LENGTH_SHORT).show();
-                            }
-
+                            plan();
                         }
                         else if (startTime == -1){
                             Toast.makeText(AgendaActivity.this, R.string.wrongEventStart, Toast.LENGTH_SHORT).show();
@@ -915,6 +906,27 @@ public class AgendaActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void plan(){
+        DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
+        int isOK = daySlotsCalculation.slotCalculation();
+
+
+        if (isOK == 0) {
+            readFromFile();
+            dailyTasks = userProfile.agenda;
+            week = userProfile.fullAgenda;
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+            Toast.makeText(AgendaActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+        }
+        else if (isOK == 1){
+            Toast.makeText(AgendaActivity.this, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+        }
+        else if (isOK == 2){
+            Toast.makeText(AgendaActivity.this, R.string.too_lots_of_fixedwork, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void setNewEvent(float startTime, float stopTime, String eventName) {

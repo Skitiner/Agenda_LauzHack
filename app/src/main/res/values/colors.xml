@@ -19,4 +19,13 @@
     <color name="black">#000000</color>
     <color name="pastelviolet">#FFE77AFA</color>
     <color name="organisemois_background">#DDFFFF</color>
+    <color name="violet">#CD86EF</color>
+    <color name="lightDarkBlue">#8786EF</color>
+    <color name="blue">#86C7EF</color>
+    <color name="turquoise">#86E8EF</color>
+    <color name="lemonGreen">#86EF95</color>
+    <color name="lightGreen">#01C8A3</color>
+    <color name="pink">#EF86E0</color>
+    <color name="lightOrange">#FCCBA4</color>
+    <color name="grey">#EFEFEF</color>
 </resources>

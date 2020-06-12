@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity {
                         case PAUSE:
                             intentForService = new Intent(context, Broadcast_break.class);
                             break;
+                        case NEWEVENT:
+                            intentForService = new Intent(context, Broadcast_break.class);
+                            break;
                         default:
                             intentForService = new Intent(context, RemindBroadcast.class);
                             break;
