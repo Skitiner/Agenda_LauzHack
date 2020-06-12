@@ -6,12 +6,19 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +67,23 @@ public class AgendaActivity extends AppCompatActivity {
     private boolean settingFinish = false;
     private int nb_day_to_set;
     private int day_already_setted;
+
+    private int event;
+    private int eventColor = 0;
+
+    private final ArrayList<Integer> colorIds = new ArrayList() {
+        {
+            add(R.id.pink); add(R.id.violet); add(R.id.lightDarkBlue); add(R.id.blue); add(R.id.turquoise);
+            add(R.id.lemonGreen); add(R.id.lightGreen);
+        }
+    };
+
+    private final ArrayList<Integer> color = new ArrayList() {
+        {
+            add(R.color.pink); add(R.color.violet); add(R.color.lightDarkBlue); add(R.color.blue); add(R.color.turquoise);
+            add(R.color.lemonGreen); add(R.color.lightGreen);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -222,11 +246,13 @@ public class AgendaActivity extends AppCompatActivity {
 
         dailyTasks = new ArrayList<>(userProfile.agenda);
         cancel_day_taks = new ArrayList<>(userProfile.canceled_slots);
+        week = new ArrayList<>(userProfile.fullAgenda);
 
         for (int i = 0; i < 7; i++) {
             int indice = (i + offset_indice)%7;
             dailyTasks.set(i, userProfile.agenda.get(indice));
             cancel_day_taks.set(i, userProfile.canceled_slots.get(indice));
+            week.set(i,userProfile.fullAgenda.get(indice));
         }
     }
 
@@ -242,6 +268,7 @@ public class AgendaActivity extends AppCompatActivity {
             adapter.updateWeek();
 
             userProfile.agenda = dailyTasks;
+            userProfile.fullAgenda = week;
             saveToFile();
 
             Toast.makeText(this, R.string.Saved, Toast.LENGTH_SHORT).show();
@@ -501,16 +528,16 @@ public class AgendaActivity extends AppCompatActivity {
 
 
             ((TextView) row.findViewById(R.id.t_1)).setText(getItem(position).time + "h");
-            setItemApparence((TextView) row.findViewById(R.id.a_1), getItem(position).task_1, position, 0);
-            setItemApparence((TextView) row.findViewById(R.id.a_2), getItem(position).task_2, position, 1);
-            setItemApparence((TextView) row.findViewById(R.id.a_3), getItem(position).task_3, position, 2);
-            setItemApparence((TextView) row.findViewById(R.id.a_4), getItem(position).task_4, position, 3);
+            setItemApparence((TextView) row.findViewById(R.id.a_1), getItem(position).task_1, getItem(position).new_task_1, position, 0);
+            setItemApparence((TextView) row.findViewById(R.id.a_2), getItem(position).task_2, getItem(position).new_task_2, position, 1);
+            setItemApparence((TextView) row.findViewById(R.id.a_3), getItem(position).task_3, getItem(position).new_task_3, position, 2);
+            setItemApparence((TextView) row.findViewById(R.id.a_4), getItem(position).task_4, getItem(position).new_task_4, position, 3);
 
 
             return row;
         }
 
-        private void setItemApparence(TextView textView, timeSlot.currentTask task, int position, int task_num) {
+        private void setItemApparence(TextView textView, timeSlot.currentTask task, String new_task, int position, int task_num) {
 
             int slot_indice = position*4 + task_num;
             textView.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
@@ -560,6 +587,16 @@ public class AgendaActivity extends AppCompatActivity {
                     textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
+                case NEWEVENT:
+                    for (int i = 0; i < userProfile.savedEvent.size(); i++){
+                        if (userProfile.savedEvent.get(i).name.equals(new_task)) {
+                            textView.setText(userProfile.savedEvent.get(i).name);
+                            textView.setBackgroundColor(getResources().getColor(userProfile.savedEvent.get(i).color, null));
+                            break;
+                        }
+                    }
+                    break;
+
             }
 
             if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
@@ -574,6 +611,19 @@ public class AgendaActivity extends AppCompatActivity {
                 week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
                 week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
                 week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
+            }
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+        }
+
+        public void updateWeekAgenda() {
+            int position;
+            for(int i = 0; i < 96; i +=4 ) {
+                position = i/4;
+                dailyTasks.get(currentDay).set(i, week.get(currentDay).get(position).task_1);
+                dailyTasks.get(currentDay).set(i+1, week.get(currentDay).get(position).task_2);
+                dailyTasks.get(currentDay).set(i+2, week.get(currentDay).get(position).task_3);
+                dailyTasks.get(currentDay).set(i+3, week.get(currentDay).get(position).task_4);
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
@@ -666,12 +716,404 @@ public class AgendaActivity extends AppCompatActivity {
                         else
                             dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
                     }
+
                     updateAgenda();
 
+                }
+                if (!lunch_time && ! fixed_work) {
+                    if (!(v.getId() == R.id.t_1)){
+                        if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
+                            dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
+                            updateAgenda();
+                            userProfile.agenda = dailyTasks;
+                            userProfile.fullAgenda = week;
+                            saveToFile();
+                            plan();
+                        }
+                    }
+                    else {
+                        eventCreation(v);
+                    }
                 }
             }
         }
     }
+
+    public void eventCreation(View v){
+
+        // inflate the layout of the popup window
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.activity_new_event, null);
+
+        // create the popup window
+        int width = LinearLayout.LayoutParams.WRAP_CONTENT;
+        int height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        boolean focusable = true; // lets taps outside the popup also dismiss it
+        final PopupWindow popupWindow = new PopupWindow(popupView, width, height, focusable);
+
+
+        // show the popup window
+        // which view you pass in doesn't matter, it is only used for the window tolken
+        popupWindow.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+        event = -1;
+
+        colorButtonListener(popupView);
+
+        setAutoComplete(popupView);
+
+        confirmButtonListener(popupView, popupWindow);
+
+    }
+
+    public void setAutoComplete(final View popupView){
+        final String[] EVENT_NAME = new String[userProfile.savedEvent.size()];
+
+        for (int i = 0; i < userProfile.savedEvent.size(); i++){
+            EVENT_NAME[i] = userProfile.savedEvent.get(i).name;
+        }
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String> (popupView.getContext(), android.R.layout.simple_dropdown_item_1line, EVENT_NAME);
+        AutoCompleteTextView textView = (AutoCompleteTextView) popupView.findViewById(R.id.eventNameAutoCompleteTextView);
+        textView.setAdapter(adapter);
+
+    }
+
+    public void colorButtonListener(final View popupView){
+
+        for (Integer buttonId : colorIds) {
+            final Button colorButton = popupView.findViewById(buttonId);
+            final int colorID = colorButton.getId(); // colorID is the id of the tapped Button
+
+            colorButton.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    eventColor = colorIds.indexOf(colorID); // position is the position of the Button (in the ArrayList colorIds)
+                    colorButton.setText("OK");
+                    for (Integer id : colorIds) {
+                        if (id != colorID) {
+                            Button b = popupView.findViewById(id);
+                            b.setText("");
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    public void confirmButtonListener(final View popupView, final PopupWindow popupWindow){
+
+        Button confirm = popupView.findViewById(R.id.confirmButton);
+
+        confirm.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                AutoCompleteTextView autotextView = (AutoCompleteTextView) popupView.findViewById(R.id.eventNameAutoCompleteTextView);
+                LinearLayout linearLayout = popupView.findViewById(R.id.eventParameter);
+                LinearLayout autoCompletLayout = popupView.findViewById(R.id.autoCompleteLayout);
+
+                if (autotextView.getText().toString().isEmpty()){
+                    Toast.makeText(AgendaActivity.this, R.string.forgetEventName, Toast.LENGTH_SHORT).show();
+                }
+                else if (linearLayout.getVisibility() == View.GONE){
+                    for (int i = 0; i < userProfile.savedEvent.size(); i++){
+                        if (autotextView.getText().toString().equals(userProfile.savedEvent.get(i).name)){
+                            event = i;
+                            break;
+                        }
+                    }
+
+                    linearLayout.setVisibility(View.VISIBLE);
+                    autoCompletLayout.setVisibility(View.GONE);
+                    TextView eventName = popupView.findViewById(R.id.eventName);
+                    eventName.setText(autotextView.getText().toString());
+
+                    if (event >= 0){
+                        int colorIndex = 0;
+
+                        for (int i = 0; i < color.size(); i++){
+                            if (color.get(i).equals(userProfile.savedEvent.get(event).color)){
+                                colorIndex = i;
+                                break;
+                            }
+                        }
+
+                        Button buttonColor = popupView.findViewById(colorIds.get(colorIndex));
+                        final int colorID = buttonColor.getId(); // colorID is the id of the tapped Button
+
+                        eventColor = colorIds.indexOf(colorID); // position is the position of the Button (in the ArrayList colorIds)
+                        buttonColor.setText("OK");
+                        for (Integer id : colorIds) {
+                            if (id != colorID) {
+                                Button b = popupView.findViewById(id);
+                                b.setText("");
+                            }
+                        }
+
+                    }
+                }
+
+                else {
+                    EditText startTimeET = popupView.findViewById(R.id.eventStartEditText);
+                    EditText stopTimeET = popupView.findViewById(R.id.eventStopEditText);
+
+                    if (startTimeET.getText().toString().isEmpty()) {
+                        Toast.makeText(AgendaActivity.this, R.string.forgetEventStart, Toast.LENGTH_SHORT).show();
+                    }
+                    else if (stopTimeET.getText().toString().isEmpty()) {
+                        Toast.makeText(AgendaActivity.this, R.string.forgetEventStop, Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        float startTime = stringTimeToFloat(startTimeET.getText().toString());
+                        float stopTime = stringTimeToFloat(stopTimeET.getText().toString());
+
+                        if (startTime >= stopTime){
+                            Toast.makeText(AgendaActivity.this, R.string.wrongEventStartStop, Toast.LENGTH_SHORT).show();
+                        }
+                        else if (startTime != -1 && stopTime != -1) {
+
+                            if (event < 0) {
+                                newEvent nE = new newEvent();
+                                nE.name = autotextView.getText().toString();
+                                nE.color = color.get(eventColor);
+                                userProfile.savedEvent.add(nE);
+                                if (userProfile.savedEvent.size() > 20) {
+                                    userProfile.savedEvent.remove(0);
+                                }
+                                event = userProfile.savedEvent.size()-1;
+                            } else {
+                                newEvent nE = new newEvent();
+                                nE.name = userProfile.savedEvent.get(event).name;
+                                nE.color = color.get(eventColor);
+                                userProfile.savedEvent.remove(event);
+                                userProfile.savedEvent.add(nE);
+                                event = userProfile.savedEvent.size()-1;
+                            }
+                            popupWindow.dismiss();
+                            setNewEvent(startTime, stopTime, userProfile.savedEvent.get(event).name);
+                            userProfile.agenda = dailyTasks;
+                            userProfile.fullAgenda = week;
+                            saveToFile();
+                            plan();
+                        }
+                        else if (startTime == -1){
+                            Toast.makeText(AgendaActivity.this, R.string.wrongEventStart, Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(AgendaActivity.this, R.string.wrongEventStop, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    public void plan(){
+        DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
+        int isOK = daySlotsCalculation.slotCalculation();
+
+
+        if (isOK == 0) {
+            readFromFile();
+            dailyTasks = userProfile.agenda;
+            week = userProfile.fullAgenda;
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+            Toast.makeText(AgendaActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+        }
+        else if (isOK == 1){
+            Toast.makeText(AgendaActivity.this, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+        }
+        else if (isOK == 2){
+            Toast.makeText(AgendaActivity.this, R.string.too_lots_of_fixedwork, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void setNewEvent(float startTime, float stopTime, String eventName) {
+        for (int i = (int)startTime; i <= (int)stopTime; i++) {
+            if ((int)startTime == (int) stopTime){
+                if (((int)(startTime*4))%4 == 0) {
+                    if (((int)(stopTime*4))%4 == 1) {
+                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_1 = eventName;
+                    }
+                    else if (((int)(stopTime*4))%4 == 2) {
+                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_1 = eventName;
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                    }
+                    else if (((int)(stopTime*4))%4 == 3) {
+                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_1 = eventName;
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_3 = eventName;
+                    }
+                }
+                else if (((int)(startTime*4))%4 == 1) {
+                    if (((int)(stopTime*4))%4 == 2) {
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                    }
+                    else if (((int)(stopTime*4))%4 == 3) {
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_3 = eventName;
+                    }
+                }
+                else if (((int)(startTime*4))%4 == 2) {
+                    if (((int)(stopTime*4))%4 == 3) {
+                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_3 = eventName;
+                    }
+                }
+            }
+            else if (i == (int)startTime) {
+                if (((int)(startTime*4))%4 == 0) {
+                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_1 = eventName;
+                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_2 = eventName;
+                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_3 = eventName;
+                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_4 = eventName;
+                }
+                if (((int)(startTime*4))%4 == 1) {
+                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_2 = eventName;
+                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_3 = eventName;
+                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_4 = eventName;
+                }
+                if (((int)(startTime*4))%4 == 2) {
+                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_3 = eventName;
+                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_4 = eventName;
+                }
+                if (((int)(startTime*4))%4 == 3) {
+                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_4 = eventName;
+                }
+            }
+            else if (i == (int)stopTime) {
+                if (((int)(stopTime*4))%4 == 1) {
+                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_1 = eventName;
+                }
+                if (((int)(stopTime*4))%4 == 2) {
+                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_1 = eventName;
+                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_2 = eventName;
+                }
+                if (((int)(stopTime*4))%4 == 3) {
+                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_1 = eventName;
+                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_2 = eventName;
+                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_3 = eventName;
+                }
+            }
+            else {
+                week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).new_task_1 = eventName;
+                week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).new_task_2 = eventName;
+                week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).new_task_3 = eventName;
+                week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).new_task_4 = eventName;
+            }
+        }
+        adapter.updateWeekAgenda();
+    }
+
+    public float stringTimeToFloat(String time){
+        boolean ok;
+        boolean entier = true;
+        String hour = "0";
+        String min = "0";
+        float hourt;
+        float mint;
+        float fTime = -1;
+
+        for (int i = 0; i < time.length(); i++){
+            if(time.charAt(i) != ':' && entier) {
+                hour += time.charAt(i);
+            }
+            else if (time.charAt(i) != ':'){
+                min += time.charAt(i);
+            }
+            else if (time.charAt(i) == ':'){
+                entier = false;
+            }
+        }
+        try {
+            hourt = Float.parseFloat(hour);
+            mint = Float.parseFloat(min);
+            ok = true;
+            if (hourt > 23 || hourt < 0){
+                ok = false;
+            }
+            if (mint >= 60 || mint < 0){
+                ok = false;
+            }
+            else {
+                hourt = hourt + roundFifty(mint/60);
+                while (hourt>=24){
+                    hourt -=24;
+                }
+            }
+            if(ok){
+                fTime = hourt;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ok=false;
+        }
+        if (!ok){
+            fTime = -1;
+        }
+        return fTime;
+    }
+
+    private float roundFifty(float fmin){
+        float min = 0;
+        final float zero = 0;
+        final float one = 1;
+        final float two = 2;
+        final float three = 3;
+        final float four = 4;
+        final float five = 5;
+        final float seven = 7;
+        final float height = 8;
+
+        if (fmin >= zero && fmin < one/height){
+            min = 0;
+        }
+        else if (fmin >= one/height && fmin < three/height){
+            min = one/four;
+        }
+        else if (fmin >= three/height && fmin < five/height){
+            min = one/two;
+        }
+        else if (fmin >= five/height && fmin < seven/height){
+            min = three/four;
+        }
+        else if (fmin >= seven/height && fmin < 1){
+            min = 1;
+        }
+
+        return min;
+    }
+
 
     private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
         int nbFixedWork = 0;
@@ -682,7 +1124,7 @@ public class AgendaActivity extends AppCompatActivity {
             int indice = (i + offset_indice)%7;
 
             for (int j = 0; j < week_slots.get(indice).size(); j++) {
-                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT)){
+                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT || week_slots.get(indice).get(j) == timeSlot.currentTask.NEWEVENT)){
                     dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
                 }
             }

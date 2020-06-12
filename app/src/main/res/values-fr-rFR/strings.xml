@@ -49,6 +49,24 @@
     <string name="bad_parameters">Les paramètres que vous avez entrés ne permettent pas la génération d\'un agenda.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="too_lots_of_fixedwork">Le nombre d\'heure de travail par semaine que vous avez entre est plus petit que votre quantite d\'heure fixe de travaille. \n S\'il vous plait, corrigez le.</string>
+    <string name="newEvent">Depuis là, vous pouvez créer un nouvel événement.</string>
+    <string name="eventName">Nom de l\'événement</string>
+    <string name="eventNameExample">Ex: Shopping</string>
+    <string name="eventStartExample">Ex: 17:15</string>
+    <string name="eventStopExample">Ex: 18:15</string>
+    <string name="eventStart">Entrez l\'heure du début de l\'activité.</string>
+    <string name="eventStop">Entrez l\'heure de la fin de l\'activité.</string>
+    <string name="colorChoice">Choisissez la couleur de l\'événement :</string>
+    <string name="confirm">Valider</string>
+    <string name="nameChosen">Le nom choisit est : </string>
+    <string name="wrongEventStart">L\'heure du début de l\'événement n\'est pas au bon format. Ex: 17:15</string>
+    <string name="wrongEventStop">L\'heure de la fin de l\'événement n\'est pas au bon format. Ex: 18:15</string>
+    <string name="forgetEventName">Veuillez d\'abord Entrez un nom d\'événement.</string>
+    <string name="forgetEventStart">Veuillez d\'abord Entrez une heure de début d\'événement.</string>
+    <string name="forgetEventStop">Veuillez d\'abord Entrez une heure de fin d\'événement.</string>
+    <string name="wrongEventStartStop">Le début de l\'événement doit être plus tôt que la fin.</string>
+
+
     <string name="eat_notif">C\'est l\'heure du repas :p</string>
     <string name="do_break_notif">Faites une pause, vous le méritez :)</string>
     <string name="time_sleep">Temps pour dormir</string>
@@ -56,4 +74,5 @@
     <string name="go_to_bed_notif">Pour dormir 8h, vous devriez allez vous coucher.</string>
     <string name="awake_notif">Je suis réveillé</string>
     <string name="wakeup_notif">Debout !</string>
+
 </resources>

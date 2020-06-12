@@ -83,6 +83,16 @@ public class DaySlotsCalculation {
 
         if(OK == 0){
             userProfile.agenda = slots_generated;
+            int pos;
+            for (int indice = 0; indice < slots_generated.size(); indice++) {
+                for (int i = 0; i < 96; i += 4) {
+                    pos = i / 4;
+                    userProfile.fullAgenda.get(indice).get(pos).task_1 = userProfile.agenda.get(indice).get(i);
+                    userProfile.fullAgenda.get(indice).get(pos).task_2 = userProfile.agenda.get(indice).get(i + 1);
+                    userProfile.fullAgenda.get(indice).get(pos).task_3 = userProfile.agenda.get(indice).get(i + 2);
+                    userProfile.fullAgenda.get(indice).get(pos).task_4 = userProfile.agenda.get(indice).get(i + 3);
+                }
+            }
             userProfile.settingDay = Calendar.getInstance();
             userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 
@@ -338,7 +348,7 @@ public class DaySlotsCalculation {
         int nbFixedWork = 0;
         for (int i = 0; i < free_day.length; i++) {
             for (int j = 0; j < week_slots.get(0).size(); j++) {
-                if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT){
+                if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT || week_slots.get(i).get(j) == timeSlot.currentTask.NEWEVENT){
                     this.slots_generated.get(i).set(j,week_slots.get(i).get(j));
                     if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX){
                         nbFixedWork++;
@@ -421,6 +431,8 @@ public class DaySlotsCalculation {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
+            updateFullAgenda();
+
             userProfile.Save(bufferedWriter);
 
             bufferedWriter.flush();
@@ -430,6 +442,19 @@ public class DaySlotsCalculation {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void updateFullAgenda(){
+        int position;
+        for(int j = 0; j < 7; j++) {
+            for (int i = 0; i < 96; i += 4) {
+                position = i / 4;
+                userProfile.fullAgenda.get(j).get(position).task_1 = userProfile.agenda.get(j).get(i);
+                userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
+                userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
+                userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
+            }
         }
     }
 }

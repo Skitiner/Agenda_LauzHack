@@ -4,12 +4,13 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="lightBlue">#DDFFFF</color>
-    <color name="green">#99FFB9</color>           <!-- à changer dans profileactivity aussi-->
-    <color name="red">#FFFF0000</color>             <!-- à changer dans profileactivity aussi-->
+    <color name="green">#99FFB9</color>
+    <color name="red">#FFFF0000</color>
     <color name="darkBlue">#3F51B5</color>
     <color name="orange">#FFCC99</color>
     <color name="orange_canceled">#EEBB88</color>
     <color name="gray">#EEE</color>
+    <color name="darkgray">#777</color>
     <color name="gray_canceled">#DDD</color>
     <color name="white">#FFF</color>
     <color name="pastel">#FFFFCC</color>
@@ -18,4 +19,13 @@
     <color name="black">#000000</color>
     <color name="pastelviolet">#FFE77AFA</color>
     <color name="organisemois_background">#DDFFFF</color>
+    <color name="violet">#CD86EF</color>
+    <color name="lightDarkBlue">#8786EF</color>
+    <color name="blue">#86C7EF</color>
+    <color name="turquoise">#86E8EF</color>
+    <color name="lemonGreen">#86EF95</color>
+    <color name="lightGreen">#01C8A3</color>
+    <color name="pink">#EF86E0</color>
+    <color name="lightOrange">#FCCBA4</color>
+    <color name="grey">#EFEFEF</color>
 </resources>

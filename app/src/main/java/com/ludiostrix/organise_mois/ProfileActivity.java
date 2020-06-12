@@ -179,10 +179,20 @@ public class ProfileActivity extends AppCompatActivity {
         int indice = ((7-conversionDayIndice()) + position)%7;
 
         for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
-            if(userProfile.agenda.get(indice).get(i) == timeSlot.currentTask.WORK_FIX || userProfile.agenda.get(indice).get(i) == timeSlot.currentTask.EAT) {
+            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.FREE) {
                 userProfile.agenda.get(indice).set(i, timeSlot.currentTask.FREE);
             }
         }
+
+        int pos;
+        for(int i = 0; i < 96; i +=4 ) {
+            pos = i/4;
+            userProfile.fullAgenda.get(indice).get(pos).task_1 =  userProfile.agenda.get(indice).get(i);
+            userProfile.fullAgenda.get(indice).get(pos).task_2 =  userProfile.agenda.get(indice).get(i+1);
+            userProfile.fullAgenda.get(indice).get(pos).task_3 =  userProfile.agenda.get(indice).get(i+2);
+            userProfile.fullAgenda.get(indice).get(pos).task_4 =  userProfile.agenda.get(indice).get(i+3);
+        }
+
         userProfile.freeDay = NewFreeDay;
 
         saveToFile();
@@ -262,47 +272,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         setSport();
 
-    }
-
-    public boolean isWorkHour(String time){
-        boolean ok = false;
-        boolean entier = true;
-        String hour = "0";
-        String min = "0";
-        int hourt;
-        int mint;
-        for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
-                hour += time.charAt(i);
-            }
-            else if (time.charAt(i) != ':'){
-                min += time.charAt(i);
-            }
-            else if (time.charAt(i) == ':'){
-                entier = false;
-            }
-        }
-        try {
-            hourt = Integer.parseInt(hour);
-            mint = Integer.parseInt(min);
-            ok = true;
-            if (hourt > 70 || hourt < 0){
-                ok = false;
-            }
-            if (mint > 30 && mint < 60){
-                hourt = (hourt + 1)%24;
-            }
-            else if (mint >= 60 || mint < 0){
-                ok = false;
-            }
-            if(ok){
-                userProfile.nbWorkHours = String.valueOf(hourt);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            ok=false;
-        }
-        return ok;
     }
 
     public void clickedSaveProfileButtonXmlCallback(View view) {

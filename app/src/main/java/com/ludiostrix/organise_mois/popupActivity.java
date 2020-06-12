@@ -97,11 +97,13 @@ public class popupActivity extends AppCompatActivity {
 
         Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void clickedBackToProfileButtonXmlCallback(View view) {
         Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
         startActivity(intent);
+        finish();
     }
 
 

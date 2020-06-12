@@ -19,17 +19,22 @@ public class Profile implements Serializable {
     protected boolean calculation;
     protected String FileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
+    protected ArrayList<ArrayList<timeSlot>> fullAgenda;
     protected ArrayList<ArrayList<Boolean>> canceled_slots;
     protected int k;
     protected String current;
     protected String cancel_current;
+    protected String event_current;
     protected ArrayList<String> agenda_back;
     protected ArrayList<String> cancel_back;
+    protected ArrayList<String> event_back;
     protected Calendar settingDay;
+    public ArrayList<newEvent> savedEvent;
 
     public Profile(){
         agenda_back = new ArrayList<>();
         cancel_back = new ArrayList<>();
+        event_back = new ArrayList<>();
         this.licenceAccepted = false;
         this.nbWorkHours = "168";
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
@@ -38,11 +43,40 @@ public class Profile implements Serializable {
         calculation = false;
         this.FileName = "userProfile.txt";
         initAgenda();
+        initFullAgenda();
         settingDay = Calendar.getInstance();
         settingDay.setTimeInMillis(System.currentTimeMillis());
         k = 0;
         current = new String();
         cancel_current = new String();
+        event_current = new String();
+
+        this.savedEvent = new ArrayList<>();
+    }
+
+    private void initFullAgenda() {
+        fullAgenda = new ArrayList<>();
+
+        timeSlot.currentTask task;
+
+        for(int j = 0; j < 7; j++ ) {
+            ArrayList<timeSlot> mySlots = new ArrayList<>();
+            for (int i = 0; i < 24; i++) {
+
+                task = timeSlot.currentTask.FREE;
+                timeSlot slot = new timeSlot();
+                slot.time = i;
+                slot.task_1 = task;
+                slot.task_2 = task;
+                slot.task_3 = task;
+                slot.task_4 = task;
+
+                mySlots.add(slot);
+
+            }
+            fullAgenda.add(mySlots);
+        }
+
     }
 
     private void initAgenda() {
@@ -86,10 +120,50 @@ public class Profile implements Serializable {
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(settingDay.getTimeInMillis()));
             bufferedWriter.write("/");
-            bufferedWriter.write(agenda.toString());
+            for (int i = 0; i < fullAgenda.size() ; i++){
+                for (int j = 0; j < fullAgenda.get(i).size(); j++){
+                    if (fullAgenda.get(i).get(j).task_1 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(fullAgenda.get(i).get(j).new_task_1);
+                    }
+                    else {
+                        bufferedWriter.write(fullAgenda.get(i).get(j).task_1.toString());
+                    }
+                    bufferedWriter.write(",");
+                    if (fullAgenda.get(i).get(j).task_2 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(fullAgenda.get(i).get(j).new_task_2);
+                    }
+                    else {
+                        bufferedWriter.write(fullAgenda.get(i).get(j).task_2.toString());
+                    }
+                    bufferedWriter.write(",");
+                    if (fullAgenda.get(i).get(j).task_3 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(fullAgenda.get(i).get(j).new_task_3);
+                    }
+                    else {
+                        bufferedWriter.write(fullAgenda.get(i).get(j).task_3.toString());
+                    }
+                    bufferedWriter.write(",");
+                    if (fullAgenda.get(i).get(j).task_4 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(fullAgenda.get(i).get(j).new_task_4);
+                    }
+                    else {
+                        bufferedWriter.write(fullAgenda.get(i).get(j).task_4.toString());
+                    }
+                    bufferedWriter.write(",");
+                }
+            }
             bufferedWriter.write("/");
             bufferedWriter.write(canceled_slots.toString());
             bufferedWriter.write("/");
+            if (savedEvent != null) {
+                for (newEvent e : savedEvent) {
+                    bufferedWriter.write(e.name);
+                    bufferedWriter.write(",");
+                    bufferedWriter.write(e.color.toString());
+                    bufferedWriter.write(",");
+                }
+                bufferedWriter.write("/");
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -105,8 +179,10 @@ public class Profile implements Serializable {
         String wU="";
         agenda_back = new ArrayList<>();
         cancel_back = new ArrayList<>();
+        event_back = new ArrayList<>();
         String sR="";
         String timeMillis = "";
+
         int j = 0;
         int n = 0;
 
@@ -132,6 +208,8 @@ public class Profile implements Serializable {
 
                     case 7 : getCanceled(lineData.charAt(i));
                             break;
+                    case 8 : getSavedEvent(lineData.charAt(i));
+                            break;
 
                 }
             }
@@ -142,6 +220,7 @@ public class Profile implements Serializable {
 
         writeInAgenda();
         writeCanceled();
+        writeSavedEvent();
 
         this.licenceAccepted = Boolean.parseBoolean(lA);
         this.nbWorkHours = nW;
@@ -161,6 +240,30 @@ public class Profile implements Serializable {
         Log.w("CANCELED READ", canceled_slots.toString());
     }
 
+    private void getSavedEvent(char charAt) {
+        if(charAt == ',') {
+            event_back.add(event_current);
+            event_current = new String();
+        }
+        else
+            event_current = event_current + charAt;
+
+    }
+
+    private void writeSavedEvent() {
+        savedEvent.clear();
+        newEvent e = new newEvent();
+        for (int i = 0; i < event_back.size(); i++) {
+            if (i % 2 == 0) {
+                e.name = event_back.get(i);
+            } else {
+                e.color = Integer.parseInt(event_back.get(i));
+                savedEvent.add(e);
+                e = new newEvent();
+            }
+        }
+    }
+
     private void getCanceled(char charAt) {
         if(charAt == '[' || charAt == ' ' || charAt == ']')
             return;
@@ -172,6 +275,7 @@ public class Profile implements Serializable {
         else
             cancel_current = cancel_current + charAt;
     }
+
 
     private void writeCanceled() {
         for(int i = 0; i < cancel_back.size(); i++) {
@@ -215,6 +319,33 @@ public class Profile implements Serializable {
 
             } else if ("PAUSE".equals(agenda_back.get(i))) {
                 agenda.get(j).set(k, timeSlot.currentTask.PAUSE);
+            }
+            else{
+                agenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
+                if(k%4 == 0) {
+                    fullAgenda.get(j).get((int) k / 4).new_task_1 = agenda_back.get(i);
+                }
+                else if(k%4 == 1) {
+                    fullAgenda.get(j).get((int) k / 4).new_task_2 = agenda_back.get(i);
+                }
+                else if(k%4 == 2) {
+                    fullAgenda.get(j).get((int) k / 4).new_task_3 = agenda_back.get(i);
+                }
+                else if(k%4 == 3) {
+                    fullAgenda.get(j).get((int) k / 4).new_task_4 = agenda_back.get(i);
+                }
+            }
+            if(k%4 == 0) {
+                fullAgenda.get(j).get((int) k / 4).task_1 = agenda.get(j).get(k);
+            }
+            else if(k%4 == 1) {
+                fullAgenda.get(j).get((int) k / 4).task_2 = agenda.get(j).get(k);
+            }
+            else if(k%4 == 2) {
+                fullAgenda.get(j).get((int) k / 4).task_3 = agenda.get(j).get(k);
+            }
+            else if(k%4 == 3) {
+                fullAgenda.get(j).get((int) k / 4).task_4 = agenda.get(j).get(k);
             }
         }
 

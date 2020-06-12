@@ -193,6 +193,9 @@ public class MainActivity extends AppCompatActivity {
                         case PAUSE:
                             intentForService = new Intent(context, Broadcast_break.class);
                             break;
+                        case NEWEVENT:
+                            intentForService = new Intent(context, Broadcast_break.class);
+                            break;
                         default:
                             intentForService = new Intent(context, RemindBroadcast.class);
                             break;
@@ -269,7 +272,7 @@ public class MainActivity extends AppCompatActivity {
     public void clickedProfileButtonXmlCallback(View view) {
 
         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
-        intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
+        //intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
 
     }

@@ -48,6 +48,23 @@
     <string name="next_day">Next Day</string>
     <string name="bad_parameters">The parameters you enter didn\'t allow the generation of a correct planning. \n Please free your time.</string>
     <string name="too_lots_of_fixedwork">The number of work hours per week you enter is smaller than your quantity of fixed work. \n Please correct it.</string>
+    <string name="newEvent">You can create a new event from here.</string>
+    <string name="eventName">Name of the event</string>
+    <string name="eventNameExample">Ex: Shopping</string>
+    <string name="eventStartExample">Ex: 17:15</string>
+    <string name="eventStopExample">Ex: 18:15</string>
+    <string name="eventStart">Enter the start time of youre activity.</string>
+    <string name="eventStop">Enter the end time of youre activity.</string>
+    <string name="colorChoice">Choose the color of the event :</string>
+    <string name="confirm">Confirm</string>
+    <string name="nameChosen">The name chosen is : </string>
+    <string name="wrongEventStart">The start time isn\'t at a good format. Ex: 17:15</string>
+    <string name="wrongEventStop">The stop time isn\'t at a good format. Ex: 18:15</string>
+    <string name="forgetEventName">Please, enter an event name first.</string>
+    <string name="forgetEventStart">Please, enter an event start time first.</string>
+    <string name="forgetEventStop">Please, enter an event stop time first.</string>
+    <string name="wrongEventStartStop">The starting time should be earlier than the end time.</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
