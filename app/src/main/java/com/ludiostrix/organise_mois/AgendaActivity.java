@@ -903,9 +903,49 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     public void setNewEvent(float startTime, float stopTime, String eventName) {
-        for (int i = (int)startTime; i < (int)stopTime; i++) {
-            if (i == (int)startTime) {
-                if (((int)startTime*4)%4 == 0) {
+        for (int i = (int)startTime; i <= (int)stopTime; i++) {
+            if ((int)startTime == (int) stopTime){
+                if (((int)(startTime*4))%4 == 0) {
+                    if (((int)(stopTime*4))%4 == 1) {
+                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_1 = eventName;
+                    }
+                    else if (((int)(stopTime*4))%4 == 2) {
+                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_1 = eventName;
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                    }
+                    else if (((int)(stopTime*4))%4 == 3) {
+                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_1 = eventName;
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_3 = eventName;
+                    }
+                }
+                else if (((int)(startTime*4))%4 == 1) {
+                    if (((int)(stopTime*4))%4 == 2) {
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                    }
+                    else if (((int)(stopTime*4))%4 == 3) {
+                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_2 = eventName;
+                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_3 = eventName;
+                    }
+                }
+                else if (((int)(startTime*4))%4 == 2) {
+                    if (((int)(stopTime*4))%4 == 3) {
+                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).new_task_3 = eventName;
+                    }
+                }
+            }
+            else if (i == (int)startTime) {
+                if (((int)(startTime*4))%4 == 0) {
                     week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_1 = eventName;
                     week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
@@ -915,7 +955,7 @@ public class AgendaActivity extends AppCompatActivity {
                     week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
-                if (((int)startTime*4)%4 == 1) {
+                if (((int)(startTime*4))%4 == 1) {
                     week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_2 = eventName;
                     week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
@@ -923,45 +963,35 @@ public class AgendaActivity extends AppCompatActivity {
                     week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
-                if (((int)startTime*4)%4 == 2) {
+                if (((int)(startTime*4))%4 == 2) {
                     week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_3 = eventName;
                     week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
-                if (((int)startTime*4)%4 == 3) {
+                if (((int)(startTime*4))%4 == 3) {
                     week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
             }
             else if (i == (int)stopTime) {
-                if (((int)stopTime*4)%4 == 0) {
+                if (((int)(stopTime*4))%4 == 1) {
+                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_1 = eventName;
+                }
+                if (((int)(stopTime*4))%4 == 2) {
+                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_1 = eventName;
+                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).new_task_2 = eventName;
+                }
+                if (((int)(stopTime*4))%4 == 3) {
                     week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_1 = eventName;
                     week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_2 = eventName;
                     week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_3 = eventName;
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_4 = eventName;
-                }
-                if (((int)stopTime*4)%4 == 1) {
-                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_2 = eventName;
-                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_3 = eventName;
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_4 = eventName;
-                }
-                if (((int)stopTime*4)%4 == 2) {
-                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_3 = eventName;
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_4 = eventName;
-                }
-                if (((int)stopTime*4)%4 == 3) {
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
-                    week.get(currentDay).get(i).new_task_4 = eventName;
                 }
             }
             else {
