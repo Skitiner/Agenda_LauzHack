@@ -890,6 +890,18 @@ public class AgendaActivity extends AppCompatActivity {
                             userProfile.agenda = dailyTasks;
                             userProfile.fullAgenda = week;
                             saveToFile();
+                            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
+                            int isOK = daySlotsCalculation.slotCalculation();
+
+                            if (isOK == 0) {
+                                Toast.makeText(AgendaActivity.this, R.string.Saved, Toast.LENGTH_SHORT).show();
+                            }
+                            else if (isOK == 1){
+                                Toast.makeText(AgendaActivity.this, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+                            }
+                            else if (isOK == 2){
+                                Toast.makeText(AgendaActivity.this, R.string.too_lots_of_fixedwork, Toast.LENGTH_SHORT).show();
+                            }
 
                         }
                         else if (startTime == -1){
