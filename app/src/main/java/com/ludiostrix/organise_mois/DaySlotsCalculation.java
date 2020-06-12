@@ -421,6 +421,8 @@ public class DaySlotsCalculation {
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
             BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
 
+            updateFullAgenda();
+
             userProfile.Save(bufferedWriter);
 
             bufferedWriter.flush();
@@ -430,6 +432,19 @@ public class DaySlotsCalculation {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void updateFullAgenda(){
+        int position;
+        for(int j = 0; j < 7; j++) {
+            for (int i = 0; i < 96; i += 4) {
+                position = i / 4;
+                userProfile.fullAgenda.get(j).get(position).task_1 = userProfile.agenda.get(j).get(i);
+                userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
+                userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
+                userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
+            }
         }
     }
 }

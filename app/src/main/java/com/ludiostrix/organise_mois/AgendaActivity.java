@@ -246,11 +246,13 @@ public class AgendaActivity extends AppCompatActivity {
 
         dailyTasks = new ArrayList<>(userProfile.agenda);
         cancel_day_taks = new ArrayList<>(userProfile.canceled_slots);
+        week = new ArrayList<>(userProfile.fullAgenda);
 
         for (int i = 0; i < 7; i++) {
             int indice = (i + offset_indice)%7;
             dailyTasks.set(i, userProfile.agenda.get(indice));
             cancel_day_taks.set(i, userProfile.canceled_slots.get(indice));
+            week.set(i,userProfile.fullAgenda.get(indice));
         }
     }
 
@@ -266,6 +268,7 @@ public class AgendaActivity extends AppCompatActivity {
             adapter.updateWeek();
 
             userProfile.agenda = dailyTasks;
+            userProfile.fullAgenda = week;
             saveToFile();
 
             Toast.makeText(this, R.string.Saved, Toast.LENGTH_SHORT).show();
@@ -585,8 +588,8 @@ public class AgendaActivity extends AppCompatActivity {
                     break;
 
                 case NEWEVENT:
-                    for (int i = 0; i <= userProfile.savedEvent.size(); i++){
-                        if (userProfile.savedEvent.get(i).name == new_task) {
+                    for (int i = 0; i < userProfile.savedEvent.size(); i++){
+                        if (userProfile.savedEvent.get(i).name.equals(new_task)) {
                             textView.setText(userProfile.savedEvent.get(i).name);
                             textView.setBackgroundColor(getResources().getColor(userProfile.savedEvent.get(i).color, null));
                             break;
@@ -721,6 +724,9 @@ public class AgendaActivity extends AppCompatActivity {
                     if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
                         dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
                         updateAgenda();
+                        userProfile.agenda = dailyTasks;
+                        userProfile.fullAgenda = week;
+                        saveToFile();
                     }
                     else {
                         eventCreation(v);
@@ -874,9 +880,13 @@ public class AgendaActivity extends AppCompatActivity {
                                 nE.color = color.get(eventColor);
                                 userProfile.savedEvent.remove(event);
                                 userProfile.savedEvent.add(nE);
+                                event = userProfile.savedEvent.size()-1;
                             }
                             popupWindow.dismiss();
                             setNewEvent(startTime, stopTime, userProfile.savedEvent.get(event).name);
+                            userProfile.agenda = dailyTasks;
+                            userProfile.fullAgenda = week;
+                            saveToFile();
 
                         }
                         else if (startTime == -1){
