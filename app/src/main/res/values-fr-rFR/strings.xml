@@ -65,6 +65,8 @@
     <string name="forgetEventStart">Veuillez d\'abord Entrez une heure de début d\'événement.</string>
     <string name="forgetEventStop">Veuillez d\'abord Entrez une heure de fin d\'événement.</string>
     <string name="wrongEventStartStop">Le début de l\'événement doit être plus tôt que la fin.</string>
+    <string name="isWork">Cette activité est du travail ?</string>
+    <string name="isSport">Cette activité est du sport ?</string>
 
 
     <string name="eat_notif">C\'est l\'heure du repas :p</string>

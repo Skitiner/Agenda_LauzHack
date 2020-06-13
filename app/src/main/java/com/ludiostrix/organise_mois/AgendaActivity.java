@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -849,6 +850,16 @@ public class AgendaActivity extends AppCompatActivity {
                             }
                         }
 
+                        if (userProfile.savedEvent.get(event).work){
+                            CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
+                            workCB.setChecked(true);
+                        }
+
+                        if (userProfile.savedEvent.get(event).sport){
+                            CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
+                            sportCB.setChecked(true);
+                        }
+
                     }
                 }
 
@@ -875,6 +886,10 @@ public class AgendaActivity extends AppCompatActivity {
                                 newEvent nE = new newEvent();
                                 nE.name = autotextView.getText().toString();
                                 nE.color = color.get(eventColor);
+                                CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
+                                CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
+                                nE.work = workCB.isChecked();
+                                nE.sport = sportCB.isChecked();
                                 userProfile.savedEvent.add(nE);
                                 if (userProfile.savedEvent.size() > 20) {
                                     userProfile.savedEvent.remove(0);
@@ -884,6 +899,10 @@ public class AgendaActivity extends AppCompatActivity {
                                 newEvent nE = new newEvent();
                                 nE.name = userProfile.savedEvent.get(event).name;
                                 nE.color = color.get(eventColor);
+                                CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
+                                CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
+                                nE.work = workCB.isChecked();
+                                nE.sport = sportCB.isChecked();
                                 userProfile.savedEvent.remove(event);
                                 userProfile.savedEvent.add(nE);
                                 event = userProfile.savedEvent.size()-1;

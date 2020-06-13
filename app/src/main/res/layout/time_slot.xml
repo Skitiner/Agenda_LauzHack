@@ -32,6 +32,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
+            android:textColor="@color/darkgray"
             android:orientation="vertical">
 
             <TextView
@@ -40,6 +41,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/orange"
+                android:textColor="@color/darkgray"
                 android:gravity="center"
                 android:text="Sport"/>
 
@@ -49,6 +51,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/salmonpink"
+                android:textColor="@color/darkgray"
                 android:gravity="center"
                 android:text="Travail" />
 
@@ -58,6 +61,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/green"
+                android:textColor="@color/darkgray"
                 android:gravity="center"
                 android:text="Free" />
 
@@ -67,6 +71,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:background="@color/pastel"
+                android:textColor="@color/darkgray"
                 android:gravity="center"
                 android:text="Eat" />
 
