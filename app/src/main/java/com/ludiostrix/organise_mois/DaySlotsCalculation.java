@@ -112,63 +112,68 @@ public class DaySlotsCalculation {
   
     public Boolean setWork(int nbFixedWork){
 
-        int nbWorkTimeSlots = 0;
+        int nbWorkTimeSlots;
 
         nbWorkTimeSlots = nb_work_h - nbFixedWork;
 
-        int nbWorkSlotsPerDay = nbWorkTimeSlots / nbWorkDay;
-        int lostWorkTime = nbWorkTimeSlots % nbWorkDay;
+        if (nbWorkTimeSlots == 0){
+            return true;
+        }
+        else {
+            int nbWorkSlotsPerDay = nbWorkTimeSlots / nbWorkDay;
+            int lostWorkTime = nbWorkTimeSlots % nbWorkDay;
 
-        int[] memi = new int[nbWorkDay+1];
-        int nbMoreWorkSlotPerDay = nbWorkSlotsPerDay;
+            int[] memi = new int[nbWorkDay + 1];
 
-        while (nbMoreWorkSlotPerDay > 0) {
-            memi = SearchWorkTime(nbMoreWorkSlotPerDay);
-            int nbpause = 0;
+            int nbMoreWorkSlotPerDay = nbWorkSlotsPerDay;
 
-            if(!ismemiComplete(memi)){
-                //Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
-                break;
-            }
-            else {
-                for (int i = 0; i < nbWorkDay; i++) {
-                    if (memi[nbWorkDay] < 9) {
-                        for (int j = 0; j < memi[nbWorkDay]; j++) {
-                            slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
-                        }
-                    } else {
-                        for (int k = 2; k < 12; k++) {
-                            if (memi[nbWorkDay] < 8 * k) {
-                                for (int j = 0; j < memi[nbWorkDay]; j++) {
-                                    if ((j % (memi[nbWorkDay] / k) == (memi[nbWorkDay] / k) - 1) && memi[nbWorkDay] > j + 2) {
-                                        slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.PAUSE);
-                                        nbpause++;
-                                    } else {
-                                        slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
+            while (nbMoreWorkSlotPerDay > 0) {
+                memi = SearchWorkTime(nbMoreWorkSlotPerDay);
+                int nbpause = 0;
+
+                if (!ismemiComplete(memi)) {
+                    //Toast.makeText(this.context, R.string.bad_parameters, Toast.LENGTH_SHORT).show();
+                    break;
+                } else {
+                    for (int i = 0; i < nbWorkDay; i++) {
+                        if (memi[nbWorkDay] < 9) {
+                            for (int j = 0; j < memi[nbWorkDay]; j++) {
+                                slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
+                            }
+                        } else {
+                            for (int k = 2; k < 12; k++) {
+                                if (memi[nbWorkDay] < 8 * k) {
+                                    for (int j = 0; j < memi[nbWorkDay]; j++) {
+                                        if ((j % (memi[nbWorkDay] / k) == (memi[nbWorkDay] / k) - 1) && memi[nbWorkDay] > j + 2) {
+                                            slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.PAUSE);
+                                            nbpause++;
+                                        } else {
+                                            slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.currentTask.WORK);
+                                        }
                                     }
+                                    break;
                                 }
-                                break;
                             }
                         }
                     }
-                }
-                memi[nbWorkDay] = memi[nbWorkDay] - nbpause / nbWorkDay;
-                nbMoreWorkSlotPerDay = nbMoreWorkSlotPerDay - memi[nbWorkDay];
-            }
-        }
-
-        if (lostWorkTime>0 && ismemiComplete(memi)) {
-            memi = SearchWorkTime(1);
-            for (int i = 0; i < lostWorkTime; i++) {
-                if (memi[i] == 0) {
-                    // TODO: 05.04.2020 no possibilities found
-                } else {
-                    slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.currentTask.WORK);
+                    memi[nbWorkDay] = memi[nbWorkDay] - nbpause / nbWorkDay;
+                    nbMoreWorkSlotPerDay = nbMoreWorkSlotPerDay - memi[nbWorkDay];
                 }
             }
-        }
 
-        return ismemiComplete(memi);
+            if (lostWorkTime > 0 && ismemiComplete(memi)) {
+                memi = SearchWorkTime(1);
+                for (int i = 0; i < lostWorkTime; i++) {
+                    if (memi[i] == 0) {
+                        // TODO: 05.04.2020 no possibilities found
+                    } else {
+                        slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.currentTask.WORK);
+                    }
+                }
+            }
+
+            return ismemiComplete(memi);
+        }
     }
 
     private int[] SearchWorkTime(int nbWorkSlotsPerDay){
@@ -211,7 +216,7 @@ public class DaySlotsCalculation {
     }
 
     public Boolean setSport(){
-        int nbSportTimeSlots = 0;
+        /*int nbSportTimeSlots = 0;
         switch (sport_routine){
             case 0:
             case 1: nbSportTimeSlots = 10;
@@ -225,6 +230,14 @@ public class DaySlotsCalculation {
         }
         else {
             nbSportSlotsPerDay = nbSportTimeSlots / nbWorkDay;
+        }*/
+        int nbSportSlotsPerDay = 0;
+        switch (sport_routine){
+            case 0:
+            case 1: nbSportSlotsPerDay = 2;
+                break;
+            case 2: nbSportSlotsPerDay = 4;
+                break;
         }
 
         int[] memi;

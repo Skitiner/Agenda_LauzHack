@@ -161,6 +161,20 @@ public class Profile implements Serializable {
                     bufferedWriter.write(",");
                     bufferedWriter.write(e.color.toString());
                     bufferedWriter.write(",");
+                    if (e.work) {
+                        bufferedWriter.write("1");
+                    }
+                    else {
+                        bufferedWriter.write("0");
+                    }
+                    bufferedWriter.write(",");
+                    if (e.sport) {
+                        bufferedWriter.write("1");
+                    }
+                    else {
+                        bufferedWriter.write("0");
+                    }
+                    bufferedWriter.write(",");
                 }
                 bufferedWriter.write("/");
             }
@@ -254,10 +268,24 @@ public class Profile implements Serializable {
         savedEvent.clear();
         newEvent e = new newEvent();
         for (int i = 0; i < event_back.size(); i++) {
-            if (i % 2 == 0) {
+            if (i % 4 == 0) {
                 e.name = event_back.get(i);
-            } else {
+            } else if (i % 4 == 1){
                 e.color = Integer.parseInt(event_back.get(i));
+            } else if (i % 4 == 2){
+                if (event_back.get(i).equals("1")) {
+                    e.work = true;
+                }
+                else {
+                    e.work = false;
+                }
+            } else if (i % 4 == 3){
+                if (event_back.get(i).equals("1")) {
+                    e.sport = true;
+                }
+                else {
+                    e.sport = false;
+                }
                 savedEvent.add(e);
                 e = new newEvent();
             }

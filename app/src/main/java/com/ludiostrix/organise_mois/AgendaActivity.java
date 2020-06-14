@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -71,6 +72,8 @@ public class AgendaActivity extends AppCompatActivity {
     private int event;
     private int eventColor = 0;
 
+    private boolean delNewEvent = false;
+
     private final ArrayList<Integer> colorIds = new ArrayList() {
         {
             add(R.id.pink); add(R.id.violet); add(R.id.lightDarkBlue); add(R.id.blue); add(R.id.turquoise);
@@ -125,10 +128,18 @@ public class AgendaActivity extends AppCompatActivity {
             previousDay.setVisibility(View.VISIBLE);
         }
         View view = findViewById(R.id.save_schedule);
-        if(!fixed_work && !lunch_time)
-            view.setVisibility(View.INVISIBLE);
-        else
+        View addEvent = findViewById(R.id.addEvent);
+        View delEvent = findViewById(R.id.delEvent);
+        if(!fixed_work && !lunch_time) {
+            view.setVisibility(View.GONE);
+            addEvent.setVisibility(View.VISIBLE);
+            delEvent.setVisibility(View.VISIBLE);
+        }
+        else {
             view.setVisibility(View.VISIBLE);
+            addEvent.setVisibility(View.GONE);
+            delEvent.setVisibility(View.GONE);
+        }
 
         if (savedInstanceState != null) {
             week = (ArrayList) savedInstanceState.getSerializable(WEEK_SAVE);
@@ -720,7 +731,7 @@ public class AgendaActivity extends AppCompatActivity {
                     updateAgenda();
 
                 }
-                if (!lunch_time && ! fixed_work) {
+                if (delNewEvent) {
                     if (!(v.getId() == R.id.t_1)){
                         if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
                             dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
@@ -731,12 +742,32 @@ public class AgendaActivity extends AppCompatActivity {
                             plan();
                         }
                     }
-                    else {
-                        eventCreation(v);
-                    }
                 }
             }
         }
+    }
+    public void addEventXmlCallback(View view){
+        eventCreation(view);
+    }
+
+    public void delEventXmlCallback(View view){
+        delNewEvent = true;
+        View add = findViewById(R.id.addEvent);
+        add.setVisibility(View.GONE);
+        View del = findViewById(R.id.delEvent);
+        del.setVisibility(View.GONE);
+        View delFinished = findViewById(R.id.delFinishedEvent);
+        delFinished.setVisibility(View.VISIBLE);
+    }
+
+    public void delFinishedEventXmlCallback(View view){
+        delNewEvent = false;
+        View add = findViewById(R.id.addEvent);
+        add.setVisibility(View.VISIBLE);
+        View del = findViewById(R.id.delEvent);
+        del.setVisibility(View.VISIBLE);
+        View delFinished = findViewById(R.id.delFinishedEvent);
+        delFinished.setVisibility(View.GONE);
     }
 
     public void eventCreation(View v){
@@ -849,6 +880,16 @@ public class AgendaActivity extends AppCompatActivity {
                             }
                         }
 
+                        if (userProfile.savedEvent.get(event).work){
+                            CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
+                            workCB.setChecked(true);
+                        }
+
+                        if (userProfile.savedEvent.get(event).sport){
+                            CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
+                            sportCB.setChecked(true);
+                        }
+
                     }
                 }
 
@@ -875,6 +916,10 @@ public class AgendaActivity extends AppCompatActivity {
                                 newEvent nE = new newEvent();
                                 nE.name = autotextView.getText().toString();
                                 nE.color = color.get(eventColor);
+                                CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
+                                CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
+                                nE.work = workCB.isChecked();
+                                nE.sport = sportCB.isChecked();
                                 userProfile.savedEvent.add(nE);
                                 if (userProfile.savedEvent.size() > 20) {
                                     userProfile.savedEvent.remove(0);
@@ -884,6 +929,10 @@ public class AgendaActivity extends AppCompatActivity {
                                 newEvent nE = new newEvent();
                                 nE.name = userProfile.savedEvent.get(event).name;
                                 nE.color = color.get(eventColor);
+                                CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
+                                CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
+                                nE.work = workCB.isChecked();
+                                nE.sport = sportCB.isChecked();
                                 userProfile.savedEvent.remove(event);
                                 userProfile.savedEvent.add(nE);
                                 event = userProfile.savedEvent.size()-1;

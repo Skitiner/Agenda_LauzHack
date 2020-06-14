@@ -81,7 +81,20 @@
             tools:layout_conversion_absoluteWidth="206dp" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/save_schedule"
+        android:id="@+id/save_schedule"
+        android:layout_margin="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end|bottom"
+        android:backgroundTint="@color/pastel"
+        android:clickable="true"
+        android:focusable="true"
+        android:visibility="visible"
+        android:onClick="saveTimeSlots"
+        app:srcCompat="@android:drawable/ic_menu_save" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/addEvent"
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,10 +102,35 @@
             android:backgroundTint="@color/pastel"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="visible"
-            android:onClick="saveTimeSlots"
-            app:srcCompat="@android:drawable/ic_menu_save" />
+            android:visibility="gone"
+            android:onClick="addEventXmlCallback"
+            app:srcCompat="@android:drawable/ic_menu_add" />
 
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/delEvent"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:backgroundTint="@color/pastel"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="visible"
+            android:onClick="delEventXmlCallback"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/delFinishedEvent"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start|bottom"
+            android:backgroundTint="@color/pastel"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone"
+            android:onClick="delFinishedEventXmlCallback"
+            app:srcCompat="@android:drawable/ic_menu_agenda" />
     </FrameLayout>
 
 </LinearLayout>
