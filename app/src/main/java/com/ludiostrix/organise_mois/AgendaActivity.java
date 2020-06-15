@@ -939,7 +939,7 @@ public class AgendaActivity extends AppCompatActivity {
                         float startTime = stringTimeToFloat(startTimeET.getText().toString());
                         float stopTime = stringTimeToFloat(stopTimeET.getText().toString());
 
-                        if (startTime >= stopTime && stopTime != 0){
+                        if (startTime >= stopTime){
                             Toast.makeText(AgendaActivity.this, R.string.wrongEventStartStop, Toast.LENGTH_SHORT).show();
                         }
                         else if (startTime != -1 && stopTime != -1) {
