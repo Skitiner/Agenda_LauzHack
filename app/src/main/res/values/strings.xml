@@ -67,7 +67,7 @@
     <string name="isWork">Work</string>
     <string name="isSport">Sport</string>
     <string name="isFree">Free time</string>
-    <string name="isWortSportFree">Is this activity work, sport or free time ?</string>
+    <string name="isWorkSportFree">Is this activity work, sport or free time ?</string>
 
 
 

@@ -68,7 +68,7 @@
     <string name="isWork">Travail</string>
     <string name="isSport">Sport</string>
     <string name="isFree">Temps libre</string>
-    <string name="isWortSportFree">Cette activité est-elle, du travail, du sport ou du temps libre ?</string>
+    <string name="isWorkSportFree">Cette activité est-elle, du travail, du sport ou du temps libre ?</string>
 
 
     <string name="eat_notif">C\'est l\'heure du repas :p</string>
