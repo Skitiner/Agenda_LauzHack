@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -909,13 +910,16 @@ public class AgendaActivity extends AppCompatActivity {
                         }
 
                         if (userProfile.savedEvent.get(event).work){
-                            CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
-                            workCB.setChecked(true);
+                            RadioButton workRB = popupView.findViewById(R.id.workRadioButton);
+                            workRB.setChecked(true);
                         }
-
-                        if (userProfile.savedEvent.get(event).sport){
-                            CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
-                            sportCB.setChecked(true);
+                        else if (userProfile.savedEvent.get(event).sport){
+                            RadioButton sportRB = popupView.findViewById(R.id.sportRadioButton);
+                            sportRB.setChecked(true);
+                        }
+                        else {
+                            RadioButton freeRB = popupView.findViewById(R.id.freeRadioButton);
+                            freeRB.setChecked(true);
                         }
 
                     }
@@ -935,7 +939,7 @@ public class AgendaActivity extends AppCompatActivity {
                         float startTime = stringTimeToFloat(startTimeET.getText().toString());
                         float stopTime = stringTimeToFloat(stopTimeET.getText().toString());
 
-                        if (startTime >= stopTime){
+                        if (startTime >= stopTime && stopTime != 0){
                             Toast.makeText(AgendaActivity.this, R.string.wrongEventStartStop, Toast.LENGTH_SHORT).show();
                         }
                         else if (startTime != -1 && stopTime != -1) {
@@ -944,10 +948,10 @@ public class AgendaActivity extends AppCompatActivity {
                                 newEvent nE = new newEvent();
                                 nE.name = autotextView.getText().toString();
                                 nE.color = color.get(eventColor);
-                                CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
-                                CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
-                                nE.work = workCB.isChecked();
-                                nE.sport = sportCB.isChecked();
+                                RadioButton workRB = popupView.findViewById(R.id.workRadioButton);
+                                RadioButton sportRB = popupView.findViewById(R.id.sportRadioButton);
+                                nE.work = workRB.isChecked();
+                                nE.sport = sportRB.isChecked();
                                 userProfile.savedEvent.add(nE);
                                 if (userProfile.savedEvent.size() > 20) {
                                     userProfile.savedEvent.remove(0);
@@ -957,10 +961,10 @@ public class AgendaActivity extends AppCompatActivity {
                                 newEvent nE = new newEvent();
                                 nE.name = userProfile.savedEvent.get(event).name;
                                 nE.color = color.get(eventColor);
-                                CheckBox workCB = popupView.findViewById(R.id.workCheckBox);
-                                CheckBox sportCB = popupView.findViewById(R.id.sportCheckBox);
-                                nE.work = workCB.isChecked();
-                                nE.sport = sportCB.isChecked();
+                                RadioButton workRB = popupView.findViewById(R.id.workRadioButton);
+                                RadioButton sportRB = popupView.findViewById(R.id.sportRadioButton);
+                                nE.work = workRB.isChecked();
+                                nE.sport = sportRB.isChecked();
                                 userProfile.savedEvent.remove(event);
                                 userProfile.savedEvent.add(nE);
                                 event = userProfile.savedEvent.size()-1;
@@ -1136,10 +1140,13 @@ public class AgendaActivity extends AppCompatActivity {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt > 23 || hourt < 0){
+            if (hourt == 24){
+                // do nothing
+            }
+            else if (hourt > 23 || hourt < 0){
                 ok = false;
             }
-            if (mint >= 60 || mint < 0){
+            else if (mint >= 60 || mint < 0){
                 ok = false;
             }
             else {
@@ -1148,6 +1155,7 @@ public class AgendaActivity extends AppCompatActivity {
                     hourt -=24;
                 }
             }
+
             if(ok){
                 fTime = hourt;
             }
@@ -1155,6 +1163,7 @@ public class AgendaActivity extends AppCompatActivity {
             e.printStackTrace();
             ok=false;
         }
+
         if (!ok){
             fTime = -1;
         }
