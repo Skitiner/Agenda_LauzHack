@@ -66,6 +66,8 @@
     <string name="wrongEventStartStop">The starting time should be earlier than the end time.</string>
     <string name="isWork">This activity is work ?</string>
     <string name="isSport">This activity is sport ?</string>
+    <string name="isFree">This activity is work ?</string>
+    <string name="isWorkSportFree">This activity is sport ?</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
