@@ -64,10 +64,10 @@
     <string name="forgetEventStart">Please, enter an event start time first.</string>
     <string name="forgetEventStop">Please, enter an event stop time first.</string>
     <string name="wrongEventStartStop">The starting time should be earlier than the end time.</string>
-    <string name="isWork">This activity is work ?</string>
-    <string name="isSport">This activity is sport ?</string>
-    <string name="isFree">This activity is work ?</string>
-    <string name="isWorkSportFree">This activity is sport ?</string>
+    <string name="isWork">Work</string>
+    <string name="isSport">Sport</string>
+    <string name="isFree">Free time</string>
+    <string name="isWorkSportFree">Is this activity work, sport or free time ?</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
