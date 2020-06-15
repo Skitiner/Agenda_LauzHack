@@ -164,7 +164,7 @@ public class DaySlotsCalculation {
             if (lostWorkTime > 0 && ismemiComplete(memi)) {
                 memi = SearchWorkTime(1);
                 for (int i = 0; i < lostWorkTime; i++) {
-                    if (memi[i] == 0) {
+                    if (memi[i] == -1) {
                         // TODO: 05.04.2020 no possibilities found
                     } else {
                         slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.currentTask.WORK);
@@ -285,7 +285,7 @@ public class DaySlotsCalculation {
     private boolean ismemiComplete(int[] memi){
         boolean memiComplete = true;
         for (int i = 0; i < nbWorkDay; i++){
-            if(memi[i]==0){
+            if(memi[i]==-1){
                 memiComplete = false;
             }
         }
@@ -297,7 +297,7 @@ public class DaySlotsCalculation {
         int freeTimeSlotCounter = 0;
         int[] memi = new int[nbWorkDay];
         for (int k = 0; k < nbWorkDay; k++){
-            memi[k] = 0;
+            memi[k] = -1;
         }
         if (ascend){
             for (int j = 0; j < nbWorkDay; j++) {
