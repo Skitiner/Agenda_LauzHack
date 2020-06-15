@@ -20,16 +20,21 @@ public class Profile implements Serializable {
     protected String FileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
     protected ArrayList<ArrayList<timeSlot>> fullAgenda;
+    protected int pastAgendaSize;
+    protected ArrayList<ArrayList<timeSlot>> pastAgenda;
     protected ArrayList<ArrayList<Boolean>> canceled_slots;
     protected int k;
     protected String current;
     protected String cancel_current;
     protected String event_current;
     protected ArrayList<String> agenda_back;
+    protected ArrayList<String> past_agenda_back;
     protected ArrayList<String> cancel_back;
     protected ArrayList<String> event_back;
     protected Calendar settingDay;
+    protected Calendar lastConnection;
     public ArrayList<newEvent> savedEvent;
+    public ArrayList<timeSlot> freeWeekDay;
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -46,16 +51,38 @@ public class Profile implements Serializable {
         initFullAgenda();
         settingDay = Calendar.getInstance();
         settingDay.setTimeInMillis(System.currentTimeMillis());
+        lastConnection = Calendar.getInstance();
+        lastConnection.setTimeInMillis(System.currentTimeMillis());
         k = 0;
         current = new String();
         cancel_current = new String();
         event_current = new String();
 
         this.savedEvent = new ArrayList<>();
+
+        this.freeWeekDay = new ArrayList<>();
+
+        timeSlot.currentTask task;
+
+        for (int i = 0; i < 24; i++) {
+
+            task = timeSlot.currentTask.FREE;
+            timeSlot slot = new timeSlot();
+            slot.time = i;
+            slot.task_1 = task;
+            slot.task_2 = task;
+            slot.task_3 = task;
+            slot.task_4 = task;
+
+            this.freeWeekDay.add(slot);
+
+        }
+        this.pastAgendaSize = 0;
     }
 
     private void initFullAgenda() {
         fullAgenda = new ArrayList<>();
+        pastAgenda = new ArrayList<>();
 
         timeSlot.currentTask task;
 
@@ -119,6 +146,43 @@ public class Profile implements Serializable {
             bufferedWriter.write(String.valueOf(this.sportRoutine));
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(settingDay.getTimeInMillis()));
+            bufferedWriter.write("/");
+            bufferedWriter.write(String.valueOf(lastConnection.getTimeInMillis()));
+            bufferedWriter.write("/");
+            bufferedWriter.write(String.valueOf(pastAgenda.size()));
+            bufferedWriter.write("/");
+            for (int i = 0; i < pastAgenda.size() ; i++){
+                for (int j = 0; j < pastAgenda.get(i).size(); j++){
+                    if (pastAgenda.get(i).get(j).task_1 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(pastAgenda.get(i).get(j).new_task_1);
+                    }
+                    else {
+                        bufferedWriter.write(pastAgenda.get(i).get(j).task_1.toString());
+                    }
+                    bufferedWriter.write(",");
+                    if (pastAgenda.get(i).get(j).task_2 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(pastAgenda.get(i).get(j).new_task_2);
+                    }
+                    else {
+                        bufferedWriter.write(pastAgenda.get(i).get(j).task_2.toString());
+                    }
+                    bufferedWriter.write(",");
+                    if (pastAgenda.get(i).get(j).task_3 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(pastAgenda.get(i).get(j).new_task_3);
+                    }
+                    else {
+                        bufferedWriter.write(pastAgenda.get(i).get(j).task_3.toString());
+                    }
+                    bufferedWriter.write(",");
+                    if (pastAgenda.get(i).get(j).task_4 == timeSlot.currentTask.NEWEVENT){
+                        bufferedWriter.write(pastAgenda.get(i).get(j).new_task_4);
+                    }
+                    else {
+                        bufferedWriter.write(pastAgenda.get(i).get(j).task_4.toString());
+                    }
+                    bufferedWriter.write(",");
+                }
+            }
             bufferedWriter.write("/");
             for (int i = 0; i < fullAgenda.size() ; i++){
                 for (int j = 0; j < fullAgenda.get(i).size(); j++){
@@ -191,11 +255,14 @@ public class Profile implements Serializable {
         String nW="";
         Character[] fD= new Character[] {'0','0','0','0','0','0','0'};
         String wU="";
+        past_agenda_back = new ArrayList<>();
         agenda_back = new ArrayList<>();
         cancel_back = new ArrayList<>();
         event_back = new ArrayList<>();
         String sR="";
         String timeMillis = "";
+        String lastConnexionTimeMillis = "";
+        String pastAS = "";
 
         int j = 0;
         int n = 0;
@@ -216,13 +283,17 @@ public class Profile implements Serializable {
                              break;
                     case 5 : timeMillis += lineData.charAt(i);
                             break;
-                    case 6 :
-                            getAgenda(lineData.charAt(i));
+                    case 6 : lastConnexionTimeMillis += lineData.charAt(i);
                             break;
-
-                    case 7 : getCanceled(lineData.charAt(i));
+                    case 7 : pastAS += lineData.charAt(i);
                             break;
-                    case 8 : getSavedEvent(lineData.charAt(i));
+                    case 8 : getPastAgenda(lineData.charAt(i));
+                            break;
+                    case 9 : getAgenda(lineData.charAt(i));
+                            break;
+                    case 10 : getCanceled(lineData.charAt(i));
+                            break;
+                    case 11 : getSavedEvent(lineData.charAt(i));
                             break;
 
                 }
@@ -232,6 +303,8 @@ public class Profile implements Serializable {
             }
         }
 
+        this.pastAgendaSize = Integer.parseInt(pastAS);
+        writeInPastAgenda();
         writeInAgenda();
         writeCanceled();
         writeSavedEvent();
@@ -248,10 +321,39 @@ public class Profile implements Serializable {
         }
         this.wakeUp = wU;
         this.sportRoutine = Integer.parseInt(sR);
-        this.settingDay = Calendar.getInstance();
+        this.settingDay = Calendar.getInstance();               //pas nécessaire?
         this.settingDay.setTimeInMillis(Long.parseLong(timeMillis));
+        this.lastConnection.setTimeInMillis(Long.parseLong(lastConnexionTimeMillis));
 
         Log.w("CANCELED READ", canceled_slots.toString());
+    }
+
+    public void convertInPastDay(){
+        int setting_day = this.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        int daySinceLastConnection = actual_day - this.lastConnection.get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - this.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        offset = (offset-daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
+
+        for (int i = 0; i < daySinceLastConnection; i++) {
+            this.pastAgenda.add(this.fullAgenda.get((i + offset)%7));
+            this.fullAgenda.set((i + offset)%7, this.freeWeekDay);
+
+            int position;
+            for(int j = 0; j < 96; j +=4 ) {
+                position = j/4;
+                this.agenda.get((i + offset)%7).set(j, this.fullAgenda.get((i + offset)%7).get(position).task_1);
+                this.agenda.get((i + offset)%7).set(j+1, this.fullAgenda.get((i + offset)%7).get(position).task_2);
+                this.agenda.get((i + offset)%7).set(j+2, this.fullAgenda.get((i + offset)%7).get(position).task_3);
+                this.agenda.get((i + offset)%7).set(j+3, this.fullAgenda.get((i + offset)%7).get(position).task_4);
+            }
+
+        }
+        this.lastConnection = Calendar.getInstance();
+        this.lastConnection.setTimeInMillis(System.currentTimeMillis());
     }
 
     private void getSavedEvent(char charAt) {
@@ -319,6 +421,92 @@ public class Profile implements Serializable {
         }
     }
 
+    private void writeInPastAgenda() {
+
+        pastAgenda = new ArrayList<>();
+
+        timeSlot.currentTask task;
+
+        for(int j = 0; j < this.pastAgendaSize; j++ ) {
+            ArrayList<timeSlot> mySlots = new ArrayList<>();
+            for (int i = 0; i < 24; i++) {
+
+                task = timeSlot.currentTask.FREE;
+                timeSlot slot = new timeSlot();
+                slot.time = i;
+                slot.task_1 = task;
+                slot.task_2 = task;
+                slot.task_3 = task;
+                slot.task_4 = task;
+
+                mySlots.add(slot);
+
+            }
+            this.pastAgenda.add(mySlots);
+        }
+
+        timeSlot.currentTask instantagenda;
+
+        for(int i = 0; i < past_agenda_back.size(); i++) {
+            int j = i/96;
+            int k = i%96;
+
+            if ("SPORT".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.SPORT;
+
+            } else if ("WORK".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.WORK;
+
+            } else if ("EAT".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.EAT;
+
+            } else if ("FREE".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.FREE;
+
+            } else if ("WORK_FIX".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.WORK_FIX;
+
+            } else if ("MORNING_ROUTINE".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.MORNING_ROUTINE;
+
+            } else if ("SLEEP".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.SLEEP;
+
+            } else if ("PAUSE".equals(past_agenda_back.get(i))) {
+                instantagenda = timeSlot.currentTask.PAUSE;
+            }
+            else{
+                instantagenda =  timeSlot.currentTask.NEWEVENT;
+                if(k%4 == 0) {
+                    pastAgenda.get(j).get((int) k / 4).new_task_1 = past_agenda_back.get(i);
+                }
+                else if(k%4 == 1) {
+                    pastAgenda.get(j).get((int) k / 4).new_task_2 = past_agenda_back.get(i);
+                }
+                else if(k%4 == 2) {
+                    pastAgenda.get(j).get((int) k / 4).new_task_3 = past_agenda_back.get(i);
+                }
+                else if(k%4 == 3) {
+                    pastAgenda.get(j).get((int) k / 4).new_task_4 = past_agenda_back.get(i);
+                }
+            }
+            if(k%4 == 0) {
+                pastAgenda.get(j).get((int) k / 4).task_1 = instantagenda;
+            }
+            else if(k%4 == 1) {
+                pastAgenda.get(j).get((int) k / 4).task_2 = instantagenda;
+            }
+            else if(k%4 == 2) {
+                pastAgenda.get(j).get((int) k / 4).task_3 = instantagenda;
+            }
+            else if(k%4 == 3) {
+                pastAgenda.get(j).get((int) k / 4).task_4 = instantagenda;
+            }
+        }
+
+        Log.w("AGENDA_BACK", past_agenda_back.toString());
+    }
+
     private void writeInAgenda() {
         for(int i = 0; i < agenda_back.size(); i++) {
             int j = i/96;
@@ -379,6 +567,19 @@ public class Profile implements Serializable {
 
         Log.w("AGENDA_BACK", agenda_back.toString());
         Log.w("AGENDA", agenda.toString());
+    }
+
+    private void getPastAgenda(char charAt) {
+        if(charAt == '[' || charAt == ' ' || charAt == ']')
+            return;
+        else if(charAt == ',') {
+            past_agenda_back.add(current);
+            current = new String();
+            k++;
+        }
+        else
+            current = current + charAt;
+
     }
 
     private void getAgenda(char charAt) {

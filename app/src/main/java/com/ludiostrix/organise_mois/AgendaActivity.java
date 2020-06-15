@@ -55,6 +55,8 @@ public class AgendaActivity extends AppCompatActivity {
     private static ArrayList<ArrayList<timeSlot>> week;
     private static ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
     private static ArrayList<ArrayList<Boolean>> cancel_day_taks;
+
+
     private int currentDay;
     private Date currentDate;
     private TextView date;
@@ -172,6 +174,7 @@ public class AgendaActivity extends AppCompatActivity {
                 week.add(mySlots);
             }
         }
+
         schedule = findViewById(R.id.schedule);
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
@@ -452,8 +455,33 @@ public class AgendaActivity extends AppCompatActivity {
             }
         }
 
-        Log.w("CURRENT DAY", " " +currentDay);
-        adapter.addAll(week.get(currentDay));
+        userProfile.convertInPastDay();
+
+        saveToFile();
+
+        setWeekSlots();
+
+        if (date_offset >= 7) {
+            adapter.addAll(userProfile.freeWeekDay);
+        }
+        else if (date_offset < 0){
+            int past = Math.abs(date_offset + 1);
+            if (userProfile.pastAgenda != null) {
+                if (past < userProfile.pastAgenda.size()) {
+                    adapter.addAll(userProfile.pastAgenda.get(userProfile.pastAgenda.size() - 1 - past));
+                }
+                else {
+                    adapter.addAll(userProfile.freeWeekDay);
+                }
+            }
+            else {
+                adapter.addAll(userProfile.freeWeekDay);
+            }
+        }
+        else {
+            Log.w("CURRENT DAY", " " + currentDay);
+            adapter.addAll(week.get(currentDay));
+        }
 
         // Start date
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());

@@ -179,7 +179,7 @@ public class ProfileActivity extends AppCompatActivity {
         int indice = ((7-conversionDayIndice()) + position)%7;
 
         for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
-            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.FREE) {
+            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.NEWEVENT) {
                 userProfile.agenda.get(indice).set(i, timeSlot.currentTask.FREE);
             }
         }
@@ -195,7 +195,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         userProfile.freeDay = NewFreeDay;
 
-        saveToFile();
         setDayColor(dayButton, NewFreeDay[position]);
 
     }

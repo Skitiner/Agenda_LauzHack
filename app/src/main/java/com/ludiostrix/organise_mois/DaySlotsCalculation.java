@@ -216,12 +216,12 @@ public class DaySlotsCalculation {
     }
 
     public Boolean setSport(){
-        /*int nbSportTimeSlots = 0;
+        int nbSportTimeSlots = 0;
         switch (sport_routine){
             case 0:
-            case 1: nbSportTimeSlots = 10;
+            case 1: nbSportTimeSlots = 14;
                 break;
-            case 2: nbSportTimeSlots = 20;
+            case 2: nbSportTimeSlots = 28;
                 break;
         }
         int nbSportSlotsPerDay;
@@ -230,15 +230,22 @@ public class DaySlotsCalculation {
         }
         else {
             nbSportSlotsPerDay = nbSportTimeSlots / nbWorkDay;
-        }*/
-        int nbSportSlotsPerDay = 0;
+        }
+
         switch (sport_routine){
             case 0:
-            case 1: nbSportSlotsPerDay = 2;
+            case 1:
+                if(nbSportSlotsPerDay > 7){
+                    nbSportSlotsPerDay = 7;
+                }
                 break;
-            case 2: nbSportSlotsPerDay = 4;
+            case 2:
+                if(nbSportSlotsPerDay > 8){
+                    nbSportSlotsPerDay = 8;
+                }
                 break;
         }
+
 
         int[] memi;
 
