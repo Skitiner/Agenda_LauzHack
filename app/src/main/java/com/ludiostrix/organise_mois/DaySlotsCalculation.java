@@ -26,7 +26,8 @@ public class DaySlotsCalculation {
     private Context context;
     private Profile userProfile = new Profile();
     private ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
-    private IA Agent = new IA();
+    private IA Agent;
+    private int nbSportTimeSlots = 0;
 
     public DaySlotsCalculation(Context context) {
 
@@ -64,6 +65,10 @@ public class DaySlotsCalculation {
         setNight();
 
         int nbFixedWork = compare(userProfile.agenda);
+
+        initSportVariable();
+
+        //IA Agent = new IA(slots_generated, freedaylist, nb_work_h - nbFixedWork, nbSportTimeSlots);
 
         int OK = 0;
         if (!(nbFixedWork > Integer.valueOf(userProfile.nbWorkHours))) {
@@ -215,8 +220,8 @@ public class DaySlotsCalculation {
         return memip;
     }
 
-    public Boolean setSport(){
-        int nbSportTimeSlots = 0;
+    public void initSportVariable(){
+
         switch (sport_routine){
             case 0:
             case 1: nbSportTimeSlots = 14;
@@ -224,6 +229,11 @@ public class DaySlotsCalculation {
             case 2: nbSportTimeSlots = 28;
                 break;
         }
+
+    }
+
+    public Boolean setSport(){
+
         int nbSportSlotsPerDay;
         if (nbWorkDay > 5){
             nbSportSlotsPerDay = nbSportTimeSlots/5;
