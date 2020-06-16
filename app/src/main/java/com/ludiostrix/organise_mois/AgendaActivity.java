@@ -745,17 +745,10 @@ public class AgendaActivity extends AppCompatActivity {
                         }
                     }
                     else{
-                        if (dailyTasks.get(currentDay).get(daily_task_pos) == timeSlot.currentTask.NEWEVENT) {
-                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
-                        }
-                        else if (dailyTasks.get(currentDay).get(daily_task_pos+1) == timeSlot.currentTask.NEWEVENT) {
-                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
-                        }
-                        else if (dailyTasks.get(currentDay).get(daily_task_pos+2) == timeSlot.currentTask.NEWEVENT) {
-                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
-                        }
-                        else if (dailyTasks.get(currentDay).get(daily_task_pos+3) == timeSlot.currentTask.NEWEVENT) {
-                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
+                        for (int i = 0; i < 4; i++) {
+                            if (dailyTasks.get(currentDay).get(daily_task_pos+i) == timeSlot.currentTask.NEWEVENT) {
+                                dailyTasks.get(currentDay).set(daily_task_pos+i, timeSlot.currentTask.FREE);
+                            }
                         }
                     }
                     updateAgenda();
