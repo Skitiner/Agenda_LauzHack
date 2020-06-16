@@ -373,7 +373,13 @@ public class AgendaActivity extends AppCompatActivity {
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
 
+                if(dailyTasks.get(i).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work && dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE)
+                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time)
+                    dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+
+                if(dailyTasks.get(i).get(j) == timeSlot.currentTask.EAT && lunch_time && dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE)
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
             }
         }
@@ -736,13 +742,23 @@ public class AgendaActivity extends AppCompatActivity {
                     if (!(v.getId() == R.id.t_1)){
                         if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
                             dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
-                            updateAgenda();
-                            userProfile.agenda = dailyTasks;
-                            userProfile.fullAgenda = week;
-                            saveToFile();
-                            plan();
                         }
                     }
+                    else{
+                        if (dailyTasks.get(currentDay).get(daily_task_pos) == timeSlot.currentTask.NEWEVENT) {
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
+                        }
+                        else if (dailyTasks.get(currentDay).get(daily_task_pos+1) == timeSlot.currentTask.NEWEVENT) {
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
+                        }
+                        else if (dailyTasks.get(currentDay).get(daily_task_pos+2) == timeSlot.currentTask.NEWEVENT) {
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
+                        }
+                        else if (dailyTasks.get(currentDay).get(daily_task_pos+3) == timeSlot.currentTask.NEWEVENT) {
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
+                        }
+                    }
+                    updateAgenda();
                 }
             }
         }
@@ -769,6 +785,10 @@ public class AgendaActivity extends AppCompatActivity {
         del.setVisibility(View.VISIBLE);
         View delFinished = findViewById(R.id.delFinishedEvent);
         delFinished.setVisibility(View.GONE);
+        userProfile.agenda = dailyTasks;
+        userProfile.fullAgenda = week;
+        saveToFile();
+        plan();
     }
 
     public void eventCreation(View v){
