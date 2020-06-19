@@ -13,20 +13,20 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class DaySlotsCalculation {
 
     private int nb_work_h;
     private boolean[] free_day;
-    private int[] freedaylist;
+    public int[] freedaylist;
     private float wake_up;
     private int sport_routine;
     private int offset;
     private int nbWorkDay;
     private Context context;
     private Profile userProfile = new Profile();
-    private ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
-    private IA Agent;
+    public ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
     private int nbSportTimeSlots = 0;
 
     public DaySlotsCalculation(Context context) {
@@ -56,6 +56,38 @@ public class DaySlotsCalculation {
         slots_generated = new ArrayList<>();
     }
 
+    public DaySlotsCalculation(Profile userProfile) {
+
+        nb_work_h = Integer.parseInt(userProfile.nbWorkHours);
+        free_day = userProfile.freeDay;
+        nbWorkDay=0;
+        offset = conversionDayIndice();
+        for (int i=0 ; i < free_day.length ; i++){
+            if (!free_day[i]) {
+                nbWorkDay++;
+            }
+        }
+        freedaylist = new int[nbWorkDay];
+        int n = 0;
+        for (int i=0 ; i < free_day.length ; i++){
+            if (!free_day[i]) {
+                freedaylist[n] = (i + (7-offset))%7;
+                n++;
+            }
+        }
+        wake_up = Float.parseFloat(userProfile.wakeUp);
+        sport_routine = userProfile.sportRoutine;
+        slots_generated = new ArrayList<>();
+
+        init();
+        remove_canceled_days();
+        setMorningRoutine();
+        setNight();
+
+        int nbFixedWork = compare(userProfile.agenda);
+    }
+
+
     public int slotCalculation() {
 
         readFromFile();
@@ -66,12 +98,45 @@ public class DaySlotsCalculation {
 
         int nbFixedWork = compare(userProfile.agenda);
 
-        initSportVariable();
+        //initSportVariable();
 
-        //IA Agent = new IA(slots_generated, freedaylist, nb_work_h - nbFixedWork, nbSportTimeSlots);
+        //List<IA> calculatedWeek;
+
+        for (int i = 0; i < slots_generated.size(); i++) {
+
+            int nbFreeDay = 0;
+            for (int j = 0; j < userProfile.freeDay.length; j++){
+                if (!userProfile.freeDay[j]){
+                    nbFreeDay++;
+                }
+            }
+            boolean freeday = true;
+            for (int  j = 0; j < freedaylist.length; j++) {
+                if (freedaylist[j] == i){
+                    freeday = false;
+                }
+            }
+            if(!freeday) {
+                this.userProfile.lateWorkSlot += Integer.parseInt(userProfile.nbWorkHours) / nbFreeDay;
+            }
+            if(userProfile.sportRoutine == 2){
+                userProfile.lateSportSlot += 4;
+            }
+            else{
+                userProfile.lateSportSlot += 2;
+            }
+
+            IA Agent = new IA(slots_generated.get(i), userProfile.fullAgenda.get(i), i,
+                    userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
+                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot);
+            Agent.planDay();
+            userProfile.agenda.set(i,Agent.dailyAgenda);
+            userProfile.lateSportSlot = Agent.sportSlot;
+            userProfile.lateWorkSlot = Agent.workSlot;
+        }
 
         int OK = 0;
-        if (!(nbFixedWork > Integer.valueOf(userProfile.nbWorkHours))) {
+        /*if (!(nbFixedWork > Integer.valueOf(userProfile.nbWorkHours))) {
             Boolean Sport = setSport();
             Boolean Work = setWork(nbFixedWork);
 
@@ -84,10 +149,11 @@ public class DaySlotsCalculation {
         }
         else {
             OK = 2;
-        }
+        }*/
 
         if(OK == 0){
-            userProfile.agenda = slots_generated;
+            //userProfile.agenda = slots_generated;
+            //userProfile.agenda.set(0, Agent.dailyAgenda);
             int pos;
             for (int indice = 0; indice < slots_generated.size(); indice++) {
                 for (int i = 0; i < 96; i += 4) {

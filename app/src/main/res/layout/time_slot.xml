@@ -25,7 +25,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center_horizontal"
-            android:background="@color/gray"
+            android:background="@color/organisemois_background"
             android:text="0h00" />
 
         <LinearLayout

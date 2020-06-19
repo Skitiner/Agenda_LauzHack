@@ -7,33 +7,37 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class Profile implements Serializable {
     private static final String TAG = "Profile";
 
     protected boolean licenceAccepted;
     protected String nbWorkHours;
+    protected String optWorkTime;
     protected boolean[] freeDay;
     protected String wakeUp;
     protected int sportRoutine;
+    protected int lateSportSlot;
+    protected int lateWorkSlot;
     protected boolean calculation;
     protected String FileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
     protected ArrayList<ArrayList<timeSlot>> fullAgenda;
     protected int pastAgendaSize;
-    protected ArrayList<ArrayList<timeSlot>> pastAgenda;
-    protected ArrayList<ArrayList<Boolean>> canceled_slots;
+    protected List<List<timeSlot>> pastAgenda;
+    protected List<List<Boolean>> canceled_slots;
     protected int k;
     protected String current;
     protected String cancel_current;
     protected String event_current;
-    protected ArrayList<String> agenda_back;
-    protected ArrayList<String> past_agenda_back;
-    protected ArrayList<String> cancel_back;
-    protected ArrayList<String> event_back;
+    protected List<String> agenda_back;
+    protected List<String> past_agenda_back;
+    protected List<String> cancel_back;
+    protected List<String> event_back;
     protected Calendar settingDay;
     protected Calendar lastConnection;
-    public ArrayList<newEvent> savedEvent;
+    public List<newEvent> savedEvent;
     public ArrayList<timeSlot> freeWeekDay;
 
     public Profile(){
@@ -42,9 +46,12 @@ public class Profile implements Serializable {
         event_back = new ArrayList<>();
         this.licenceAccepted = false;
         this.nbWorkHours = "168";
+        this.optWorkTime = "6";
         this.freeDay = new boolean[] {false, false, false, false, false, false, false};
         this.wakeUp = "8.0";
         this.sportRoutine = 1;
+        this.lateSportSlot = 0;
+        this.lateWorkSlot = 0;
         calculation = false;
         this.FileName = "userProfile.txt";
         initAgenda();
@@ -113,7 +120,7 @@ public class Profile implements Serializable {
         timeSlot.currentTask task;
         for(int j = 0; j < 7; j++ ) {
             ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
-            ArrayList<Boolean> cancel = new ArrayList<>();
+            List<Boolean> cancel = new ArrayList<>();
 
             for (int i = 0; i < 96; i++) {
                 task = timeSlot.currentTask.FREE;
@@ -132,6 +139,8 @@ public class Profile implements Serializable {
             bufferedWriter.write("/");
             bufferedWriter.write(this.nbWorkHours);
             bufferedWriter.write("/");
+            bufferedWriter.write(this.optWorkTime);
+            bufferedWriter.write("/");
             for(int i=0; i < this.freeDay.length; i ++) {
                 if (this.freeDay[i]){
                     bufferedWriter.write('1');
@@ -144,6 +153,10 @@ public class Profile implements Serializable {
             bufferedWriter.write(this.wakeUp);
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(this.sportRoutine));
+            bufferedWriter.write("/");
+            bufferedWriter.write(String.valueOf(this.lateSportSlot));
+            bufferedWriter.write("/");
+            bufferedWriter.write(String.valueOf(this.lateWorkSlot));
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(settingDay.getTimeInMillis()));
             bufferedWriter.write("/");
@@ -253,6 +266,7 @@ public class Profile implements Serializable {
     public void decode(String lineData) {
         String lA="";
         String nW="";
+        String oW="";
         Character[] fD= new Character[] {'0','0','0','0','0','0','0'};
         String wU="";
         past_agenda_back = new ArrayList<>();
@@ -260,6 +274,8 @@ public class Profile implements Serializable {
         cancel_back = new ArrayList<>();
         event_back = new ArrayList<>();
         String sR="";
+        String lSS="";
+        String lWS="";
         String timeMillis = "";
         String lastConnexionTimeMillis = "";
         String pastAS = "";
@@ -274,26 +290,32 @@ public class Profile implements Serializable {
                              break;
                     case 1 : nW += lineData.charAt(i);
                              break;
-                    case 2 : fD[n] = lineData.charAt(i);
+                    case 2 : oW += lineData.charAt(i);
+                            break;
+                    case 3 : fD[n] = lineData.charAt(i);
                              n++;
                              break;
-                    case 3 : wU += lineData.charAt(i);
+                    case 4 : wU += lineData.charAt(i);
                              break;
-                    case 4 : sR += lineData.charAt(i);
+                    case 5 : sR += lineData.charAt(i);
                              break;
-                    case 5 : timeMillis += lineData.charAt(i);
+                    case 6 : lSS += lineData.charAt(i);
                             break;
-                    case 6 : lastConnexionTimeMillis += lineData.charAt(i);
+                    case 7 : lWS += lineData.charAt(i);
                             break;
-                    case 7 : pastAS += lineData.charAt(i);
+                    case 8 : timeMillis += lineData.charAt(i);
                             break;
-                    case 8 : getPastAgenda(lineData.charAt(i));
+                    case 9 : lastConnexionTimeMillis += lineData.charAt(i);
                             break;
-                    case 9 : getAgenda(lineData.charAt(i));
+                    case 10 : pastAS += lineData.charAt(i);
                             break;
-                    case 10 : getCanceled(lineData.charAt(i));
+                    case 11 : getPastAgenda(lineData.charAt(i));
                             break;
-                    case 11 : getSavedEvent(lineData.charAt(i));
+                    case 12 : getAgenda(lineData.charAt(i));
+                            break;
+                    case 13 : getCanceled(lineData.charAt(i));
+                            break;
+                    case 14 : getSavedEvent(lineData.charAt(i));
                             break;
 
                 }
@@ -311,6 +333,7 @@ public class Profile implements Serializable {
 
         this.licenceAccepted = Boolean.parseBoolean(lA);
         this.nbWorkHours = nW;
+        this.optWorkTime = oW;
         for(int i=0; i < fD.length; i ++) {
             if (fD[i] == '1') {
                 this.freeDay[i] = true;
@@ -321,6 +344,8 @@ public class Profile implements Serializable {
         }
         this.wakeUp = wU;
         this.sportRoutine = Integer.parseInt(sR);
+        this.lateSportSlot = Integer.parseInt(lSS);
+        this.lateWorkSlot = Integer.parseInt(lWS);
         this.settingDay = Calendar.getInstance();               //pas nécessaire?
         this.settingDay.setTimeInMillis(Long.parseLong(timeMillis));
         this.lastConnection.setTimeInMillis(Long.parseLong(lastConnexionTimeMillis));
@@ -340,20 +365,99 @@ public class Profile implements Serializable {
 
         for (int i = 0; i < daySinceLastConnection; i++) {
             this.pastAgenda.add(this.fullAgenda.get((i + offset)%7));
-            this.fullAgenda.set((i + offset)%7, this.freeWeekDay);
+
+            int nbFreeDay = 0;
+            for (int j = 0; j < freeDay.length; j++){
+                if (!freeDay[j]){
+                    nbFreeDay++;
+                }
+            }
+            int nbWorkDay=0;
+            for (int j=0 ; j < freeDay.length ; j++){
+                if (!freeDay[j]) {
+                    nbWorkDay++;
+                }
+            }
+            int[] freedaylist = new int[nbWorkDay];
+            int n = 0;
+            for (int j=0 ; j < this.freeDay.length ; j++){
+                if (!freeDay[j]) {
+                    freedaylist[n] = (j + (7-conversionDayIndice()))%7;
+                    n++;
+                }
+            }
+            boolean freeday = true;
+            for (int k = 0; k < freedaylist.length; k++) {
+                if (freedaylist[k] == i){
+                    freeday = false;
+                }
+            }
+            if (!freeday) {
+                this.lateWorkSlot += Integer.parseInt(nbWorkHours) / nbFreeDay;
+            }
+
+            if(sportRoutine == 2){
+                this.lateSportSlot += 4;
+            }
+            else{
+                this.lateSportSlot += 2;
+            }
+
+            DaySlotsCalculation plan = new DaySlotsCalculation(this);
+
+            IA Agent = new IA(plan.slots_generated.get((i + offset)%7), this.fullAgenda.get((i + offset)%7), (i + offset)%7,
+                    this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
+                    this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
+            Agent.planDay();
+            this.agenda.set((i + offset)%7, Agent.dailyAgenda);
+            this.lateSportSlot = Agent.sportSlot;
+            this.lateWorkSlot = Agent.workSlot;
 
             int position;
             for(int j = 0; j < 96; j +=4 ) {
                 position = j/4;
-                this.agenda.get((i + offset)%7).set(j, this.fullAgenda.get((i + offset)%7).get(position).task_1);
-                this.agenda.get((i + offset)%7).set(j+1, this.fullAgenda.get((i + offset)%7).get(position).task_2);
-                this.agenda.get((i + offset)%7).set(j+2, this.fullAgenda.get((i + offset)%7).get(position).task_3);
-                this.agenda.get((i + offset)%7).set(j+3, this.fullAgenda.get((i + offset)%7).get(position).task_4);
+                this.fullAgenda.get((i+offset)%7).get(position).task_1 =  this.agenda.get((i+offset)%7).get(j);
+                this.fullAgenda.get((i+offset)%7).get(position).task_2 =  this.agenda.get((i+offset)%7).get(j+1);
+                this.fullAgenda.get((i+offset)%7).get(position).task_3 =  this.agenda.get((i+offset)%7).get(j+2);
+                this.fullAgenda.get((i+offset)%7).get(position).task_4 =  this.agenda.get((i+offset)%7).get(j+3);
             }
 
         }
         this.lastConnection = Calendar.getInstance();
         this.lastConnection.setTimeInMillis(System.currentTimeMillis());
+    }
+
+    private int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
     }
 
     private void getSavedEvent(char charAt) {
@@ -428,7 +532,7 @@ public class Profile implements Serializable {
         timeSlot.currentTask task;
 
         for(int j = 0; j < this.pastAgendaSize; j++ ) {
-            ArrayList<timeSlot> mySlots = new ArrayList<>();
+            List<timeSlot> mySlots = new ArrayList<>();
             for (int i = 0; i < 24; i++) {
 
                 task = timeSlot.currentTask.FREE;
@@ -632,6 +736,51 @@ public class Profile implements Serializable {
             }
             if(ok){
                 this.nbWorkHours = String.valueOf(intHourt);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            ok=false;
+        }
+        return ok;
+    }
+
+    public boolean stringOptWorkTimeToSlot(String time){
+        boolean ok;
+        boolean entier = true;
+        String hour = "0";
+        String min = "0";
+        float hourt;
+        float mint;
+
+        for (int i = 0; i < time.length(); i++){
+            if(time.charAt(i) != ':' && entier) {
+                hour += time.charAt(i);
+            }
+            else if (time.charAt(i) != ':'){
+                min += time.charAt(i);
+            }
+            else if (time.charAt(i) == ':'){
+                entier = false;
+            }
+        }
+        try {
+            int intHourt=0;
+            hourt = Float.parseFloat(hour);
+            mint = Float.parseFloat(min);
+            ok = true;
+            if (hourt > 4 || hourt < 0){
+                ok = false;
+            }
+            if (mint >= 60 || mint < 0){
+                ok = false;
+            }
+            else {
+                hourt = hourt + roundFifty(mint/60);
+                hourt = hourt*4;
+                intHourt = (int)hourt;
+            }
+            if(ok){
+                this.optWorkTime = String.valueOf(intHourt);
             }
         } catch (Exception e) {
             e.printStackTrace();

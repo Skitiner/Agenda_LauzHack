@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AgendaActivity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class AgendaActivity extends AppCompatActivity {
     private ListView schedule;
     private static ArrayList<ArrayList<timeSlot>> week;
     private static ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
-    private static ArrayList<ArrayList<Boolean>> cancel_day_taks;
+    private static List<List<Boolean>> cancel_day_taks;
 
 
     private int currentDay;
@@ -77,14 +78,14 @@ public class AgendaActivity extends AppCompatActivity {
 
     private boolean delNewEvent = false;
 
-    private final ArrayList<Integer> colorIds = new ArrayList() {
+    private final List<Integer> colorIds = new ArrayList() {
         {
             add(R.id.pink); add(R.id.violet); add(R.id.lightDarkBlue); add(R.id.blue); add(R.id.turquoise);
             add(R.id.lemonGreen); add(R.id.lightGreen);
         }
     };
 
-    private final ArrayList<Integer> color = new ArrayList() {
+    private final List<Integer> color = new ArrayList() {
         {
             add(R.color.pink); add(R.color.violet); add(R.color.lightDarkBlue); add(R.color.blue); add(R.color.turquoise);
             add(R.color.lemonGreen); add(R.color.lightGreen);
