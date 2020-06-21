@@ -28,7 +28,7 @@ public class IA {
     //public List<List<timeSlot.currentTask>> calculatedAgenda;
     private List<newEvent> savedEvent;
     private int workSizeOpti;
-    int workSlot;
+    double workSlot;
     int sportCategory;
     int sportSlot;
 
@@ -42,7 +42,7 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, int wSlot, int sCategory, int sSlot){
+    public IA(ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, double wSlot, int sCategory, int sSlot){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -196,35 +196,36 @@ public class IA {
         }
         List<Integer> workPosition = new ArrayList<>();
 
-        if (workEvent.size() != 0) {
-            for (int j = 0; j < 4*fullDailyAgenda.size(); j++) {
+        for (int j = 0; j < 4*fullDailyAgenda.size(); j++) {
+            if (workEvent.size() != 0) {
                 for (String eventName : workEvent) {
-                    if (fullDailyAgenda.get(j/4).new_task_1 != null && j%4 == 0) {
-                        if (fullDailyAgenda.get(j/4).new_task_1.equals(eventName)) {
+                    if (fullDailyAgenda.get(j / 4).new_task_1 != null && j % 4 == 0) {
+                        if (fullDailyAgenda.get(j / 4).new_task_1.equals(eventName)) {
                             workPosition.add(j);
                         }
                     }
-                    if (fullDailyAgenda.get(j/4).new_task_2 != null && j%4 == 1) {
-                        if (fullDailyAgenda.get(j/4).new_task_2.equals(eventName)) {
+                    if (fullDailyAgenda.get(j / 4).new_task_2 != null && j % 4 == 1) {
+                        if (fullDailyAgenda.get(j / 4).new_task_2.equals(eventName)) {
                             workPosition.add(j);
                         }
                     }
-                    if (fullDailyAgenda.get(j/4).new_task_3 != null && j%4 == 2) {
-                        if (fullDailyAgenda.get(j/4).new_task_3.equals(eventName)) {
+                    if (fullDailyAgenda.get(j / 4).new_task_3 != null && j % 4 == 2) {
+                        if (fullDailyAgenda.get(j / 4).new_task_3.equals(eventName)) {
                             workPosition.add(j);
                         }
                     }
-                    if (fullDailyAgenda.get(j/4).new_task_4 != null && j%4 == 3) {
-                        if (fullDailyAgenda.get(j/4).new_task_4.equals(eventName)) {
+                    if (fullDailyAgenda.get(j / 4).new_task_4 != null && j % 4 == 3) {
+                        if (fullDailyAgenda.get(j / 4).new_task_4.equals(eventName)) {
                             workPosition.add(j);
                         }
                     }
-                }
-                if (dailyAgenda.get(j) == timeSlot.currentTask.WORK_FIX){
-                    workPosition.add(j);
                 }
             }
+            if (dailyAgenda.get(j) == timeSlot.currentTask.WORK_FIX){
+                workPosition.add(j);
+            }
         }
+
 
         List<List<Integer>> freeDaySlot = new ArrayList<>();
         List<Integer> freeGroupSlot = new ArrayList<>();

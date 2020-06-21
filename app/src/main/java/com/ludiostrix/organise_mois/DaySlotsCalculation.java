@@ -79,6 +79,7 @@ public class DaySlotsCalculation {
         sport_routine = userProfile.sportRoutine;
         slots_generated = new ArrayList<>();
 
+
         init();
         remove_canceled_days();
         setMorningRoutine();
@@ -117,7 +118,7 @@ public class DaySlotsCalculation {
                 }
             }
             if(!freeday) {
-                this.userProfile.lateWorkSlot += Integer.parseInt(userProfile.nbWorkHours) / nbFreeDay;
+                this.userProfile.lateWorkSlot += Double.parseDouble(userProfile.nbWorkHours) / (double)nbFreeDay;
             }
             if(userProfile.sportRoutine == 2){
                 userProfile.lateSportSlot += 4;

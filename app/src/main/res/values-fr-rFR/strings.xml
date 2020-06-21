@@ -25,7 +25,7 @@
     <string name="forgetOptWorkHour">Vous avez oublier d\'entrer votre temps de travail optimal avant une pause !</string>
     <string name="forgetWakeUp">Vous avez oublier de renter une heure de reveil !</string>
     <string name="Saved">Sauvegardé</string>
-    <string name="accept">Veuillez acceptez les conditions générales d\'utilisation.</string>
+    <string name="accept">Veuillez accepter les conditions générales d\'utilisation.</string>
     <string name="light">Calme</string>
     <string name="moderated">Modéré</string>
     <string name="intense">Intense</string>

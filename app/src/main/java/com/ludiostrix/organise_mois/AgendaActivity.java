@@ -459,6 +459,8 @@ public class AgendaActivity extends AppCompatActivity {
 
         userProfile.convertInPastDay();
 
+        //convertInPastDay();
+
         saveToFile();
 
         setWeekSlots();
@@ -499,6 +501,82 @@ public class AgendaActivity extends AppCompatActivity {
         dt = sdf.format(c.getTime());
 
         date.setText(dt);
+    }
+
+    public void convertInPastDay(){
+        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        int daySinceLastConnection = actual_day - userProfile.lastConnection.get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        offset = (offset-daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
+
+        for (int i = 0; i < daySinceLastConnection; i++) {
+            //ArrayList<ArrayList<timeSlot>> copy = (ArrayList<ArrayList<timeSlot>>)userProfile.fullAgenda.clone();
+            //ArrayList<ArrayList<timeSlot>> copy = new ArrayList<>(fullAgenda);
+            //ArrayList<ArrayList<timeSlot>> copy = fullAgenda.stream().collect(Collectors.toCollection());
+            //Collections.copy(copy, fullAgenda);
+
+            userProfile.pastAgenda.add(week.get((i-daySinceLastConnection + 7)%7));
+
+            int nbWorkDay=0;
+            for (int j=0 ; j < userProfile.freeDay.length ; j++){
+                if (!userProfile.freeDay[j]) {
+                    nbWorkDay++;
+                }
+            }
+            int[] freedaylist = new int[nbWorkDay];
+            int n = 0;
+            for (int j=0 ; j < userProfile.freeDay.length ; j++){
+                if (!userProfile.freeDay[j]) {
+                    freedaylist[n] = j;
+                    n++;
+                }
+            }
+
+            boolean freeday = true;
+            for (int k = 0; k < freedaylist.length; k++) {
+                if (freedaylist[k] == (i + conversionDayIndice() - daySinceLastConnection)%7){
+                    freeday = false;
+                }
+            }
+
+            if (!freeday) {
+                userProfile.lateWorkSlot += Integer.parseInt(userProfile.nbWorkHours) / nbWorkDay;
+            }
+
+            if(userProfile.sportRoutine == 2){
+                userProfile.lateSportSlot += 4;
+            }
+            else{
+                userProfile.lateSportSlot += 2;
+            }
+
+            DaySlotsCalculation plan = new DaySlotsCalculation(userProfile);
+
+            // problèmes d'indices
+            IA Agent = new IA(plan.slots_generated.get((i + offset)%7), userProfile.fullAgenda.get((i + offset)%7),
+                    (i + offset)%7, userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
+                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot);
+            Agent.planDay();
+            userProfile.agenda.set((i + offset)%7, Agent.dailyAgenda);
+            userProfile.lateSportSlot = Agent.sportSlot;
+            userProfile.lateWorkSlot = Agent.workSlot;
+
+            int position;
+            for(int j = 0; j < 96; j +=4 ) {
+                position = j/4;
+                userProfile.fullAgenda.get((i+offset)%7).get(position).task_1 = userProfile.agenda.get((i+offset)%7).get(j);
+                userProfile.fullAgenda.get((i+offset)%7).get(position).task_2 = userProfile.agenda.get((i+offset)%7).get(j+1);
+                userProfile.fullAgenda.get((i+offset)%7).get(position).task_3 = userProfile.agenda.get((i+offset)%7).get(j+2);
+                userProfile.fullAgenda.get((i+offset)%7).get(position).task_4 = userProfile.agenda.get((i+offset)%7).get(j+3);
+            }
+
+        }
+        userProfile.lastConnection = Calendar.getInstance();
+        userProfile.lastConnection.setTimeInMillis(System.currentTimeMillis());
     }
 
     private void saveToFile(){
