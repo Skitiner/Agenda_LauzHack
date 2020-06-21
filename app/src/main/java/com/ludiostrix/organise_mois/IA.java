@@ -28,7 +28,7 @@ public class IA {
     //public List<List<timeSlot.currentTask>> calculatedAgenda;
     private List<newEvent> savedEvent;
     private int workSizeOpti;
-    double workSlot;
+    float workSlot;
     int sportCategory;
     int sportSlot;
 
@@ -42,7 +42,7 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, double wSlot, int sCategory, int sSlot){
+    public IA(ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -69,6 +69,9 @@ public class IA {
         setSport();
         if (!freeDay) {
             setWork();
+        }
+        else {
+            searchFreeWorkSlot(); // enleve les heures de travaile de la journée
         }
     }
 
@@ -245,7 +248,7 @@ public class IA {
             }
         }
 
-        workSlot = workSlot - workPosition.size();
+        workSlot = workSlot - (float)workPosition.size();
 
         return freeDaySlot;
     }

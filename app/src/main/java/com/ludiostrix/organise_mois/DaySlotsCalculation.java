@@ -56,7 +56,7 @@ public class DaySlotsCalculation {
         slots_generated = new ArrayList<>();
     }
 
-    public DaySlotsCalculation(Profile userProfile) {
+    public DaySlotsCalculation(Profile userProfile, boolean freeday) {
 
         nb_work_h = Integer.parseInt(userProfile.nbWorkHours);
         free_day = userProfile.freeDay;
@@ -82,8 +82,10 @@ public class DaySlotsCalculation {
 
         init();
         remove_canceled_days();
-        setMorningRoutine();
-        setNight();
+        if (!freeday) {
+            setMorningRoutine();
+            setNight();
+        }
 
         int nbFixedWork = compare(userProfile.agenda);
     }
@@ -118,7 +120,7 @@ public class DaySlotsCalculation {
                 }
             }
             if(!freeday) {
-                this.userProfile.lateWorkSlot += Double.parseDouble(userProfile.nbWorkHours) / (double)nbFreeDay;
+                this.userProfile.lateWorkSlot += Float.parseFloat(userProfile.nbWorkHours) / (float) nbFreeDay;
             }
             if(userProfile.sportRoutine == 2){
                 userProfile.lateSportSlot += 4;
@@ -156,7 +158,7 @@ public class DaySlotsCalculation {
             //userProfile.agenda = slots_generated;
             //userProfile.agenda.set(0, Agent.dailyAgenda);
             int pos;
-            for (int indice = 0; indice < slots_generated.size(); indice++) {
+            for (int indice = 0; indice < userProfile.fullAgenda.size(); indice++) {
                 for (int i = 0; i < 96; i += 4) {
                     pos = i / 4;
                     userProfile.fullAgenda.get(indice).get(pos).task_1 = userProfile.agenda.get(indice).get(i);
@@ -424,7 +426,7 @@ public class DaySlotsCalculation {
         for (int i = 0; i < freedaylist.length; i++) {
             for (int j = 0; j < 32; j++) {
                 if ((wake_up*4)-j-1 < 0) {
-                    this.slots_generated.get((freedaylist[i]-1+7)%7).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    this.slots_generated.get((freedaylist[i]-1)%7 + 7).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
                 }
                 else {
                     this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);

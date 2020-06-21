@@ -21,7 +21,7 @@ public class Profile implements Serializable {
     protected String wakeUp;
     protected int sportRoutine;
     protected int lateSportSlot;
-    protected double lateWorkSlot;
+    protected Float lateWorkSlot;
     protected boolean calculation;
     protected String FileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
@@ -53,7 +53,7 @@ public class Profile implements Serializable {
         this.wakeUp = "8.0";
         this.sportRoutine = 1;
         this.lateSportSlot = 0;
-        this.lateWorkSlot = 0;
+        this.lateWorkSlot = Float.valueOf(0);
         calculation = false;
         this.FileName = "userProfile.txt";
         initAgenda();
@@ -357,7 +357,7 @@ public class Profile implements Serializable {
         this.wakeUp = wU;
         this.sportRoutine = Integer.parseInt(sR);
         this.lateSportSlot = Integer.parseInt(lSS);
-        this.lateWorkSlot = Double.parseDouble(lWS);
+        this.lateWorkSlot = Float.parseFloat(lWS);
         this.settingDay = Calendar.getInstance();               //pas nécessaire?
         this.settingDay.setTimeInMillis(Long.parseLong(timeMillis));
         this.lastConnection.setTimeInMillis(Long.parseLong(lastConnexionTimeMillis));
@@ -376,12 +376,20 @@ public class Profile implements Serializable {
         offset = (offset-daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
 
         for (int i = 0; i < daySinceLastConnection; i++) {
-            ArrayList<ArrayList<timeSlot>> copy = (ArrayList<ArrayList<timeSlot>>)this.fullAgenda.clone();
-            //ArrayList<ArrayList<timeSlot>> copy = new ArrayList<>(fullAgenda);
+            int val = (i + offset) % 7;
+            if (val < 0) {
+                val += 7;
+            }
+            //ArrayList<ArrayList<timeSlot>> copy = (ArrayList<ArrayList<timeSlot>>)this.fullAgenda.clone();
+            ArrayList<timeSlot> copy = new ArrayList<>(fullAgenda.get(val).size());
             //ArrayList<ArrayList<timeSlot>> copy = fullAgenda.stream().collect(Collectors.toCollection());
             //Collections.copy(copy, fullAgenda);
 
-            this.pastAgenda.add(copy.get((i + offset)%7));
+            for (timeSlot task : fullAgenda.get(val)){
+                copy.add(new timeSlot(task));
+            }
+
+            this.pastAgenda.add(copy);
 
             int nbWorkDay=0;
             for (int j=0 ; j < freeDay.length ; j++){
@@ -406,7 +414,7 @@ public class Profile implements Serializable {
             }
 
             if (!freeday) {
-                this.lateWorkSlot += Double.parseDouble(nbWorkHours) / (double)nbWorkDay;
+                this.lateWorkSlot += Float.parseFloat(nbWorkHours) / (float) nbWorkDay;
             }
 
             if(sportRoutine == 2){
@@ -416,24 +424,24 @@ public class Profile implements Serializable {
                 this.lateSportSlot += 2;
             }
 
-            DaySlotsCalculation plan = new DaySlotsCalculation(this);
+            DaySlotsCalculation plan = new DaySlotsCalculation(this, freeday);
 
             // problèmes d'indices
-            IA Agent = new IA(plan.slots_generated.get((i + offset)%7), this.fullAgenda.get((i + offset)%7),
-                    (i + offset)%7, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
+            IA Agent = new IA(plan.slots_generated.get(val), this.fullAgenda.get(val),
+                    val, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                     this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
             Agent.planDay();
-            this.agenda.set((i + offset)%7, Agent.dailyAgenda);
+            this.agenda.set(val, Agent.dailyAgenda);
             this.lateSportSlot = Agent.sportSlot;
             this.lateWorkSlot = Agent.workSlot;
 
             int position;
             for(int j = 0; j < 96; j +=4 ) {
                 position = j/4;
-                this.fullAgenda.get((i+offset)%7).get(position).task_1 = this.agenda.get((i+offset)%7).get(j);
-                this.fullAgenda.get((i+offset)%7).get(position).task_2 = this.agenda.get((i+offset)%7).get(j+1);
-                this.fullAgenda.get((i+offset)%7).get(position).task_3 = this.agenda.get((i+offset)%7).get(j+2);
-                this.fullAgenda.get((i+offset)%7).get(position).task_4 = this.agenda.get((i+offset)%7).get(j+3);
+                this.fullAgenda.get(val).get(position).task_1 = this.agenda.get(val).get(j);
+                this.fullAgenda.get(val).get(position).task_2 = this.agenda.get(val).get(j+1);
+                this.fullAgenda.get(val).get(position).task_3 = this.agenda.get(val).get(j+2);
+                this.fullAgenda.get(val).get(position).task_4 = this.agenda.get(val).get(j+3);
             }
 
         }
