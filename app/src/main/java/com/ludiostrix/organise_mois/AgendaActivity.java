@@ -459,9 +459,11 @@ public class AgendaActivity extends AppCompatActivity {
 
         userProfile.convertInPastDay();
 
+        //setWeekSlots();
+
         saveToFile();
 
-        setWeekSlots();
+
 
         if (date_offset >= 7) {
             adapter.addAll(userProfile.freeWeekDay);
@@ -644,18 +646,7 @@ public class AgendaActivity extends AppCompatActivity {
                 textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        public void updateAgenda() {
-            int position;
-            for(int i = 0; i < 96; i +=4 ) {
-                position = i/4;
-                week.get(currentDay).get(position).task_1 =  dailyTasks.get(currentDay).get(i);
-                week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
-                week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
-                week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
-            }
-            adapter.clear();
-            adapter.addAll(week.get(currentDay));
-        }
+
 
         public void updateWeekAgenda() {
             int position;
@@ -665,6 +656,19 @@ public class AgendaActivity extends AppCompatActivity {
                 dailyTasks.get(currentDay).set(i+1, week.get(currentDay).get(position).task_2);
                 dailyTasks.get(currentDay).set(i+2, week.get(currentDay).get(position).task_3);
                 dailyTasks.get(currentDay).set(i+3, week.get(currentDay).get(position).task_4);
+            }
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+        }
+
+        public void updateAgenda() {
+            int position;
+            for(int i = 0; i < 96; i +=4 ) {
+                position = i/4;
+                week.get(currentDay).get(position).task_1 =  dailyTasks.get(currentDay).get(i);
+                week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
+                week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
+                week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));

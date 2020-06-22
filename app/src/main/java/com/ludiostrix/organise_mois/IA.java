@@ -71,7 +71,7 @@ public class IA {
             setWork();
         }
         else {
-            searchFreeWorkSlot(); // enleve les heures de travaile de la journée
+            searchFreeWorkSlot(); // enleve les heures de travail de la journée
         }
     }
 
@@ -440,7 +440,7 @@ public class IA {
         List<Integer> position;
         List<List<Integer>> scoresPosition = new ArrayList<>();
 
-        for (int i = 0; i < dailyAgenda.size() - nbSportSlot; i++) {
+        for (int i = 0; i < dailyAgenda.size() - nbSportSlot + 1; i++) {
             position = new ArrayList<>();
             if (dailyAgenda.get(i) == timeSlot.currentTask.FREE) {
                 position.add(i);
@@ -474,9 +474,12 @@ public class IA {
 
             //choisi le dernier max (ajoute de préférence après le newevent)
             double maxScore = 0;
-            int maxScoreIndice = 0;
+            int maxScoreIndice = -1;
             for (int i = 0; i < score.size(); i++) {
-                if (score.get(i) >= maxScore) {
+                if (score.get(i) >= maxScore && (score.get(i) > maxScore ||
+                        (scoresPosition.get(i).get(0) < 20*4 + 1 && scoresPosition.get(i).get(0) >= 5*4) ||
+                        (scoresPosition.get(i).get(0) >= 20*4 && scoresPosition.get(maxScoreIndice).get(0) < 5*4) ||
+                        maxScoreIndice == -1)) {
                     maxScore = score.get(i);
                     maxScoreIndice = i;
                 }
