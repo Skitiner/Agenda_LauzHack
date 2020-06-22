@@ -252,13 +252,8 @@ public class AgendaActivity extends AppCompatActivity {
 
     // Fonction pour adapter le dailyTask au jour actuel
     private void setWeekSlots() {
-        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
-        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
-        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
-        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
-
-        int offset_indice = offset%7;
+        int offset_indice = convertedIndice();
 
         dailyTasks = new ArrayList<>(userProfile.agenda);
         cancel_day_taks = new ArrayList<>(userProfile.canceled_slots);
@@ -459,11 +454,9 @@ public class AgendaActivity extends AppCompatActivity {
 
         userProfile.convertInPastDay();
 
-        //setWeekSlots();
+        setWeekSlots();
 
         saveToFile();
-
-
 
         if (date_offset >= 7) {
             adapter.addAll(userProfile.freeWeekDay);
