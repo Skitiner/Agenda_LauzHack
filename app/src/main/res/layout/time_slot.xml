@@ -26,6 +26,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:background="@color/organisemois_background"
+            android:textColor="@color/black"
             android:text="0h00" />
 
         <LinearLayout
