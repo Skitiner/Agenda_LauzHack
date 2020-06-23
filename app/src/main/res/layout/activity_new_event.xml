@@ -14,12 +14,12 @@
 
 
         <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:textSize="22sp"
-        android:textColor="@color/black"
-        android:text="@string/newEvent"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:textSize="22sp"
+            android:textColor="@color/black"
+            android:text="@string/newEvent"/>
 
         <LinearLayout
             android:id="@+id/autoCompleteLayout"

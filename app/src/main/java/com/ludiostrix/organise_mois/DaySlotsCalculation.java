@@ -313,9 +313,8 @@ public class DaySlotsCalculation {
 
         return memip;
     }
-
+  
     public void initSportVariable(){
-
         switch (sport_routine){
             case 0:
             case 1: nbSportTimeSlots = 14;

@@ -4,6 +4,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -85,6 +86,7 @@ public class Broadcast_new_event extends BroadcastReceiver {
                 .addAction(R.drawable.cheetah_background, context.getString(R.string.start), startAct)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.minutes), postpone)
                 .addAction(R.drawable.rabbit_background, context.getString(R.string.cancel), cancel);
+
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationId, builder.build());
