@@ -43,6 +43,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class AgendaActivity extends AppCompatActivity {
@@ -55,7 +56,9 @@ public class AgendaActivity extends AppCompatActivity {
     private ListView schedule;
     private static ArrayList<ArrayList<timeSlot>> week;
     private static ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
-    private static ArrayList<ArrayList<Boolean>> cancel_day_taks;
+    private static List<List<Boolean>> cancel_day_taks;
+
+
     private int currentDay;
     private Date currentDate;
     private TextView date;
@@ -75,14 +78,14 @@ public class AgendaActivity extends AppCompatActivity {
 
     private boolean delNewEvent = false;
 
-    private final ArrayList<Integer> colorIds = new ArrayList() {
+    private final List<Integer> colorIds = new ArrayList() {
         {
             add(R.id.pink); add(R.id.violet); add(R.id.lightDarkBlue); add(R.id.blue); add(R.id.turquoise);
             add(R.id.lemonGreen); add(R.id.lightGreen);
         }
     };
 
-    private final ArrayList<Integer> color = new ArrayList() {
+    private final List<Integer> color = new ArrayList() {
         {
             add(R.color.pink); add(R.color.violet); add(R.color.lightDarkBlue); add(R.color.blue); add(R.color.turquoise);
             add(R.color.lemonGreen); add(R.color.lightGreen);
@@ -103,6 +106,11 @@ public class AgendaActivity extends AppCompatActivity {
         userProfile = new Profile();
 
         readFromFile();
+
+        userProfile.convertInPastDay();
+
+        MainActivity.setAlarmOfTheDay(AgendaActivity.this);
+
         setWeekSlots();
 
         nb_day_to_set = 0;
@@ -173,6 +181,7 @@ public class AgendaActivity extends AppCompatActivity {
                 week.add(mySlots);
             }
         }
+
         schedule = findViewById(R.id.schedule);
 
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
@@ -247,14 +256,9 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     // Fonction pour adapter le dailyTask au jour actuel
-    private void setWeekSlots() {
-        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
-        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+    public void setWeekSlots() {
 
-        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
-        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
-
-        int offset_indice = offset%7;
+        int offset_indice = convertedIndice();
 
         dailyTasks = new ArrayList<>(userProfile.agenda);
         cancel_day_taks = new ArrayList<>(userProfile.canceled_slots);
@@ -453,8 +457,31 @@ public class AgendaActivity extends AppCompatActivity {
             }
         }
 
-        Log.w("CURRENT DAY", " " +currentDay);
-        adapter.addAll(week.get(currentDay));
+        setWeekSlots();
+
+        saveToFile();
+
+        if (date_offset >= 7) {
+            adapter.addAll(userProfile.freeWeekDay);
+        }
+        else if (date_offset < 0){
+            int past = Math.abs(date_offset + 1);
+            if (userProfile.pastAgenda != null) {
+                if (past < userProfile.pastAgenda.size()) {
+                    adapter.addAll(userProfile.pastAgenda.get(userProfile.pastAgenda.size() - 1 - past));
+                }
+                else {
+                    adapter.addAll(userProfile.freeWeekDay);
+                }
+            }
+            else {
+                adapter.addAll(userProfile.freeWeekDay);
+            }
+        }
+        else {
+            Log.w("CURRENT DAY", " " + currentDay);
+            adapter.addAll(week.get(currentDay));
+        }
 
         // Start date
         SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
@@ -615,18 +642,7 @@ public class AgendaActivity extends AppCompatActivity {
                 textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }
 
-        public void updateAgenda() {
-            int position;
-            for(int i = 0; i < 96; i +=4 ) {
-                position = i/4;
-                week.get(currentDay).get(position).task_1 =  dailyTasks.get(currentDay).get(i);
-                week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
-                week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
-                week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
-            }
-            adapter.clear();
-            adapter.addAll(week.get(currentDay));
-        }
+
 
         public void updateWeekAgenda() {
             int position;
@@ -636,6 +652,19 @@ public class AgendaActivity extends AppCompatActivity {
                 dailyTasks.get(currentDay).set(i+1, week.get(currentDay).get(position).task_2);
                 dailyTasks.get(currentDay).set(i+2, week.get(currentDay).get(position).task_3);
                 dailyTasks.get(currentDay).set(i+3, week.get(currentDay).get(position).task_4);
+            }
+            adapter.clear();
+            adapter.addAll(week.get(currentDay));
+        }
+
+        public void updateAgenda() {
+            int position;
+            for(int i = 0; i < 96; i +=4 ) {
+                position = i/4;
+                week.get(currentDay).get(position).task_1 =  dailyTasks.get(currentDay).get(i);
+                week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
+                week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
+                week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
@@ -1127,6 +1156,7 @@ public class AgendaActivity extends AppCompatActivity {
                     hourt -=24;
                 }
             }
+
             if(ok){
                 fTime = hourt;
             }
@@ -1134,6 +1164,7 @@ public class AgendaActivity extends AppCompatActivity {
             e.printStackTrace();
             ok=false;
         }
+
         if (!ok){
             fTime = -1;
         }

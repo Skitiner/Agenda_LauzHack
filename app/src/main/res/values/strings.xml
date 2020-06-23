@@ -6,10 +6,11 @@
     <string name="eat">lunch</string>
     <string name="work">work</string>
     <string name="Sport">Sport</string>
-    <string name="Wakeup">4. Wake up :</string>
+    <string name="Wakeup">5. Wake up :</string>
     <string name="NBWork">1. Number of work hours per week :</string>
-    <string name="FixedWork">3. If you have some fixed working hours, you can set them on this button</string>
-    <string name="FreeDay">2. As it is important to rest, select your free day (green = free day)</string>
+    <string name="NBOptWork">2. Optimal time of work before a break :</string>
+    <string name="FixedWork">4. If you have some fixed working hours, you can set them on this button</string>
+    <string name="FreeDay">3. As it is important to rest, select your free day (green = free day)</string>
     <string name="monday">Mo</string>
     <string name="tuesday">Tu</string>
     <string name="wednesday">We</string>
@@ -17,9 +18,10 @@
     <string name="friday">Fr</string>
     <string name="saturday">Sa</string>
     <string name="sunday">Su</string>
-    <string name="eatTime">"5. Select your lunch time: "</string>
-    <string name="sport">6. Select your sport routine:</string>
+    <string name="eatTime">"6. Select your lunch time: "</string>
+    <string name="sport">7. Select your sport routine:</string>
     <string name="forgetWorkHour">You forgot to enter a number of work hour !</string>       <!--à changer dans profileactivity aussi-->
+    <string name="forgetOptWorkHour">You forgot to enter your optimal working time before a break!</string>
     <string name="forgetWakeUp">You forgot to enter a wake up hour !</string>                <!-- à changer dans profileactivity aussi-->
     <string name="Saved">Correctly saved !</string>                                          <!--à changer dans profileactivity aussi-->
     <string name="accept">Please, read and accept the general condition of utilisation.</string>
@@ -42,6 +44,7 @@
     <string name="cancel">Cancel</string>
     <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8:00)</string>
     <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42:00)</string>
+    <string name="wrongnbOptWorkHours">The optimal work time before a break is not valid ! (e.g 1:00)</string>
     <string name="allFreeDay">Why did you install this app ? Set at least one working day !</string>
     <string name="notif_sport_easy">Could be good to walk for example.</string>
     <string name="notif_sport_hard">Could be good to run for example.</string>
@@ -68,7 +71,6 @@
     <string name="isSport">Sport</string>
     <string name="isFree">Free time</string>
     <string name="isWorkSportFree">Is this activity work, sport or free time ?</string>
-
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
