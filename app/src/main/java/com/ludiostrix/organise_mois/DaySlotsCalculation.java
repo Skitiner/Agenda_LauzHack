@@ -448,8 +448,10 @@ public class DaySlotsCalculation {
 
     private void setDailyNight(boolean nextfreeday){
         for (int j = 0; j < 32; j++) {
-            if ((wake_up*4)-j-1 < 0 && nextfreeday) {
-                this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+            if ((wake_up*4)-j-1 < 0) {
+                if (nextfreeday) {
+                    this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                }
             }
             else {
                 this.daily_slots_generated.set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
@@ -467,7 +469,7 @@ public class DaySlotsCalculation {
         for (int i = 0; i < freedaylist.length; i++) {
             for (int j = 0; j < 32; j++) {
                 if ((wake_up*4)-j-1 < 0) {
-                    this.slots_generated.get((freedaylist[i]-1)%7 + 7).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    this.slots_generated.get((freedaylist[i]-1 + 7)%7).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
                 }
                 else {
                     this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);

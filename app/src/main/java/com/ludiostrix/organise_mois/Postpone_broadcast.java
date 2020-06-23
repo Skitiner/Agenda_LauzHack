@@ -44,6 +44,10 @@ public class Postpone_broadcast extends BroadcastReceiver {
         int startI = calendar.get(Calendar.HOUR_OF_DAY)*4 + calendar.get(Calendar.MINUTE)/15;
         int converted_indice = convertedIndice();
 
+        if(startI != 0){
+            startI--;
+        }
+
         ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
         List<String> newEvent = new ArrayList<>(userProfile.newEventAgenda.get(converted_indice));
 
@@ -58,25 +62,24 @@ public class Postpone_broadcast extends BroadcastReceiver {
             userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
             userProfile.newEventAgenda.get(converted_indice).set(i, newEvent.get(i-1));
         }
-        updateWeek();
+        updateDay();
         saveToFile();
         setAlarmOfTheDay(context);
     }
 
-    private void updateWeek() {
+    private void updateDay() {
+        int convertedIndice = convertedIndice();
         int position;
-        for(int j = 0; j < 7; j++) {
-            for (int i = 0; i < 96; i += 4) {
-                position = i / 4;
-                userProfile.fullAgenda.get(j).get(position).task_1 = userProfile.agenda.get(j).get(i);
-                userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
-                userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
-                userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
-                userProfile.fullAgenda.get(j).get(position).new_task_1 = userProfile.newEventAgenda.get(j).get(i);
-                userProfile.fullAgenda.get(j).get(position).new_task_2 = userProfile.newEventAgenda.get(j).get(i + 1);
-                userProfile.fullAgenda.get(j).get(position).new_task_3 = userProfile.newEventAgenda.get(j).get(i + 2);
-                userProfile.fullAgenda.get(j).get(position).new_task_4 = userProfile.newEventAgenda.get(j).get(i + 3);
-            }
+        for (int i = 0; i < 96; i += 4) {
+            position = i / 4;
+            userProfile.fullAgenda.get(convertedIndice).get(position).task_1 = userProfile.agenda.get(convertedIndice).get(i);
+            userProfile.fullAgenda.get(convertedIndice).get(position).task_2 = userProfile.agenda.get(convertedIndice).get(i + 1);
+            userProfile.fullAgenda.get(convertedIndice).get(position).task_3 = userProfile.agenda.get(convertedIndice).get(i + 2);
+            userProfile.fullAgenda.get(convertedIndice).get(position).task_4 = userProfile.agenda.get(convertedIndice).get(i + 3);
+            userProfile.fullAgenda.get(convertedIndice).get(position).new_task_1 = userProfile.newEventAgenda.get(convertedIndice).get(i);
+            userProfile.fullAgenda.get(convertedIndice).get(position).new_task_2 = userProfile.newEventAgenda.get(convertedIndice).get(i + 1);
+            userProfile.fullAgenda.get(convertedIndice).get(position).new_task_3 = userProfile.newEventAgenda.get(convertedIndice).get(i + 2);
+            userProfile.fullAgenda.get(convertedIndice).get(position).new_task_4 = userProfile.newEventAgenda.get(convertedIndice).get(i + 3);
         }
     }
 

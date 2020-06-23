@@ -71,6 +71,7 @@ public class Profile implements Serializable {
         lastConnection.setTimeInMillis(System.currentTimeMillis());
 
         current = new String();
+        currentPast = new String();
         cancel_current = new String();
         event_current = new String();
 
@@ -488,7 +489,7 @@ public class Profile implements Serializable {
 
             DaySlotsCalculation plan = new DaySlotsCalculation(this, freeday, nextfreeday, val);
 
-            // problèmes d'indices
+
             IA Agent = new IA(this.weight, plan.daily_slots_generated, this.newEventAgenda.get(val),
                     val, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                     this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);

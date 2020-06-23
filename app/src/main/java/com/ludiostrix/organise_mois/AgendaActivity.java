@@ -109,6 +109,8 @@ public class AgendaActivity extends AppCompatActivity {
 
         userProfile.convertInPastDay();
 
+        saveToFile();
+
         MainActivity.setAlarmOfTheDay(AgendaActivity.this);
 
         setWeekSlots();
@@ -463,9 +465,9 @@ public class AgendaActivity extends AppCompatActivity {
             }
         }
 
-        setWeekSlots();
+        //setWeekSlots();
 
-        saveToFile();
+        //saveToFile();
 
         if (date_offset >= 7) {
             adapter.addAll(userProfile.freeWeekDay);
@@ -1035,7 +1037,7 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     public void setNewEvent(float startTime, float stopTime, String eventName) {
-        for (int i = (int)startTime; i <= (int)stopTime; i++) {
+        for (int i = (int)(4*startTime); i < (int)(4*stopTime); i++) {
             dailyTasks.get(currentDay).set(i, timeSlot.currentTask.NEWEVENT);
             userProfile.newEventAgenda.get(currentDay).set(i, eventName);
             /*if ((int)startTime == (int) stopTime){

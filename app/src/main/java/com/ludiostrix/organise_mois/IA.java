@@ -180,7 +180,7 @@ public class IA {
         }
 
         for (int i = 0; i < pausePosition.size(); i++){
-            dailyAgenda.set(pausePosition.get(i), timeSlot.currentTask.FREE);
+            dailyAgenda.set(pausePosition.get(i), timeSlot.currentTask.PAUSE);
         }
 
     }
@@ -198,10 +198,8 @@ public class IA {
         for (int j = 0; j < newEventAgenda.size(); j++) {
             if (workEvent.size() != 0) {
                 for (String eventName : workEvent) {
-                    if (!newEventAgenda.get(j).equals("")){
-                        if (newEventAgenda.get(j).equals(eventName)){
-                            workPosition.add(j);
-                        }
+                    if (newEventAgenda.get(j).equals(eventName)){
+                        workPosition.add(j);
                     }
                 }
             }
@@ -490,10 +488,8 @@ public class IA {
         if (sportEvent.size() != 0) {
             for (int j = 0; j < newEventAgenda.size(); j++) {
                 for (String eventName : sportEvent) {
-                    if (!newEventAgenda.get(j).equals("")){
-                        if (newEventAgenda.get(j).equals(eventName)){
-                            sportSlot.add(j);
-                        }
+                    if (newEventAgenda.get(j).equals(eventName)){
+                        sportSlot.add(j);
                     }
                 }
             }
