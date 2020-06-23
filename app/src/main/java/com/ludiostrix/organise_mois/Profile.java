@@ -8,7 +8,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Profile implements Serializable {
@@ -26,6 +28,7 @@ public class Profile implements Serializable {
     protected String FileName;
     //protected String LastFileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
+    protected ArrayList<ArrayList<String>> newEventAgenda;
     protected ArrayList<ArrayList<timeSlot>> fullAgenda;
     protected int pastAgendaSize;
     protected List<List<timeSlot>> pastAgenda;
@@ -43,6 +46,7 @@ public class Profile implements Serializable {
     public List<newEvent> savedEvent;
     public ArrayList<timeSlot> freeWeekDay;
     protected List<List<List<Integer>>> weight;
+    protected Map<String,Integer> Task = new HashMap<>();
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -92,6 +96,8 @@ public class Profile implements Serializable {
         this.pastAgendaSize = 0;
 
         initWeight();
+        this.Task.put("Sport",0);
+        this.Task.put("Work",1);
     }
 
     /*public Profile(Profile that) {
@@ -159,20 +165,24 @@ public class Profile implements Serializable {
 
     private void initAgenda() {
         agenda = new ArrayList<>();
+        newEventAgenda = new ArrayList<>();
         canceled_slots = new ArrayList<>();
 
         timeSlot.currentTask task;
         for(int j = 0; j < 7; j++ ) {
             ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
             List<Boolean> cancel = new ArrayList<>();
+            ArrayList<String> newEvent = new ArrayList<>();
 
             for (int i = 0; i < 96; i++) {
                 task = timeSlot.currentTask.FREE;
                 tasks.add(task);
                 cancel.add(Boolean.FALSE);
+                newEvent.add("");
             }
             agenda.add(tasks);
             canceled_slots.add(cancel);
+            newEventAgenda.add(newEvent);
         }
 
     }
@@ -479,7 +489,7 @@ public class Profile implements Serializable {
             DaySlotsCalculation plan = new DaySlotsCalculation(this, freeday, nextfreeday, val);
 
             // problèmes d'indices
-            IA Agent = new IA(this.weight, plan.daily_slots_generated, this.fullAgenda.get(val),
+            IA Agent = new IA(this.weight, plan.daily_slots_generated, this.newEventAgenda.get(val),
                     val, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                     this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
             Agent.planDay();
@@ -715,6 +725,7 @@ public class Profile implements Serializable {
             }
             else{
                 agenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
+                newEventAgenda.get(j).set(k, agenda_back.get(i));
                 if(k%4 == 0) {
                     fullAgenda.get(j).get((int) k / 4).new_task_1 = agenda_back.get(i);
                 }

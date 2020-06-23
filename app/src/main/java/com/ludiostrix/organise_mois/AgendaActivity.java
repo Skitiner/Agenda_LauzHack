@@ -671,6 +671,10 @@ public class AgendaActivity extends AppCompatActivity {
                 week.get(currentDay).get(position).task_2 =  dailyTasks.get(currentDay).get(i+1);
                 week.get(currentDay).get(position).task_3 =  dailyTasks.get(currentDay).get(i+2);
                 week.get(currentDay).get(position).task_4 =  dailyTasks.get(currentDay).get(i+3);
+                week.get(currentDay).get(position).new_task_1 =  userProfile.newEventAgenda.get(currentDay).get(i);
+                week.get(currentDay).get(position).new_task_2 =  userProfile.newEventAgenda.get(currentDay).get(i+1);
+                week.get(currentDay).get(position).new_task_3 =  userProfile.newEventAgenda.get(currentDay).get(i+2);
+                week.get(currentDay).get(position).new_task_4 =  userProfile.newEventAgenda.get(currentDay).get(i+3);
             }
             adapter.clear();
             adapter.addAll(week.get(currentDay));
@@ -685,6 +689,10 @@ public class AgendaActivity extends AppCompatActivity {
                     week.get(j).get(position).task_2 = dailyTasks.get(j).get(i + 1);
                     week.get(j).get(position).task_3 = dailyTasks.get(j).get(i + 2);
                     week.get(j).get(position).task_4 = dailyTasks.get(j).get(i + 3);
+                    week.get(j).get(position).new_task_1 =  userProfile.newEventAgenda.get(j).get(i);
+                    week.get(j).get(position).new_task_2 =  userProfile.newEventAgenda.get(j).get(i+1);
+                    week.get(j).get(position).new_task_3 =  userProfile.newEventAgenda.get(j).get(i+2);
+                    week.get(j).get(position).new_task_4 =  userProfile.newEventAgenda.get(j).get(i+3);
                 }
             }
             adapter.clear();
@@ -771,12 +779,14 @@ public class AgendaActivity extends AppCompatActivity {
                     if (!(v.getId() == R.id.t_1)){
                         if (dailyTasks.get(currentDay).get(daily_task_pos-1) == timeSlot.currentTask.NEWEVENT){
                             dailyTasks.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.FREE);
+                            userProfile.newEventAgenda.get(currentDay).set(daily_task_pos - 1, "");
                         }
                     }
                     else{
                         for (int i = 0; i < 4; i++) {
                             if (dailyTasks.get(currentDay).get(daily_task_pos+i) == timeSlot.currentTask.NEWEVENT) {
                                 dailyTasks.get(currentDay).set(daily_task_pos+i, timeSlot.currentTask.FREE);
+                                userProfile.newEventAgenda.get(currentDay).set(daily_task_pos + i, "");
                             }
                         }
                     }
@@ -1026,7 +1036,9 @@ public class AgendaActivity extends AppCompatActivity {
 
     public void setNewEvent(float startTime, float stopTime, String eventName) {
         for (int i = (int)startTime; i <= (int)stopTime; i++) {
-            if ((int)startTime == (int) stopTime){
+            dailyTasks.get(currentDay).set(i, timeSlot.currentTask.NEWEVENT);
+            userProfile.newEventAgenda.get(currentDay).set(i, eventName);
+            /*if ((int)startTime == (int) stopTime){
                 if (((int)(startTime*4))%4 == 0) {
                     if (((int)(stopTime*4))%4 == 1) {
                         week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
@@ -1125,9 +1137,10 @@ public class AgendaActivity extends AppCompatActivity {
                 week.get(currentDay).get(i).new_task_3 = eventName;
                 week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
                 week.get(currentDay).get(i).new_task_4 = eventName;
-            }
+            }*/
         }
-        adapter.updateWeekAgenda();
+        adapter.updateAgenda();
+        //adapter.updateWeekAgenda();
     }
 
     public float stringTimeToFloat(String time){

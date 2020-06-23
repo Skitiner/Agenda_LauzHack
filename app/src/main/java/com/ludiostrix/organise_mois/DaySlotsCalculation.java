@@ -140,7 +140,7 @@ public class DaySlotsCalculation {
                 userProfile.lateSportSlot += 2;
             }
 
-            IA Agent = new IA(userProfile.weight, slots_generated.get(val), userProfile.fullAgenda.get(val), val,
+            IA Agent = new IA(userProfile.weight, slots_generated.get(val), userProfile.newEventAgenda.get(val), val,
                     userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
                     userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot);
             Agent.planDay();

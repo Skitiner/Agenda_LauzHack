@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import static com.ludiostrix.organise_mois.MainActivity.setAlarmOfTheDay;
 
@@ -44,6 +45,7 @@ public class Postpone_broadcast extends BroadcastReceiver {
         int converted_indice = convertedIndice();
 
         ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
+        List<String> newEvent = new ArrayList<>(userProfile.newEventAgenda.get(converted_indice));
 
         // Determinate the time boudaries of the block to postpone
         int endI = startI;
@@ -54,8 +56,9 @@ public class Postpone_broadcast extends BroadcastReceiver {
 
         for(int i = startI; i < (endI + 1); i++) {
             userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
+            userProfile.newEventAgenda.get(converted_indice).set(i, newEvent.get(i-1));
         }
-        //updateWeek();
+        updateWeek();
         saveToFile();
         setAlarmOfTheDay(context);
     }
@@ -69,6 +72,10 @@ public class Postpone_broadcast extends BroadcastReceiver {
                 userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
                 userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
                 userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
+                userProfile.fullAgenda.get(j).get(position).new_task_1 = userProfile.newEventAgenda.get(j).get(i);
+                userProfile.fullAgenda.get(j).get(position).new_task_2 = userProfile.newEventAgenda.get(j).get(i + 1);
+                userProfile.fullAgenda.get(j).get(position).new_task_3 = userProfile.newEventAgenda.get(j).get(i + 2);
+                userProfile.fullAgenda.get(j).get(position).new_task_4 = userProfile.newEventAgenda.get(j).get(i + 3);
             }
         }
     }

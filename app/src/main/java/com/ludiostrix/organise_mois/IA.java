@@ -17,7 +17,7 @@ public class IA {
     protected Map<String,Integer> Task = new HashMap<>();
     protected List<List<List<Integer>>> Day;
     protected ArrayList<timeSlot.currentTask> dailyAgenda;
-    private List<timeSlot> fullDailyAgenda;
+    private List<String> newEventAgenda;
     private int currentDay;
     //public List<List<timeSlot.currentTask>> calculatedAgenda;
     private List<newEvent> savedEvent;
@@ -33,12 +33,12 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
+    public IA(List<List<List<Integer>>> weight, ArrayList<timeSlot.currentTask> day, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
         this.dailyAgenda = day;
-        this.fullDailyAgenda = fullDay;
+        this.newEventAgenda = newEventDay;
 
         //this.userProfile = userprofile;
         this.savedEvent = savedevent;
@@ -195,26 +195,11 @@ public class IA {
         }
         List<Integer> workPosition = new ArrayList<>();
 
-        for (int j = 0; j < 4*fullDailyAgenda.size(); j++) {
+        for (int j = 0; j < newEventAgenda.size(); j++) {
             if (workEvent.size() != 0) {
                 for (String eventName : workEvent) {
-                    if (fullDailyAgenda.get(j / 4).new_task_1 != null && j % 4 == 0) {
-                        if (fullDailyAgenda.get(j / 4).new_task_1.equals(eventName)) {
-                            workPosition.add(j);
-                        }
-                    }
-                    if (fullDailyAgenda.get(j / 4).new_task_2 != null && j % 4 == 1) {
-                        if (fullDailyAgenda.get(j / 4).new_task_2.equals(eventName)) {
-                            workPosition.add(j);
-                        }
-                    }
-                    if (fullDailyAgenda.get(j / 4).new_task_3 != null && j % 4 == 2) {
-                        if (fullDailyAgenda.get(j / 4).new_task_3.equals(eventName)) {
-                            workPosition.add(j);
-                        }
-                    }
-                    if (fullDailyAgenda.get(j / 4).new_task_4 != null && j % 4 == 3) {
-                        if (fullDailyAgenda.get(j / 4).new_task_4.equals(eventName)) {
+                    if (!newEventAgenda.get(j).equals("")){
+                        if (newEventAgenda.get(j).equals(eventName)){
                             workPosition.add(j);
                         }
                     }
@@ -503,25 +488,10 @@ public class IA {
         }
 
         if (sportEvent.size() != 0) {
-            for (int j = 0; j < 4*fullDailyAgenda.size(); j++) {
+            for (int j = 0; j < newEventAgenda.size(); j++) {
                 for (String eventName : sportEvent) {
-                    if (fullDailyAgenda.get(j/4).new_task_1 != null && j%4 == 0) {
-                        if (fullDailyAgenda.get(j/4).new_task_1.equals(eventName)) {
-                            sportSlot.add(j);
-                        }
-                    }
-                    if (fullDailyAgenda.get(j/4).new_task_2 != null && j%4 == 1) {
-                        if (fullDailyAgenda.get(j/4).new_task_2.equals(eventName)) {
-                            sportSlot.add(j);
-                        }
-                    }
-                    if (fullDailyAgenda.get(j/4).new_task_3 != null && j%4 == 2) {
-                        if (fullDailyAgenda.get(j/4).new_task_3.equals(eventName)) {
-                            sportSlot.add(j);
-                        }
-                    }
-                    if (fullDailyAgenda.get(j/4).new_task_4 != null && j%4 == 3) {
-                        if (fullDailyAgenda.get(j/4).new_task_4.equals(eventName)) {
+                    if (!newEventAgenda.get(j).equals("")){
+                        if (newEventAgenda.get(j).equals(eventName)){
                             sportSlot.add(j);
                         }
                     }

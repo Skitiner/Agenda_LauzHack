@@ -49,6 +49,17 @@ public class Cancel_broadcast extends BroadcastReceiver {
                 break;
 
             userProfile.canceled_slots.get(converted_indice).set(i, Boolean.TRUE);
+
+
+            //update weight
+            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK &&
+                    userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) > 0){
+                userProfile.weight.get(converted_indice).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
+            }
+            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
+                    userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) > 0){
+                userProfile.weight.get(converted_indice).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
+            }
         }
 
         saveToFile();
