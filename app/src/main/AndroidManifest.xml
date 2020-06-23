@@ -33,6 +33,7 @@
         <receiver android:name=".Cancel_broadcast" />
         <receiver android:name=".Start_broadcast" />
         <receiver android:name=".Postpone_broadcast" />
+        <receiver android:name=".Broadcast_new_event" />
     </application>
 
 </manifest>

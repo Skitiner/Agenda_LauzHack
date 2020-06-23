@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import static com.ludiostrix.organise_mois.AgendaActivity.conversionDayIndice;
 
@@ -29,18 +31,10 @@ public class ProfileActivity extends AppCompatActivity {
     public static final String FIXED_WORK = "FIXED_WORK";
     public static final String LUNCH_TIME = "LUNCH_TIME";
 
-    private ArrayList<Integer> dayIds = new ArrayList() {
-        {
-            add(R.id.monday); add(R.id.tuesday); add(R.id.wednesday); add(R.id.thursday);
-            add(R.id.friday); add(R.id.saturday); add(R.id.sunday);
-        }
-    };
+    private List<Integer> dayIds = Arrays.asList(R.id.monday, R.id.tuesday, R.id.wednesday, R.id.thursday,
+            R.id.friday, R.id.saturday, R.id.sunday);
 
-    private ArrayList<Integer> sportIds = new ArrayList() {
-        {
-            add(R.id.sloth); add(R.id.rabbit); add(R.id.cheetah);
-        }
-    };
+    private List<Integer> sportIds = Arrays.asList(R.id.sloth, R.id.rabbit, R.id.cheetah);
 
     Profile userProfile = new Profile();
 
@@ -67,6 +61,9 @@ public class ProfileActivity extends AppCompatActivity {
             if (savedInstanceState.getSerializable("sportRoutine") != null) {
                 positionSport = (int) savedInstanceState.getSerializable("sportRoutine");
             }
+            if (savedInstanceState.getSerializable("OptWorkTime") != null) {
+                userProfile.optWorkTime = (String) savedInstanceState.getSerializable("OptWorkTime");
+            }
         }
         else {
             positionSport = userProfile.sportRoutine;
@@ -82,18 +79,24 @@ public class ProfileActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle state) {
         super.onSaveInstanceState(state);
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView NBOptWorkEditText = findViewById(R.id.NBOptWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
         userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
+        userProfile.stringOptWorkTimeToSlot(NBOptWorkEditText.getText().toString());
         userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
         state.putSerializable("nbWorkHours", userProfile.nbWorkHours);
         state.putSerializable("wakeUp", userProfile.wakeUp);
         state.putSerializable("freeDay", NewFreeDay);
         state.putSerializable("sportRoutine", positionSport);
+        state.putSerializable("OptWorkTime", userProfile.optWorkTime);
     }
 
     private void setProfileInfo() {
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
         NBWorkEditText.setText(userProfile.slotStringToTimeString(userProfile.nbWorkHours));
+
+        TextView NBOptWorkEditText = findViewById(R.id.NBOptWorkEditText);
+        NBOptWorkEditText.setText(userProfile.slotStringToTimeString(userProfile.optWorkTime));
 
         setFreeDay();
 
@@ -179,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
         int indice = ((7-conversionDayIndice()) + position)%7;
 
         for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
-            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.FREE) {
+            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.NEWEVENT) {
                 userProfile.agenda.get(indice).set(i, timeSlot.currentTask.FREE);
             }
         }
@@ -195,7 +198,6 @@ public class ProfileActivity extends AppCompatActivity {
 
         userProfile.freeDay = NewFreeDay;
 
-        saveToFile();
         setDayColor(dayButton, NewFreeDay[position]);
 
     }
@@ -214,14 +216,18 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView NBOptWorkEditText = findViewById(R.id.NBOptWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
         if (NBWorkEditText.getText().toString().isEmpty()) {
+        }
+        else if (NBOptWorkEditText.getText().toString().isEmpty()) {
         }
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
             userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
+            userProfile.stringOptWorkTimeToSlot(NBOptWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -246,14 +252,18 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView NBOptWorkEditText = findViewById(R.id.NBOptWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
         if (NBWorkEditText.getText().toString().isEmpty()) {
+        }
+        else if (NBOptWorkEditText.getText().toString().isEmpty()) {
         }
         else if (WakeUpEditText.getText().toString().isEmpty()) {
         }
         else {
             userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
+            userProfile.stringOptWorkTimeToSlot(NBOptWorkEditText.getText().toString());
             userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             userProfile.sportRoutine = positionSport;
         }
@@ -277,6 +287,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void clickedSaveProfileButtonXmlCallback(View view) {
 
         TextView NBWorkEditText = findViewById(R.id.NBWorkEditText);
+        TextView NBOptWorkEditText = findViewById(R.id.NBOptWorkEditText);
         TextView WakeUpEditText = findViewById(R.id.WakeupEditText);
 
         boolean allFreeDay = true;
@@ -290,19 +301,30 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else if (NBWorkEditText.getText().toString().isEmpty()) {
             Toast.makeText(ProfileActivity.this, R.string.forgetWorkHour, Toast.LENGTH_SHORT).show();
+        }else if (NBOptWorkEditText.getText().toString().isEmpty()) {
+            Toast.makeText(ProfileActivity.this, R.string.forgetOptWorkHour, Toast.LENGTH_SHORT).show();
         }
         else if (WakeUpEditText.getText().toString().isEmpty()) {
             Toast.makeText(ProfileActivity.this, R.string.forgetWakeUp, Toast.LENGTH_SHORT).show();
         }
         else {
             boolean correctnbWork = userProfile.stringWorkTimeToSlot(NBWorkEditText.getText().toString());
+            boolean correctnbOptWork = userProfile.stringOptWorkTimeToSlot(NBOptWorkEditText.getText().toString());
             boolean correctwakeUp = userProfile.stringTimewakeUpToFloat(WakeUpEditText.getText().toString());
             if (!correctnbWork) {
                 Toast.makeText(ProfileActivity.this, R.string.wrongnbWorkHours, Toast.LENGTH_SHORT).show();
+            } else if (!correctnbOptWork) {
+                Toast.makeText(ProfileActivity.this, R.string.wrongnbOptWorkHours, Toast.LENGTH_SHORT).show();
             } else if (!correctwakeUp) {
                 Toast.makeText(ProfileActivity.this, R.string.wrongwakeUp, Toast.LENGTH_SHORT).show();
             } else {
                 userProfile.sportRoutine = positionSport;
+                int newOffsetSettings = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+                for (int i = 0; i < newOffsetSettings ; i++) {
+                    ArrayList<timeSlot> tempDay = userProfile.fullAgenda.get(0);
+                    userProfile.fullAgenda.remove(0);
+                    userProfile.fullAgenda.add(tempDay);
+                }
                 userProfile.settingDay = Calendar.getInstance();
                 userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 

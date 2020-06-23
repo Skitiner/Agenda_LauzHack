@@ -195,7 +195,7 @@ public class MainActivity extends AppCompatActivity {
                             intentForService = new Intent(context, Broadcast_break.class);
                             break;
                         case NEWEVENT:
-                            intentForService = new Intent(context, Broadcast_break.class);
+                            intentForService = new Intent(context, Broadcast_new_event.class);
                             break;
                         default:
                             intentForService = new Intent(context, RemindBroadcast.class);

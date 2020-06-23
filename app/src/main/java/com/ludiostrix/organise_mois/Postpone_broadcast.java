@@ -55,8 +55,22 @@ public class Postpone_broadcast extends BroadcastReceiver {
         for(int i = startI; i < (endI + 1); i++) {
             userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
         }
+        //updateWeek();
         saveToFile();
         setAlarmOfTheDay(context);
+    }
+
+    private void updateWeek() {
+        int position;
+        for(int j = 0; j < 7; j++) {
+            for (int i = 0; i < 96; i += 4) {
+                position = i / 4;
+                userProfile.fullAgenda.get(j).get(position).task_1 = userProfile.agenda.get(j).get(i);
+                userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
+                userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
+                userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
+            }
+        }
     }
 
     private int convertedIndice() {
