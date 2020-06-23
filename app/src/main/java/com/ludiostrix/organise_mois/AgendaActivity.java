@@ -106,6 +106,11 @@ public class AgendaActivity extends AppCompatActivity {
         userProfile = new Profile();
 
         readFromFile();
+
+        userProfile.convertInPastDay();
+
+        MainActivity.setAlarmOfTheDay(AgendaActivity.this);
+
         setWeekSlots();
 
         nb_day_to_set = 0;
@@ -251,7 +256,7 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     // Fonction pour adapter le dailyTask au jour actuel
-    private void setWeekSlots() {
+    public void setWeekSlots() {
 
         int offset_indice = convertedIndice();
 
@@ -451,8 +456,6 @@ public class AgendaActivity extends AppCompatActivity {
                 }
             }
         }
-
-        userProfile.convertInPastDay();
 
         setWeekSlots();
 

@@ -319,6 +319,12 @@ public class ProfileActivity extends AppCompatActivity {
                 Toast.makeText(ProfileActivity.this, R.string.wrongwakeUp, Toast.LENGTH_SHORT).show();
             } else {
                 userProfile.sportRoutine = positionSport;
+                int newOffsetSettings = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+                for (int i = 0; i < newOffsetSettings ; i++) {
+                    ArrayList<timeSlot> tempDay = userProfile.fullAgenda.get(0);
+                    userProfile.fullAgenda.remove(0);
+                    userProfile.fullAgenda.add(tempDay);
+                }
                 userProfile.settingDay = Calendar.getInstance();
                 userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 

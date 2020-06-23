@@ -16,12 +16,6 @@ import java.util.Map;
 public class IA {
     protected Map<String,Integer> Task = new HashMap<>();
     protected List<List<List<Integer>>> Day;
-    private List<List<Integer>> Hour;
-    private List<Integer> dayWeight;
-    private List<Integer> nightWeight;
-    private List<Integer> bonusScore = new ArrayList<>();
-    private List<List<Integer>> freeDaySlot = new ArrayList<>();
-    private Profile userProfile;
     protected ArrayList<timeSlot.currentTask> dailyAgenda;
     private List<timeSlot> fullDailyAgenda;
     private int currentDay;
@@ -32,9 +26,6 @@ public class IA {
     int sportCategory;
     int sportSlot;
 
-    private List<Integer> preSelectedDay = new ArrayList<>();
-    private List<Integer> selectedDay = new ArrayList<>();
-
     private boolean freeDay;
 
     private List<Integer> lightSport = Arrays.asList(8, 8, 2);
@@ -42,7 +33,7 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
+    public IA(List<List<List<Integer>>> weight, ArrayList<timeSlot.currentTask> day, List<timeSlot> fullDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -51,6 +42,8 @@ public class IA {
 
         //this.userProfile = userprofile;
         this.savedEvent = savedevent;
+
+        this.Day = weight;
 
         this.currentDay = dayNb;
         this.sportSlot = sSlot;
@@ -76,24 +69,27 @@ public class IA {
     }
 
     private void initWeight(){
-        this.dayWeight = new ArrayList<>();
-        this.dayWeight.add(6);
-        this.dayWeight.add(6);
-        this.nightWeight = new ArrayList<Integer>();
-        this.nightWeight.add(4);
-        this.nightWeight.add(4);
-        this.Hour = new ArrayList<>();
+        List<List<Integer>> Hour;
+        List<Integer> dayWeight;
+        List<Integer> nightWeight;
+        dayWeight = new ArrayList<>();
+        dayWeight.add(6);
+        dayWeight.add(6);
+        nightWeight = new ArrayList<Integer>();
+        nightWeight.add(4);
+        nightWeight.add(4);
+        Hour = new ArrayList<>();
         for (int i = 0 ; i < 4*24; i++){
             if (i < 4*7 - 1 || i > 4*22 - 1){
-                this.Hour.add(this.nightWeight);
+                Hour.add(nightWeight);
             }
             else {
-                this.Hour.add(this.dayWeight);
+                Hour.add(dayWeight);
             }
         }
-        this.Day = new ArrayList<>();
+        Day = new ArrayList<>();
         for (int i = 0 ; i < 7; i++){
-            this.Day.add(this.Hour);
+            Day.add(Hour);
         }
 
         // int test = this.Hour.get(12).get(Task.get("Sport"));
@@ -184,7 +180,7 @@ public class IA {
         }
 
         for (int i = 0; i < pausePosition.size(); i++){
-            dailyAgenda.set(pausePosition.get(i), timeSlot.currentTask.PAUSE);
+            dailyAgenda.set(pausePosition.get(i), timeSlot.currentTask.FREE);
         }
 
     }
