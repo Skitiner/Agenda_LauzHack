@@ -37,7 +37,10 @@ public class MainActivity extends AppCompatActivity {
         createNotificationChannel();
         setContentView(R.layout.activity_main);
 
+        readFromFile(this);
+
         mgrAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
+
         setLogo();
         setAlarmOfTheDay(this);
 
@@ -55,17 +58,21 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setLogo() {
-        readFromFile(this);
-
         int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
         int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
         int offset = (365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3)))%7;
 
+        while (offset < 0){
+            offset += 7;
+        }
+        offset %=7;
+
         int slot_indice = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*4 + Calendar.getInstance().get(Calendar.MINUTE)/15;
 
         ImageView logo = findViewById(R.id.logo_image);
+
 
         if (userProfile.canceled_slots.get(offset).get(slot_indice) == Boolean.TRUE) {
             logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_def));
@@ -120,11 +127,10 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         setLogo();
+        setAlarmOfTheDay(this);
     }
 
     protected static void setAlarmOfTheDay(Context context) {
-        readFromFile(context);
-
         if(intentArray != null)
             removeAlarms();
         else
@@ -142,6 +148,10 @@ public class MainActivity extends AppCompatActivity {
 
         int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        while (offset < 0){
+            offset += 7;
+        }
 
         int offset_indice = offset%7;
 
