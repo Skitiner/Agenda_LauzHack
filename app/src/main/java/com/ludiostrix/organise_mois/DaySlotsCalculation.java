@@ -82,10 +82,11 @@ public class DaySlotsCalculation {
 
 
         daily_init();
-        daily_remove_canceled_days(day);
         if (!freeday) {
             setDailyMorningRoutine();
-            setDailyNight(nextfreeday);
+        }
+        if (!freeday || !nextfreeday){
+            setDailyNight(freeday, nextfreeday);
         }
 
         daily_compare(userProfile.agenda.get(day));
@@ -96,7 +97,7 @@ public class DaySlotsCalculation {
 
         readFromFile();
         init();
-        remove_canceled_days();
+        userProfile.remove_canceled_days();
         setMorningRoutine();
         setNight();
 
@@ -106,15 +107,15 @@ public class DaySlotsCalculation {
 
         //List<IA> calculatedWeek;
 
-        int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+        /*int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
 
         int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - userProfile.settingDay.get(Calendar.YEAR);
-        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));*/
 
 
         for (int i = 0; i < slots_generated.size(); i++) {
-            int val = (i + offset)%7;
+            int val = i % 7; //(i + offset)%7;
 
             int nbWorkDay = 0;
             for (int j = 0; j < userProfile.freeDay.length; j++){
@@ -158,9 +159,10 @@ public class DaySlotsCalculation {
             }
 
             saveToFile();
-            MainActivity.setAlarmOfTheDay(context);
         }
 
+
+        MainActivity.setAlarmOfTheDay(context);
         /*int OK = 0;
         if (!(nbFixedWork > Integer.valueOf(userProfile.nbWorkHours))) {
             Boolean Sport = setSport();
@@ -193,20 +195,6 @@ public class DaySlotsCalculation {
         }
         return OK;*/
         return 0;
-    }
-
-    private void remove_canceled_days() {
-        for (int i = 0; i < 7; i++) {
-            for(int j = 0; j < 96; j++) {
-                userProfile.canceled_slots.get(i).set(j, Boolean.FALSE);
-            }
-        }
-    }
-
-    private void daily_remove_canceled_days(int day) {
-        for(int j = 0; j < 96; j++) {
-            userProfile.canceled_slots.get(day).set(j, Boolean.FALSE);
-        }
     }
   
     public Boolean setWork(int nbFixedWork){
@@ -446,14 +434,14 @@ public class DaySlotsCalculation {
         return memi;
     }
 
-    private void setDailyNight(boolean nextfreeday){
+    private void setDailyNight(boolean freeday, boolean nextfreeday){
         for (int j = 0; j < 32; j++) {
             if ((wake_up*4)-j-1 < 0) {
-                if (nextfreeday) {
+                if (!nextfreeday) {
                     this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
                 }
             }
-            else {
+            else if (!freeday) {
                 this.daily_slots_generated.set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
             }
         }
@@ -466,14 +454,27 @@ public class DaySlotsCalculation {
     }
 
     private void setNight(){
-        for (int i = 0; i < freedaylist.length; i++) {
+        for (int i = 0; i < 7; i++) {
             for (int j = 0; j < 32; j++) {
-                if ((wake_up*4)-j-1 < 0) {
-                    this.slots_generated.get((freedaylist[i]-1 + 7)%7).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                for (int k = 0; k < freedaylist.length; k ++){
+                    if ((wake_up*4)-j-1 < 0) {
+                        if (freedaylist[(k+1) % freedaylist.length] == (i + 1) % 7) {
+                            this.slots_generated.get(i).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                        }
+                    }
+                    else if (i == freedaylist[k]){
+                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    }
+
+                }
+                /*if ((wake_up*4)-j-1 < 0) {
+                    if (freedaylist[(i+1) % freedaylist.length] == (freedaylist[i] + 1) % 7) {
+                        this.slots_generated.get(freedaylist[i]).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    }
                 }
                 else {
                     this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                }
+                }*/
             }
         }
     }

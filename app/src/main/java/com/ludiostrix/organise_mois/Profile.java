@@ -1,5 +1,6 @@
 package com.ludiostrix.organise_mois;
 
+import android.service.autofill.AutofillService;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -425,16 +426,13 @@ public class Profile implements Serializable {
     }
 
     public void convertInPastDay(){
-        int setting_day = this.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
         int daySinceLastConnection = actual_day - this.lastConnection.get(Calendar.DAY_OF_YEAR);
 
         if (daySinceLastConnection > 0) {
+            int offset;
 
-            int year_offset = Calendar.getInstance().get(Calendar.YEAR) - this.settingDay.get(Calendar.YEAR);
-            int offset = 365 * year_offset + actual_day - setting_day + (int) (0.25 * (year_offset + 3));
-
-            offset = (offset - daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
+            offset = (convertedIndice() - daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
 
             for (int i = 0; i < daySinceLastConnection; i++) {
                 int val = (i + offset) % 7;
@@ -470,11 +468,11 @@ public class Profile implements Serializable {
                 boolean freeday = true;
                 boolean nextfreeday = true;
                 for (int k = 0; k < freedaylist.length; k++) {
-                    if (freedaylist[k] == (i + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) {
+                    if (freedaylist[k] == (i + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) { // (daySinceLastConnection / 7) * 7) make it >= 0
                         freeday = false;
-                        if (freedaylist[(k + 1) % freedaylist.length] == (i + 1 + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) {
-                            nextfreeday = false;
-                        }
+                    }
+                    if (freedaylist[k] == (i + 1 + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) {
+                        nextfreeday = false;
                     }
                 }
 
@@ -508,19 +506,84 @@ public class Profile implements Serializable {
                     this.fullAgenda.get(val).get(position).task_4 = this.agenda.get(val).get(j + 3);
                 }
 
+                for (int j = 0 ; j < this.canceled_slots.get(val).size(); j++) {
+                    this.canceled_slots.get(val).set(j, false);
+                }
+
             }
             this.lastConnection = Calendar.getInstance();
             this.lastConnection.setTimeInMillis(System.currentTimeMillis());
         }
-        else{
+        else if (daySinceLastConnection < 0){
             for (int i = pastAgendaSize; i > this.pastAgendaSize + daySinceLastConnection; i--) { //daySinceLastConnection <0
                 if (pastAgenda.size() > 0) {
                     this.pastAgenda.remove(i - 1);
                 }
             }
+
+            /*int offset_indice = convertedIndice() + daySinceLastConnection;
+            while (offset_indice < 0){
+                offset_indice += 7;
+            }
+
+            ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks = new ArrayList<>(this.agenda);
+            ArrayList<ArrayList<timeSlot>> week = new ArrayList<>(this.fullAgenda);
+            ArrayList<ArrayList<String>> newEventWeek = new ArrayList<>(this.newEventAgenda);
+
+            for (int i = 0; i < 7; i++) {
+                int indice = (i + offset_indice)%7;
+                dailyTasks.set(i, this.agenda.get(indice));
+                week.set(i,this.fullAgenda.get(indice));
+                newEventWeek.set(i,this.newEventAgenda.get(indice));
+            }
+
+            remove_canceled_days();
+
+            this.agenda = dailyTasks;
+            this.fullAgenda = week;
+            this.newEventAgenda = newEventWeek;
+
+            this.settingDay = Calendar.getInstance();*/
             this.lastConnection = Calendar.getInstance();
             this.lastConnection.setTimeInMillis(System.currentTimeMillis());
         }
+    }
+
+    public void remove_canceled_days() {
+        for (int i = 0; i < 7; i++) {
+            for(int j = 0; j < 96; j++) {
+                this.canceled_slots.get(i).set(j, Boolean.FALSE);
+            }
+        }
+    }
+
+    public void updateFullAgenda(int currentDay) {
+        int position;
+        for(int i = 0; i < 96; i +=4 ) {
+            position = i/4;
+            this.fullAgenda.get(currentDay).get(position).task_1 =  this.agenda.get(currentDay).get(i);
+            this.fullAgenda.get(currentDay).get(position).task_2 =  this.agenda.get(currentDay).get(i+1);
+            this.fullAgenda.get(currentDay).get(position).task_3 =  this.agenda.get(currentDay).get(i+2);
+            this.fullAgenda.get(currentDay).get(position).task_4 =  this.agenda.get(currentDay).get(i+3);
+            this.fullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i);
+            this.fullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i+1);
+            this.fullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i+2);
+            this.fullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i+3);
+        }
+    }
+
+    private int convertedIndice() {
+        int setting_day = this.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - this.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        while (offset < 0){
+            offset += 7;
+        }
+
+        return offset%7;
     }
 
     private int conversionDayIndice() {
@@ -931,7 +994,7 @@ public class Profile implements Serializable {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt > 23 || hourt < 0){
+            if (hourt >= 23 || hourt < 0){
                 ok = false;
             }
             if (mint >= 60 || mint < 0){

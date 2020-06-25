@@ -864,6 +864,7 @@ public class AgendaActivity extends AppCompatActivity {
         userProfile.fullAgenda = week;
         saveToFile();
         plan();
+        MainActivity.setAlarmOfTheDay(AgendaActivity.this);
     }
 
     public void eventCreation(View v){
@@ -1038,10 +1039,14 @@ public class AgendaActivity extends AppCompatActivity {
                             }
                             popupWindow.dismiss();
                             setNewEvent(startTime, stopTime, userProfile.savedEvent.get(event).name);
-                            userProfile.agenda = dailyTasks;
-                            userProfile.fullAgenda = week;
+
+                            userProfile.updateFullAgenda(currentDay);
+
+                            setWeekSlots();
+
                             saveToFile();
                             plan();
+                            MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                         }
                         else if (startTime == -1){
                             Toast.makeText(AgendaActivity.this, R.string.wrongEventStart, Toast.LENGTH_SHORT).show();
@@ -1079,8 +1084,8 @@ public class AgendaActivity extends AppCompatActivity {
 
     public void setNewEvent(float startTime, float stopTime, String eventName) {
         for (int i = (int)(4*startTime); i < (int)(4*stopTime); i++) {
-            dailyTasks.get(currentDay).set(i, timeSlot.currentTask.NEWEVENT);
-            userProfile.newEventAgenda.get(currentDay).set(i, eventName);
+            userProfile.agenda.get(currentDay).set(i, timeSlot.currentTask.NEWEVENT);
+            userProfile.newEventAgenda.get(currentDay + convertedIndice()).set(i, eventName);
             /*if ((int)startTime == (int) stopTime){
                 if (((int)(startTime*4))%4 == 0) {
                     if (((int)(stopTime*4))%4 == 1) {

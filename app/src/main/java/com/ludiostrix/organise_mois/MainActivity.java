@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         setLogo();
         setAlarmOfTheDay(this);
 
-        planningCalculation();
+        //planningCalculation();
 
         if (userProfile == null){
             userProfile = new Profile();
