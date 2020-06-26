@@ -931,6 +931,9 @@ public class Profile implements Serializable {
             if (mint >= 60 || mint < 0){
                 ok = false;
             }
+            if (hourt == 0 && mint < 30){
+                ok = false;
+            }
             else {
                 hourt = hourt + roundFifty(mint/60);
                 hourt = hourt*4;
