@@ -43,8 +43,8 @@
     <string name="start">Start</string>
     <string name="cancel">Cancel</string>
     <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8:00)</string>
-    <string name="wrongnbWorkHours">The number of work hours is not valid ! (e.g 42:00)</string>
-    <string name="wrongnbOptWorkHours">The optimal work time before a break is not valid ! It should be between 0:30 and 4:45.</string>
+    <string name="wrongnbWorkHours">The number of work hours is not valid ! It could maximum be 70:00.</string>
+    <string name="wrongnbOptWorkHours">The optimal work time before a break is not valid ! It should be between 0:30 and 4:00.</string>
     <string name="allFreeDay">Why did you install this app ? Set at least one working day !</string>
     <string name="notif_sport_easy">Could be good to walk for example.</string>
     <string name="notif_sport_hard">Could be good to run for example.</string>

@@ -43,8 +43,8 @@
     <string name="start">Commencer</string>
     <string name="cancel">Annuler</string>
     <string name="wrongwakeUp">L\'heure de réveil est incorrecte ! (ex: 8:00)</string>
-    <string name="wrongnbWorkHours">Le nombre d\'heure de travail est incorrecte. (ex: 42:00)</string>
-    <string name="wrongnbOptWorkHours">Le temps de travail optimal avant une pause est incorrecte ! Il doit être entre 0:30 et 4:45.</string>
+    <string name="wrongnbWorkHours">Le nombre d\'heure de travail est incorrecte. Il peut au maximume être de 70:00.</string>
+    <string name="wrongnbOptWorkHours">Le temps de travail optimal avant une pause est incorrecte ! Il doit être entre 0:30 et 4:00.</string>
     <string name="allFreeDay">Veuillez selectioner au moins un jour de travail.</string>
     <string name="notif_sport_easy">Allez marcher par exemple.</string>
     <string name="notif_sport_hard">Allez courrir par exemple</string>

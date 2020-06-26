@@ -883,6 +883,9 @@ public class Profile implements Serializable {
             if (hourt > 70 || hourt < 0){
                 ok = false;
             }
+            if (hourt == 70 && mint > 0){
+                ok = false;
+            }
             if (mint >= 60 || mint < 0){
                 ok = false;
             }
@@ -926,6 +929,9 @@ public class Profile implements Serializable {
             mint = Float.parseFloat(min);
             ok = true;
             if (hourt > 4 || hourt < 0){
+                ok = false;
+            }
+            if (hourt == 4 && mint > 0){
                 ok = false;
             }
             if (mint >= 60 || mint < 0){
