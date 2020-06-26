@@ -880,7 +880,7 @@ public class Profile implements Serializable {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt > 80 || hourt < 0){
+            if (hourt > 70 || hourt < 0){
                 ok = false;
             }
             if (mint >= 60 || mint < 0){
