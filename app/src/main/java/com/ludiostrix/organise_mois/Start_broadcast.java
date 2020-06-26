@@ -56,12 +56,12 @@ public class Start_broadcast extends BroadcastReceiver {
         for(int i = startI; i < (endI + 1); i++) {
             //update weight
             if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK &&
-                    userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) < 10){
-                userProfile.weight.get(converted_indice).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) + 1);
+                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) < 9){
+                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) + 1);
             }
             if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
-                    userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) < 10){
-                userProfile.weight.get(converted_indice).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) + 1);
+                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) < 9){
+                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) + 1);
             }
         }
         saveToFile();
@@ -75,6 +75,39 @@ public class Start_broadcast extends BroadcastReceiver {
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
 
         return offset%7;
+    }
+
+    public static int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
     }
 
     private void saveToFile(){

@@ -7,6 +7,7 @@ import androidx.annotation.VisibleForTesting;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -43,6 +44,8 @@ public class IA {
         //this.userProfile = userprofile;
         this.savedEvent = savedevent;
 
+        initWeight();
+
         this.Day = weight;
 
         this.currentDay = dayNb;
@@ -51,8 +54,6 @@ public class IA {
         this.freeDay = freeday;
         this.workSizeOpti = workSize;
         this.workSlot = wSlot;
-
-        initWeight();
 
         //searchFreeSlot(agenda, freeDayList);
 
@@ -72,25 +73,25 @@ public class IA {
         List<List<Integer>> Hour;
         List<Integer> dayWeight;
         List<Integer> nightWeight;
-        dayWeight = new ArrayList<>();
-        dayWeight.add(6);
-        dayWeight.add(6);
-        nightWeight = new ArrayList<Integer>();
-        nightWeight.add(4);
-        nightWeight.add(4);
-        Hour = new ArrayList<>();
-        for (int i = 0 ; i < 4*24; i++){
-            if (i < 4*7 - 1 || i > 4*22 - 1){
-                Hour.add(nightWeight);
-            }
-            else {
-                Hour.add(dayWeight);
-            }
-        }
         Day = new ArrayList<>();
-        for (int i = 0 ; i < 7; i++){
+        for (int j = 0 ; j < 7; j++) {
+            Hour = new ArrayList<>();
+            for (int i = 0; i < 4 * 24; i++) {
+                if (i < 4 * 7 - 1 || i > 4 * 22 - 1) {
+                    nightWeight = new ArrayList<>();
+                    nightWeight.add(4);
+                    nightWeight.add(4);
+                    Hour.add(nightWeight);
+                } else {
+                    dayWeight = new ArrayList<>();
+                    dayWeight.add(6);
+                    dayWeight.add(6);
+                    Hour.add(dayWeight);
+                }
+            }
             Day.add(Hour);
         }
+
 
         // int test = this.Hour.get(12).get(Task.get("Sport"));
     }
@@ -161,7 +162,7 @@ public class IA {
         for (int i = 0; i < groupPosition.size(); i++){
             score.add(Double.valueOf(0));
             for (int j = 0; j < groupPosition.get(i).size(); j++) {
-                score.set(i, score.get(i) + Double.valueOf(Day.get(currentDay).get(groupPosition.get(i).get(j)).get(Task.get("Work"))));
+                score.set(i, score.get(i) + Double.valueOf(Day.get((conversionDayIndice() + currentDay)%7).get(groupPosition.get(i).get(j)).get(Task.get("Work"))));
             }
             score.set(i, score.get(i)/groupPosition.get(i).size());
         }
@@ -389,7 +390,7 @@ public class IA {
             for (int i = 0; i < scoresPosition.size(); i++) {
                 score.add(Double.valueOf(0));
                 for (int j = 0; j < scoresPosition.get(i).size(); j++) {
-                    score.set(i, score.get(i) + this.Day.get(currentDay).get(scoresPosition.get(i).get(j)).get(Task.get("Sport")));
+                    score.set(i, score.get(i) + this.Day.get((conversionDayIndice() + currentDay)%7).get(scoresPosition.get(i).get(j)).get(Task.get("Sport")));
                 }
                 score.set(i, score.get(i) / scoresPosition.get(i).size());
             }
@@ -446,7 +447,7 @@ public class IA {
             for (int i = 0; i < scoresPosition.size(); i++) {
                 score.add(Double.valueOf(0));
                 for (int j = 0; j < scoresPosition.get(i).size(); j++) {
-                    score.set(i, score.get(i) + this.Day.get(currentDay).get(scoresPosition.get(i).get(j)).get(Task.get("Sport")));
+                    score.set(i, score.get(i) + this.Day.get((conversionDayIndice() + currentDay)%7).get(scoresPosition.get(i).get(j)).get(Task.get("Sport")));
                 }
                 score.set(i, score.get(i) / scoresPosition.get(i).size());
             }
@@ -522,7 +523,7 @@ public class IA {
         for (int i = 0; i < this.Day.size(); i++){
             meanPerDay.add(Double.valueOf(0));
             for (int j = 0; j < this.Day.get(i).size(); j++){
-                meanPerDay.set(i, meanPerDay.get(i) + this.Day.get(i).get(j).get(Task.get("Sport")));
+                meanPerDay.set(i, meanPerDay.get(i) + this.Day.get((conversionDayIndice() + currentDay + i)%7).get(j).get(Task.get("Sport")));
             }
             meanPerDay.set(i, meanPerDay.get(i)/this.Day.get(i).size());
         }
@@ -787,6 +788,39 @@ public class IA {
         int position;
         double score;
     }*/
+
+    public static int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
+    }
 }
 
 

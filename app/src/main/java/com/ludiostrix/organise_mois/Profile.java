@@ -116,25 +116,25 @@ public class Profile implements Serializable {
         List<List<Integer>> Hour;
         List<Integer> dayWeight;
         List<Integer> nightWeight;
-        dayWeight = new ArrayList<>();
-        dayWeight.add(6);
-        dayWeight.add(6);
-        nightWeight = new ArrayList<Integer>();
-        nightWeight.add(4);
-        nightWeight.add(4);
-        Hour = new ArrayList<>();
-        for (int i = 0 ; i < 4*24; i++){
-            if (i < 4*7 - 1 || i > 4*22 - 1){
-                Hour.add(nightWeight);
-            }
-            else {
-                Hour.add(dayWeight);
-            }
-        }
         weight = new ArrayList<>();
-        for (int i = 0 ; i < 7; i++){
+        for (int j = 0 ; j < 7; j++) {
+            Hour = new ArrayList<>();
+            for (int i = 0; i < 4 * 24; i++) {
+                if (i < 4 * 7 - 1 || i > 4 * 22 - 1) {
+                    nightWeight = new ArrayList<Integer>();
+                    nightWeight.add(4);
+                    nightWeight.add(4);
+                    Hour.add(nightWeight);
+                } else {
+                    dayWeight = new ArrayList<>();
+                    dayWeight.add(6);
+                    dayWeight.add(6);
+                    Hour.add(dayWeight);
+                }
+            }
             weight.add(Hour);
         }
+
 
         // int test = this.Hour.get(12).get(Task.get("Sport"));
     }
@@ -323,7 +323,7 @@ public class Profile implements Serializable {
             e.printStackTrace();
         }
 
-        Log.w("CANCELED SAVE", canceled_slots.toString());
+        //Log.w("CANCELED SAVE", canceled_slots.toString());
     }
 
     public void decode(String lineData) {
@@ -410,8 +410,8 @@ public class Profile implements Serializable {
         }
         for (int i = 0; i < weight.size() ; i++){
             for (int k = 0; k < weight.get(i).size(); k++){
-                weight.get(i).get(j).set(0, Integer.parseInt(String.valueOf(W.charAt(i*weight.size() + 2*k))));
-                weight.get(i).get(j).set(1, Integer.parseInt(String.valueOf(W.charAt(i*weight.size() + 2*k + 1))));
+                weight.get(i).get(k).set(0, Integer.parseInt(String.valueOf(W.charAt(2*i*weight.get(0).size() + 2*k))));
+                weight.get(i).get(k).set(1, Integer.parseInt(String.valueOf(W.charAt(2*i*weight.get(0).size() + 2*k + 1))));
             }
         }
         this.wakeUp = wU;
@@ -490,7 +490,7 @@ public class Profile implements Serializable {
 
 
                 IA Agent = new IA(this.weight, plan.daily_slots_generated, this.newEventAgenda.get(val),
-                        val, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
+                        i, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                         this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
                 Agent.planDay();
                 this.agenda.set(val, Agent.dailyAgenda);
