@@ -271,26 +271,46 @@ public class IA {
 
             List<Integer> sportPosition = sportLocation();
             if (sportSlot - sportPosition.size() > 1) {
+                //search all freeSlot during one hour after the lunchtime to not add sport there if possible
+                List<Integer> afterLunchtime = new ArrayList<>();
+
+                for (int i = 0; i < dailyAgenda.size(); i ++){
+                    if (dailyAgenda.get(i) == timeSlot.currentTask.EAT || dailyAgenda.get(i) == timeSlot.currentTask.MORNING_ROUTINE){
+                        for(int j = 1; j < 5; j ++) {
+                            if (dailyAgenda.get(i + j) == timeSlot.currentTask.FREE) {
+                                afterLunchtime.add(i + j);
+                            }
+                            else
+                                break;
+                        }
+                    }
+                }
+
+                int afterLunchtimepenalty = 3;
+
                 if (sportPosition.size() != 0) {
                     if (maxSport.get(rank.get(currentDay)) <= sportSlot) {
-                        placed = placeSportAround(maxSport.get(rank.get(currentDay)) - sportPosition.size(), sportPosition);
+                        placed = placeSportAround(maxSport.get(rank.get(currentDay)) - sportPosition.size(), sportPosition,
+                                afterLunchtime, afterLunchtimepenalty);
                         if (placed) {
                             sportSlot -= maxSport.get(rank.get(currentDay));
                         }
                     } else {
-                        placed = placeSportAround(sportSlot - sportPosition.size(), sportPosition);
+                        placed = placeSportAround(sportSlot - sportPosition.size(), sportPosition,
+                                afterLunchtime, afterLunchtimepenalty);
                         if (placed) {
                             sportSlot = 0;
                         }
                     }
                     if (!placed) {
                         if (maxSport.get(rank.get(currentDay)) <= sportSlot) {
-                            placed = placeSport(maxSport.get(rank.get(currentDay)) - sportPosition.size());
+                            placed = placeSport(maxSport.get(rank.get(currentDay)) - sportPosition.size(),
+                                    afterLunchtime, afterLunchtimepenalty);
                             if (placed) {
                                 sportSlot -= maxSport.get(rank.get(currentDay));
                             }
                         } else {
-                            placed = placeSport(sportSlot);
+                            placed = placeSport(sportSlot, afterLunchtime, afterLunchtimepenalty);
                             if (placed) {
                                 sportSlot = 0;
                             }
@@ -298,12 +318,13 @@ public class IA {
                     }
                 } else {
                     if (maxSport.get(rank.get(currentDay)) <= sportSlot) {
-                        placed = placeSport(maxSport.get(rank.get(currentDay)));
+                        placed = placeSport(maxSport.get(rank.get(currentDay)),
+                                afterLunchtime, afterLunchtimepenalty);
                         if (placed) {
                             sportSlot -= maxSport.get(rank.get(currentDay));
                         }
                     } else {
-                        placed = placeSport(sportSlot);
+                        placed = placeSport(sportSlot, afterLunchtime, afterLunchtimepenalty);
                         if (placed) {
                             sportSlot = 0;
                         }
@@ -317,7 +338,7 @@ public class IA {
     }
 
 
-    private boolean placeSportAround(int nbSportSlot, List<Integer> sportPosition){
+    private boolean placeSportAround(int nbSportSlot, List<Integer> sportPosition, List<Integer> afterLunchtime, int afterLunchtimepenalty){
         boolean slotFound = false;
 
         List<Integer> position;
@@ -399,6 +420,9 @@ public class IA {
                 score.add(Double.valueOf(0));
                 for (int j = 0; j < scoresPosition.get(i).size(); j++) {
                     score.set(i, score.get(i) + this.Day.get((conversionDayIndice() + currentDay)%7).get(scoresPosition.get(i).get(j)).get(Task.get("Sport")));
+                    if (afterLunchtime.indexOf(scoresPosition.get(i).get(j)) != -1){
+                        score.set(i, score.get(i) - afterLunchtimepenalty);
+                    }
                 }
                 score.set(i, score.get(i) / scoresPosition.get(i).size());
             }
@@ -422,7 +446,7 @@ public class IA {
         return slotFound;
     }
 
-    private boolean placeSport(int nbSportSlot){
+    private boolean placeSport(int nbSportSlot, List<Integer> afterLunchtime, int afterLunchtimepenalty){
         boolean slotFound = false;
 
         List<Integer> position;
@@ -456,6 +480,9 @@ public class IA {
                 score.add(Double.valueOf(0));
                 for (int j = 0; j < scoresPosition.get(i).size(); j++) {
                     score.set(i, score.get(i) + this.Day.get((conversionDayIndice() + currentDay)%7).get(scoresPosition.get(i).get(j)).get(Task.get("Sport")));
+                    if (afterLunchtime.indexOf(scoresPosition.get(i).get(j)) != -1){
+                        score.set(i, score.get(i) - afterLunchtimepenalty);
+                    }
                 }
                 score.set(i, score.get(i) / scoresPosition.get(i).size());
             }
