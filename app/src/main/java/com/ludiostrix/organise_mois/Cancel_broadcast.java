@@ -55,10 +55,12 @@ public class Cancel_broadcast extends BroadcastReceiver {
             if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
+                userProfile.lateWorkSlot++;
             }
             if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
+                userProfile.lateSportSlot++;
             }
         }
 
