@@ -26,6 +26,8 @@ public class IA {
     float workSlot;
     int sportCategory;
     int sportSlot;
+    public List<Integer> rank;
+    private Calendar lastConnection;
 
     private boolean freeDay;
 
@@ -34,9 +36,11 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, ArrayList<timeSlot.currentTask> day, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
+    public IA(List<List<List<Integer>>> weight, List<Integer>weekRank, Calendar lastConnection, ArrayList<timeSlot.currentTask> day, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
+
+        this.lastConnection = lastConnection;
 
         this.dailyAgenda = day;
         this.newEventAgenda = newEventDay;
@@ -50,6 +54,7 @@ public class IA {
 
         this.currentDay = dayNb;
         this.sportSlot = sSlot;
+        this.rank = weekRank;
         this.sportCategory = sCategory;
         this.freeDay = freeday;
         this.workSizeOpti = workSize;
@@ -245,8 +250,11 @@ public class IA {
     }*/
 
     private void setSport() {
-        List<Double> score = scorePerDay();
-        List<Integer> rank = rankDay(score);
+        if (this.lastConnection.get(Calendar.WEEK_OF_YEAR) < Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)){
+            List<Double> score = scorePerDay();
+            this.rank = rankDay(score);
+        }
+
         List<Integer> maxSport = new ArrayList<>();
         if (sportCategory == 0){
             maxSport = lightSport;
@@ -523,7 +531,7 @@ public class IA {
         for (int i = 0; i < this.Day.size(); i++){
             meanPerDay.add(Double.valueOf(0));
             for (int j = 0; j < this.Day.get(i).size(); j++){
-                meanPerDay.set(i, meanPerDay.get(i) + this.Day.get((conversionDayIndice() + currentDay + i)%7).get(j).get(Task.get("Sport")));
+                meanPerDay.set(i, meanPerDay.get(i) + this.Day.get((conversionDayIndice() + i)%7).get(j).get(Task.get("Sport")));
             }
             meanPerDay.set(i, meanPerDay.get(i)/this.Day.get(i).size());
         }
