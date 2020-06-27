@@ -34,6 +34,7 @@ public class Profile implements Serializable {
     protected int pastAgendaSize;
     protected List<List<timeSlot>> pastAgenda;
     protected List<List<Boolean>> canceled_slots;
+    protected List<List<Boolean>> pastCanceledSlots;
     protected String current;
     protected String currentPast;
     protected String cancel_current;
@@ -169,6 +170,7 @@ public class Profile implements Serializable {
         agenda = new ArrayList<>();
         newEventAgenda = new ArrayList<>();
         canceled_slots = new ArrayList<>();
+        pastCanceledSlots = new ArrayList<>();
 
         timeSlot.currentTask task;
         for(int j = 0; j < 7; j++ ) {
@@ -253,6 +255,16 @@ public class Profile implements Serializable {
                 }
             }
             bufferedWriter.write("/");
+            for(int i=0; i < this.pastCanceledSlots.size(); i ++) {
+                for (int j = 0; j < this.pastCanceledSlots.get(i).size(); j ++) {
+                    if (this.pastCanceledSlots.get(i).get(j)) {
+                        bufferedWriter.write('1');
+                    } else {
+                        bufferedWriter.write('0');
+                    }
+                }
+            }
+            bufferedWriter.write("/");
             for (int i = 0; i < fullAgenda.size() ; i++){
                 for (int j = 0; j < fullAgenda.get(i).size(); j++){
                     if (fullAgenda.get(i).get(j).task_1 == timeSlot.currentTask.NEWEVENT){
@@ -333,6 +345,7 @@ public class Profile implements Serializable {
         Character[] fD= new Character[] {'0','0','0','0','0','0','0'};
         String wU="";
         past_agenda_back = new ArrayList<>();
+        String pastCA = "";
         agenda_back = new ArrayList<>();
         cancel_back = new ArrayList<>();
         event_back = new ArrayList<>();
@@ -375,13 +388,15 @@ public class Profile implements Serializable {
                             break;
                     case 11 : getPastAgenda(lineData.charAt(i));
                             break;
-                    case 12 : getAgenda(lineData.charAt(i));
+                    case 12 : pastCA += lineData.charAt(i);
                             break;
-                    case 13 : getCanceled(lineData.charAt(i));
+                    case 13 : getAgenda(lineData.charAt(i));
                             break;
-                    case 14 : W += lineData.charAt(i);
+                    case 14 : getCanceled(lineData.charAt(i));
                             break;
-                    case 15 : getSavedEvent(lineData.charAt(i));
+                    case 15 : W += lineData.charAt(i);
+                            break;
+                    case 16 : getSavedEvent(lineData.charAt(i));
                             break;
 
                 }
@@ -393,6 +408,21 @@ public class Profile implements Serializable {
 
         this.pastAgendaSize = Integer.parseInt(pastAS);
         writeInPastAgenda();
+
+        List<Boolean> backPCA;
+        for (int i = 0; i < pastAgendaSize ; i++){
+            backPCA = new ArrayList<>();
+            for (int k = 0; k < 96; k++){
+                if (pastCA.charAt(i*96 + k) == '1') {
+                    backPCA.add(true);
+                }
+                else {
+                    backPCA.add(false);
+                }
+            }
+            pastCanceledSlots.add(backPCA);
+        }
+
         writeInAgenda();
         writeCanceled();
         writeSavedEvent();
@@ -450,6 +480,14 @@ public class Profile implements Serializable {
 
                 this.pastAgenda.add(copy);
 
+                List<Boolean> copyCanceled = new ArrayList<>(canceled_slots.get(val).size());
+
+                for (boolean canceled : canceled_slots.get(val)) {
+                    copyCanceled.add(canceled);
+                }
+
+                this.pastCanceledSlots.add(copyCanceled);
+
                 int nbWorkDay = 0;
                 for (int j = 0; j < freeDay.length; j++) {
                     if (!freeDay[j]) {
@@ -489,8 +527,13 @@ public class Profile implements Serializable {
                 DaySlotsCalculation plan = new DaySlotsCalculation(this, freeday, nextfreeday, val);
 
 
+                int dayCalcul = (i - daySinceLastConnection) % 7;
+                if (dayCalcul < 0) {
+                    dayCalcul += 7;
+                }
+
                 IA Agent = new IA(this.weight, plan.daily_slots_generated, this.newEventAgenda.get(val),
-                        i, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
+                        dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                         this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
                 Agent.planDay();
                 this.agenda.set(val, Agent.dailyAgenda);
@@ -518,6 +561,7 @@ public class Profile implements Serializable {
             for (int i = pastAgendaSize; i > this.pastAgendaSize + daySinceLastConnection; i--) { //daySinceLastConnection <0
                 if (pastAgenda.size() > 0) {
                     this.pastAgenda.remove(i - 1);
+                    this.pastCanceledSlots.remove(i-1);
                 }
             }
 
@@ -928,10 +972,10 @@ public class Profile implements Serializable {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt > 4 || hourt < 0){
+            if (hourt > 2 || hourt < 0){
                 ok = false;
             }
-            if (hourt == 4 && mint > 0){
+            if (hourt == 2 && mint > 0){
                 ok = false;
             }
             if (mint >= 60 || mint < 0){

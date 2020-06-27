@@ -635,16 +635,28 @@ public class AgendaActivity extends AppCompatActivity {
                 case SPORT:
                     textView.setText(R.string.Sport);
                     textView.setBackgroundColor(getResources().getColor(R.color.orange, null));
-                    if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
-                        textView.setBackgroundColor(getResources().getColor(R.color.orange_canceled, null));
+                    if (date_offset < 0 && Math.abs(date_offset + 1) < userProfile.pastAgenda.size()){
+                        if(userProfile.pastCanceledSlots.get(userProfile.pastAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.orange_canceled, null));
+                    }
+                    else {
+                        if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.orange_canceled, null));
+                    }
 
                     break;
 
                 case WORK:
                     textView.setText(R.string.work);
                     textView.setBackgroundColor(getResources().getColor(R.color.salmonpink, null));
-                    if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
-                        textView.setBackgroundColor(getResources().getColor(R.color.salmonpink_canceled, null));
+                    if (date_offset < 0 && Math.abs(date_offset + 1) < userProfile.pastAgenda.size()){
+                        if(userProfile.pastCanceledSlots.get(userProfile.pastAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.salmonpink_canceled, null));
+                    }
+                    else {
+                        if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.salmonpink_canceled, null));
+                    }
                     break;
 
                 case EAT:
@@ -660,9 +672,14 @@ public class AgendaActivity extends AppCompatActivity {
                 case WORK_FIX:
                     textView.setText(R.string.fixed_work);
                     textView.setBackgroundColor(getResources().getColor(R.color.gray, null));
-                    if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
-                        textView.setBackgroundColor(getResources().getColor(R.color.gray_canceled, null));
-                    break;
+                    if (date_offset < 0 && Math.abs(date_offset + 1) < userProfile.pastAgenda.size()){
+                        if(userProfile.pastCanceledSlots.get(userProfile.pastAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.gray_canceled, null));
+                    }
+                    else {
+                        if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.gray_canceled, null));
+                    }
                 case MORNING_ROUTINE:
                     textView.setText(R.string.morningRoutine);
                     textView.setBackgroundColor(getResources().getColor(R.color.pastel, null));
@@ -688,8 +705,14 @@ public class AgendaActivity extends AppCompatActivity {
 
             }
 
-            if(cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
-                textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            if (date_offset < 0 && Math.abs(date_offset + 1) < userProfile.pastAgenda.size()){
+                if(userProfile.pastCanceledSlots.get(userProfile.pastAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
+                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
+            else {
+                if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                    textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+            }
         }
 
 
