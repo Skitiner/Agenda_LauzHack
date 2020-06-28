@@ -27,7 +27,7 @@ public class Profile implements Serializable {
     protected Float lateWorkSlot;
     protected boolean calculation;
     protected String FileName;
-    //protected String LastFileName;
+    protected String LastFileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
     protected ArrayList<ArrayList<String>> newEventAgenda;
     protected ArrayList<ArrayList<timeSlot>> fullAgenda;
@@ -64,8 +64,8 @@ public class Profile implements Serializable {
         this.lateSportSlot = 0;
         this.lateWorkSlot = Float.valueOf(0);
         calculation = false;
-        this.FileName = "userProfile.txt";
-        //this.LastFileName = "userProfile.txt";
+        this.FileName = "userProfileV0.txt";
+        this.LastFileName = "userProfile.txt";
         initAgenda();
         initFullAgenda();
         settingDay = Calendar.getInstance();
