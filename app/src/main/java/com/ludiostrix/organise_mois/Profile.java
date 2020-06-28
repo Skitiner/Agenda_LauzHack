@@ -27,7 +27,7 @@ public class Profile implements Serializable {
     protected Float lateWorkSlot;
     protected boolean calculation;
     protected String FileName;
-    //protected String LastFileName;
+    protected String LastFileName;
     protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
     protected ArrayList<ArrayList<String>> newEventAgenda;
     protected ArrayList<ArrayList<timeSlot>> fullAgenda;
@@ -49,6 +49,7 @@ public class Profile implements Serializable {
     public ArrayList<timeSlot> freeWeekDay;
     protected List<List<List<Integer>>> weight;
     protected Map<String,Integer> Task = new HashMap<>();
+    protected List<Integer> sportDayRank;
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -63,8 +64,8 @@ public class Profile implements Serializable {
         this.lateSportSlot = 0;
         this.lateWorkSlot = Float.valueOf(0);
         calculation = false;
-        this.FileName = "userProfile.txt";
-        //this.LastFileName = "userProfile.txt";
+        this.FileName = "userProfileV0.txt";
+        this.LastFileName = "userProfile.txt";
         initAgenda();
         initFullAgenda();
         settingDay = Calendar.getInstance();
@@ -137,6 +138,10 @@ public class Profile implements Serializable {
         }
 
 
+        sportDayRank = new ArrayList<>();
+        for (int i = 0; i < 7; i++) {
+            sportDayRank.add(1);
+        }
         // int test = this.Hour.get(12).get(Task.get("Sport"));
     }
 
@@ -307,6 +312,10 @@ public class Profile implements Serializable {
                 }
             }
             bufferedWriter.write("/");
+            for (int j = 0; j < sportDayRank.size(); j++) {
+                bufferedWriter.write(sportDayRank.get(j).toString());
+            }
+            bufferedWriter.write("/");
             if (savedEvent != null) {
                 for (newEvent e : savedEvent) {
                     bufferedWriter.write(e.name);
@@ -355,6 +364,7 @@ public class Profile implements Serializable {
         String timeMillis = "";
         String lastConnexionTimeMillis = "";
         String W = "";
+        String sDR = "";
         String pastAS = "";
 
         int j = 0;
@@ -396,7 +406,9 @@ public class Profile implements Serializable {
                             break;
                     case 15 : W += lineData.charAt(i);
                             break;
-                    case 16 : getSavedEvent(lineData.charAt(i));
+                    case 16 : sDR += lineData.charAt(i);
+                            break;
+                    case 17 : getSavedEvent(lineData.charAt(i));
                             break;
 
                 }
@@ -426,6 +438,10 @@ public class Profile implements Serializable {
         writeInAgenda();
         writeCanceled();
         writeSavedEvent();
+
+        for (int i = 0; i < sDR.length(); i++){
+            this.sportDayRank.add(Integer.parseInt(String.valueOf(sDR.charAt(i))));
+        }
 
         this.licenceAccepted = Boolean.parseBoolean(lA);
         this.nbWorkHours = nW;
@@ -486,6 +502,10 @@ public class Profile implements Serializable {
                     copyCanceled.add(canceled);
                 }
 
+                for (boolean canceled : canceled_slots.get(val)) {
+                    copyCanceled.add(canceled);
+                }
+
                 this.pastCanceledSlots.add(copyCanceled);
 
                 int nbWorkDay = 0;
@@ -532,10 +552,11 @@ public class Profile implements Serializable {
                     dayCalcul += 7;
                 }
 
-                IA Agent = new IA(this.weight, plan.daily_slots_generated, this.newEventAgenda.get(val),
+                IA Agent = new IA(this.weight, this.sportDayRank, this.lastConnection, plan.daily_slots_generated, this.newEventAgenda.get(val),
                         dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                         this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
                 Agent.planDay();
+                this.sportDayRank = Agent.rank;
                 this.agenda.set(val, Agent.dailyAgenda);
                 this.lateSportSlot = Agent.sportSlot;
                 this.lateWorkSlot = Agent.workSlot;
