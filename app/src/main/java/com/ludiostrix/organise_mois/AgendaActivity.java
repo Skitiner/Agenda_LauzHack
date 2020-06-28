@@ -684,6 +684,7 @@ public class AgendaActivity extends AppCompatActivity {
                         if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
                             textView.setBackgroundColor(getResources().getColor(R.color.gray_canceled, null));
                     }
+                    break;
                 case MORNING_ROUTINE:
                     textView.setText(R.string.morningRoutine);
                     textView.setBackgroundColor(getResources().getColor(R.color.pastel, null));
@@ -1073,7 +1074,7 @@ public class AgendaActivity extends AppCompatActivity {
                             setWeekSlots();
 
                             saveToFile();
-                            //plan();                   // si jour actuelle, ne pas update ce qui est déja passé
+                            plan();                   // si jour actuelle, ne pas update ce qui est déja passé
                             MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                         }
                         else if (startTime == -1){

@@ -552,8 +552,8 @@ public class Profile implements Serializable {
                     dayCalcul += 7;
                 }
 
-                IA Agent = new IA(this.weight, this.sportDayRank, this.lastConnection, plan.daily_slots_generated, this.newEventAgenda.get(val),
-                        dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
+                IA Agent = new IA(this.weight, this.sportDayRank, this.lastConnection, plan.daily_slots_generated, this.agenda.get(val),
+                        this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
                         this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
                 Agent.planDay();
                 this.sportDayRank = Agent.rank;

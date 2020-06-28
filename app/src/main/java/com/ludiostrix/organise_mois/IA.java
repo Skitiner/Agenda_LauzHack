@@ -18,6 +18,7 @@ public class IA {
     protected Map<String,Integer> Task = new HashMap<>();
     protected List<List<List<Integer>>> Day;
     protected ArrayList<timeSlot.currentTask> dailyAgenda;
+    protected ArrayList<timeSlot.currentTask> currentAgenda;
     private List<String> newEventAgenda;
     private int currentDay;
     //public List<List<timeSlot.currentTask>> calculatedAgenda;
@@ -36,13 +37,14 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, List<Integer>weekRank, Calendar lastConnection, ArrayList<timeSlot.currentTask> day, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
+    public IA(List<List<List<Integer>>> weight, List<Integer>weekRank, Calendar lastConnection, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
         this.lastConnection = lastConnection;
 
         this.dailyAgenda = day;
+        this.currentAgenda = currentAgenda;
         this.newEventAgenda = newEventDay;
 
         //this.userProfile = userprofile;
@@ -65,12 +67,50 @@ public class IA {
     }
 
     public void planDay(){
+        if(this.currentDay == 0) {   //aujourdhui
+            int slot = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 4 + Calendar.getInstance().get(Calendar.MINUTE) / 15 + 1;  // timeslot suivant l'actuel
+            while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
+                slot--;
+            }
+            updateWorkSportToDo(slot);
+            for (int i = 0; i < slot; i ++) {
+                if(currentAgenda.get(i) == timeSlot.currentTask.FREE){
+                    dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                }
+                else
+                    dailyAgenda.set(i, currentAgenda.get(i));
+            }
+        }
+
         setSport();
         if (!freeDay) {
             setWork();
         }
         else {
             searchFreeWorkSlot(); // enleve les heures de travail de la journée
+        }
+    }
+
+    private void updateWorkSportToDo(int slot){
+        for (int i = 0; i < slot; i++){
+            if (dailyAgenda.get(i) == timeSlot.currentTask.SPORT){
+                sportSlot--;
+            }
+            else if (dailyAgenda.get(i) == timeSlot.currentTask.WORK || dailyAgenda.get(i) == timeSlot.currentTask.WORK_FIX){
+                workSlot--;
+            }
+            else if (dailyAgenda.get(i) == timeSlot.currentTask.NEWEVENT){
+                for(newEvent event : savedEvent){
+                    if (newEventAgenda.get(i) == event.name){
+                        if (event.sport){
+                            sportSlot--;
+                        }
+                        else if (event.work){
+                            workSlot--;
+                        }
+                    }
+                }
+            }
         }
     }
 
