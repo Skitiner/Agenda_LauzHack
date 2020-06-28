@@ -28,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -249,12 +250,15 @@ public class AgendaActivity extends AppCompatActivity {
                 }
             });
             dialog.show();
+
         }
 
     }
 
     @Override
     public void onBackPressed() {
+        Intent intent = new Intent(AgendaActivity.this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 

@@ -378,6 +378,15 @@ public class ProfileActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void onBackPressed() {
+        DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
+        daySlotsCalculation.slotCalculation();
+
+        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void readFromFile() {
         try {
             Context ctx = getApplicationContext();

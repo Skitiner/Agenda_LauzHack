@@ -281,6 +281,7 @@ public class MainActivity extends AppCompatActivity {
     public void goToAgendaActivity(View view) {
         Intent agenda = new Intent(this, AgendaActivity.class);
         startActivity(agenda);
+        finish();
     }
   
     public void clickedProfileButtonXmlCallback(View view) {
@@ -288,6 +289,7 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
         //intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
         startActivity(intent);
+        finish();
 
     }
 
