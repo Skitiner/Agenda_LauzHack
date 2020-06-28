@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -51,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (!userProfile.licenceAccepted){
+            File file = new File(getFilesDir(), userProfile.LastFileName);
+            file.delete();
             Intent intent = new Intent(MainActivity.this, popupActivity.class);
             intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
             startActivity(intent);

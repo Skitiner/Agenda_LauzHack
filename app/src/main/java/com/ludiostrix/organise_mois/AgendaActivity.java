@@ -1069,7 +1069,7 @@ public class AgendaActivity extends AppCompatActivity {
                             setWeekSlots();
 
                             saveToFile();
-                            plan();
+                            //plan();                   // si jour actuelle, ne pas update ce qui est déja passé
                             MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                         }
                         else if (startTime == -1){
