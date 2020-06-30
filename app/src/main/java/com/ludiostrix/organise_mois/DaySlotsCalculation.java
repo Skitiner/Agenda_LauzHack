@@ -29,8 +29,13 @@ public class DaySlotsCalculation {
     public ArrayList<ArrayList<timeSlot.currentTask>> slots_generated;
     public ArrayList<timeSlot.currentTask> daily_slots_generated;
     private int nbSportTimeSlots = 0;
+    private int weekSport;
+    private float weekWork;
 
     public DaySlotsCalculation(Context context) {
+
+        weekSport = userProfile.lateSportSlot;
+        weekWork = userProfile.lateWorkSlot;
 
         this.context = context;
         readFromFile();
@@ -89,7 +94,7 @@ public class DaySlotsCalculation {
             setDailyNight(freeday, nextfreeday);
         }
 
-        daily_compare(userProfile.agenda.get(day));
+        daily_compare(userProfile.agenda.get(day), userProfile.canceled_slots.get(day));
     }
 
 
@@ -97,6 +102,7 @@ public class DaySlotsCalculation {
 
         readFromFile();
         init();
+        //countWeekWorkAndSport();          /l'idée était ne ne pas réinit le workslot et sportslot à zero mais c'est un peu plus compliqué que ca
         userProfile.remove_canceled_days();
         setMorningRoutine();
         setNight();
@@ -114,6 +120,8 @@ public class DaySlotsCalculation {
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));*/
 
 
+        userProfile.lateWorkSlot = Float.valueOf(0);
+        userProfile.lateSportSlot = 0;
         for (int i = 0; i < slots_generated.size(); i++) {
             int val = i % 7; //(i + offset)%7;
 
@@ -141,10 +149,11 @@ public class DaySlotsCalculation {
                 userProfile.lateSportSlot += 2;
             }
 
-            IA Agent = new IA(userProfile.weight, userProfile.sportDayRank, userProfile.lastConnection, slots_generated.get(val),
+            IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
+                    userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,
                     userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
-                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot);
+                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot, true);
             Agent.planDay();
             userProfile.agenda.set(val, Agent.dailyAgenda);
             userProfile.lateSportSlot = Agent.sportSlot;
@@ -196,6 +205,29 @@ public class DaySlotsCalculation {
         }
         return OK;*/
         return 0;
+    }
+
+    private void countWeekWorkAndSport(){
+        for (int i = 0; i < userProfile.agenda.size();i++){
+            for (int j = 0; j < userProfile.agenda.get(i).size(); j++){
+                if (!userProfile.canceled_slots.get(i).get(j)) {
+                    if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX ||
+                            userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK) {
+                        weekWork++;
+                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.SPORT) {
+                        weekSport++;
+                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.NEWEVENT) {
+                        for (newEvent event : userProfile.savedEvent) {
+                            if (event.sport) {
+                                weekSport++;
+                            } else if (event.work) {
+                                weekWork++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
   
     public Boolean setWork(int nbFixedWork){
@@ -488,9 +520,10 @@ public class DaySlotsCalculation {
         }
     }
 
-    private void daily_compare(ArrayList<timeSlot.currentTask> day_slots){
+    private void daily_compare(ArrayList<timeSlot.currentTask> day_slots, List<Boolean> day_canceledSlots){
         for (int j = 0; j < day_slots.size(); j++) {
-            if (day_slots.get(j) == timeSlot.currentTask.WORK_FIX || day_slots.get(j) == timeSlot.currentTask.EAT || day_slots.get(j) == timeSlot.currentTask.NEWEVENT){
+            if (day_slots.get(j) == timeSlot.currentTask.WORK_FIX || day_slots.get(j) == timeSlot.currentTask.EAT ||
+                    day_slots.get(j) == timeSlot.currentTask.NEWEVENT || day_canceledSlots.get(j)){
                 this.daily_slots_generated.set(j,day_slots.get(j));
             }
         }

@@ -21,6 +21,7 @@ public class IA {
     protected ArrayList<timeSlot.currentTask> currentAgenda;
     private List<String> newEventAgenda;
     private int currentDay;
+    private Calendar settingDay;
     //public List<List<timeSlot.currentTask>> calculatedAgenda;
     private List<newEvent> savedEvent;
     private int workSizeOpti;
@@ -28,24 +29,31 @@ public class IA {
     int sportCategory;
     int sportSlot;
     public List<Integer> rank;
+    public List<Boolean> canceledAgenda;
     private Calendar lastConnection;
 
     private boolean freeDay;
+
+    private boolean init;
 
     private List<Integer> lightSport = Arrays.asList(8, 8, 2);
     private List<Integer> intermediateSport = Arrays.asList(8, 8, 2);
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, List<Integer>weekRank, Calendar lastConnection, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot){
+    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot, boolean init){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
         this.lastConnection = lastConnection;
+        this.settingDay = settingDay;
+
+        this.init = init;
 
         this.dailyAgenda = day;
         this.currentAgenda = currentAgenda;
         this.newEventAgenda = newEventDay;
+        this.canceledAgenda = canceledSlots;
 
         //this.userProfile = userprofile;
         this.savedEvent = savedevent;
@@ -67,46 +75,73 @@ public class IA {
     }
 
     public void planDay(){
-        if(this.currentDay == 0) {   //aujourdhui
-            int slot = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 4 + Calendar.getInstance().get(Calendar.MINUTE) / 15 + 1;  // timeslot suivant l'actuel
-            while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
-                slot--;
-            }
-            updateWorkSportToDo(slot);
-            for (int i = 0; i < slot; i ++) {
-                if(currentAgenda.get(i) == timeSlot.currentTask.FREE){
-                    dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+        int slot = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 4 + Calendar.getInstance().get(Calendar.MINUTE) / 15 + 1;  // timeslot suivant l'actuel
+
+        if(this.currentDay == convertedIndice()) {   //aujourdhui
+            if (slot == 96){
+                for (int i = 0; i < dailyAgenda.size(); i++){
+                    if(currentAgenda.get(i) == timeSlot.currentTask.FREE || init){
+                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                    }
+                    else
+                        dailyAgenda.set(i, currentAgenda.get(i));
                 }
-                else
-                    dailyAgenda.set(i, currentAgenda.get(i));
             }
+            else {
+                while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
+                    slot--;
+                }
+                if (!init) {
+                    updateWorkSportToDo(slot);
+                }
+                for (int i = 0; i < slot; i++) {
+                    if (currentAgenda.get(i) == timeSlot.currentTask.FREE || init) {
+                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                    } else
+                        dailyAgenda.set(i, currentAgenda.get(i));
+                }
+            }
+        }
+        else if (!init){
+            updateWorkSportToDo(0);
         }
 
-        setSport();
-        if (!freeDay) {
-            setWork();
-        }
-        else {
-            searchFreeWorkSlot(); // enleve les heures de travail de la journée
+        if (slot < 96 || this.currentDay != 0) {
+            setSport();
+            if (!freeDay) {
+                setWork();
+            } else {
+                searchFreeWorkSlot(); // enleve les heures de travail de la journée
+            }
         }
     }
 
+    private int convertedIndice() {
+        int setting_day = settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        return offset%7;
+    }
+
     private void updateWorkSportToDo(int slot){
-        for (int i = 0; i < slot; i++){
-            if (dailyAgenda.get(i) == timeSlot.currentTask.SPORT){
-                sportSlot--;
+        for (int i = slot; i < currentAgenda.size(); i++){
+            if (currentAgenda.get(i) == timeSlot.currentTask.SPORT && !canceledAgenda.get(i)){
+                sportSlot++;
             }
-            else if (dailyAgenda.get(i) == timeSlot.currentTask.WORK || dailyAgenda.get(i) == timeSlot.currentTask.WORK_FIX){
-                workSlot--;
+            else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)){
+                workSlot++;
             }
-            else if (dailyAgenda.get(i) == timeSlot.currentTask.NEWEVENT){
+            else if (currentAgenda.get(i) == timeSlot.currentTask.NEWEVENT && !canceledAgenda.get(i)){
                 for(newEvent event : savedEvent){
-                    if (newEventAgenda.get(i) == event.name){
+                    if (newEventAgenda.get(i).equals(event.name)){
                         if (event.sport){
-                            sportSlot--;
+                            sportSlot++;
                         }
                         else if (event.work){
-                            workSlot--;
+                            workSlot++;
                         }
                     }
                 }
@@ -310,7 +345,8 @@ public class IA {
         if (maxSport.size() > rank.get(currentDay)) {
 
             List<Integer> sportPosition = sportLocation();
-            if (sportSlot - sportPosition.size() > 1) {
+            sportSlot = sportSlot-sportPosition.size();
+            if (sportSlot > 1) {
                 //search all freeSlot during one hour after the lunchtime to not add sport there if possible
                 List<Integer> afterLunchtime = new ArrayList<>();
 
@@ -370,9 +406,6 @@ public class IA {
                         }
                     }
                 }
-            }
-            else {
-                sportSlot = sportSlot-sportPosition.size();
             }
         }
     }
@@ -476,11 +509,12 @@ public class IA {
                     maxScoreIndice = i;
                 }
             }
-
-            for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
-                dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+            if (maxScoreIndice != -1) {
+                for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
+                    dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                }
+                slotFound = true;
             }
-            slotFound = true;
         }
 
         return slotFound;
@@ -540,10 +574,12 @@ public class IA {
                 }
             }
 
-            for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
-                dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+            if (maxScoreIndice != -1) {
+                for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
+                    dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                }
+                slotFound = true;
             }
-            slotFound = true;
         }
 
         return slotFound;
