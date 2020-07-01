@@ -1374,10 +1374,12 @@ public class AgendaActivity extends AppCompatActivity {
         float hourt;
         float mint;
         float fTime = -1;
+        int nbHChar = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHChar < 2) {
                 hour += time.charAt(i);
+                nbHChar++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
@@ -1390,10 +1392,7 @@ public class AgendaActivity extends AppCompatActivity {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt == 24){
-                // do nothing
-            }
-            else if (hourt > 23 || hourt < 0){
+            if (hourt > 23 || hourt < 0){
                 ok = false;
             }
             else if (mint >= 60 || mint < 0){

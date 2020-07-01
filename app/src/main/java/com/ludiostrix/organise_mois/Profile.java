@@ -955,10 +955,12 @@ public class Profile implements Serializable {
         String min = "0";
         float hourt;
         float mint;
+        int nbHC = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHC < 2) {
                 hour += time.charAt(i);
+                nbHC++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
@@ -1003,10 +1005,12 @@ public class Profile implements Serializable {
         String min = "0";
         float hourt;
         float mint;
+        int nbHC = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHC < 2) {
                 hour += time.charAt(i);
+                nbHC++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
@@ -1079,10 +1083,12 @@ public class Profile implements Serializable {
         String min = "0";
         float hourt;
         float mint;
+        int nbHC = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHC < 2) {
                 hour += time.charAt(i);
+                nbHC++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
