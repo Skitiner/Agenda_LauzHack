@@ -718,12 +718,18 @@ public class AgendaActivity extends AppCompatActivity {
                     break;
 
                 case NEWEVENT:
+                    boolean eventExist = false;
                     for (int i = 0; i < userProfile.savedEvent.size(); i++){
                         if (userProfile.savedEvent.get(i).name.equals(new_task)) {
                             textView.setText(userProfile.savedEvent.get(i).name);
                             textView.setBackgroundColor(getResources().getColor(userProfile.savedEvent.get(i).color, null));
+                            eventExist = true;
                             break;
                         }
+                    }
+                    if (!eventExist){
+                        textView.setText(new_task);
+                        textView.setBackgroundColor(getResources().getColor(R.color.lightOrange, null));
                     }
                     break;
 
@@ -1205,7 +1211,7 @@ public class AgendaActivity extends AppCompatActivity {
                 dayOffset++;
             } while (!freeday);*/
             dayOffset++;
-        } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot == 0) && dayOffset < 7);
+        } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot != 0) && dayOffset < 7);
         saveToFile();
 
         int isOK = 0;               //pas tres utile...
@@ -1249,17 +1255,11 @@ public class AgendaActivity extends AppCompatActivity {
 
             userProfile.agenda.get(day).set(i, timeSlot.currentTask.NEWEVENT);
             userProfile.newEventAgenda.get(day).set(i, newEvent.name);
-            if(userProfile.agenda.get(day).get(i) == timeSlot.currentTask.NEWEVENT){
-                for (newEvent event : userProfile.savedEvent){
-                    if (event.name.equals(userProfile.newEventAgenda.get(day).get(i))){
-                        if (event.sport){
-                            userProfile.lateSportSlot--;
-                        }
-                        else if (event.work){
-                            userProfile.lateWorkSlot--;
-                        }
-                    }
-                }
+            if (newEvent.sport){
+                userProfile.lateSportSlot--;
+            }
+            else if (newEvent.work){
+                userProfile.lateWorkSlot--;
             }
             /*if ((int)startTime == (int) stopTime){
                 if (((int)(startTime*4))%4 == 0) {

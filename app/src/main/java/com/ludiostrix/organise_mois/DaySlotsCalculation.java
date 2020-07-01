@@ -139,14 +139,39 @@ public class DaySlotsCalculation {
                 }
             }
 
-            if(!freeday) {
-                this.userProfile.lateWorkSlot += Float.parseFloat(userProfile.nbWorkHours) / (float) nbWorkDay;
+            if (i!=0) {         // aujourdhui, dépendemment de l'heure on initie diférement pour ne pas déja avoir du retard
+                if (!freeday) {
+                    this.userProfile.lateWorkSlot += Float.parseFloat(userProfile.nbWorkHours) / (float) nbWorkDay;
+                }
+                if (userProfile.sportRoutine == 2) {
+                    userProfile.lateSportSlot += 4;
+                } else {
+                    userProfile.lateSportSlot += 2;
+                }
             }
-            if(userProfile.sportRoutine == 2){
-                userProfile.lateSportSlot += 4;
-            }
-            else{
-                userProfile.lateSportSlot += 2;
+            else {
+                int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                if (currentHour < 20 && wake_up < currentHour){
+                    if (!freeday) {
+                        this.userProfile.lateWorkSlot += ((Float.parseFloat(userProfile.nbWorkHours) / (float) nbWorkDay)
+                                * (Float.valueOf(20)-(float)currentHour)/(Float.valueOf(20)-(wake_up+1)));       // coeff < 1 réprensentant le pourcentage d'heure de la journée
+                    }
+                    if (userProfile.sportRoutine == 2) {
+                        userProfile.lateSportSlot += 4;
+                    } else {
+                        userProfile.lateSportSlot += 2;
+                    }
+                }
+                else if(currentHour < 20){
+                    if (!freeday) {
+                        this.userProfile.lateWorkSlot += Float.parseFloat(userProfile.nbWorkHours) / (float) nbWorkDay;
+                    }
+                    if (userProfile.sportRoutine == 2) {
+                        userProfile.lateSportSlot += 4;
+                    } else {
+                        userProfile.lateSportSlot += 2;
+                    }
+                }
             }
 
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,

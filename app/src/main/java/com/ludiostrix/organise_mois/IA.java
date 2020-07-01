@@ -86,10 +86,17 @@ public class IA {
                     else
                         dailyAgenda.set(i, currentAgenda.get(i));
                 }
+
+                if (!init) {
+                    updateWorkSportToDo(slot);
+                }
             }
             else {
-                while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
+                /*while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
                     slot--;
+                }*/
+                while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot < dailyAgenda.size()) {
+                    slot++;
                 }
                 if (!init) {
                     updateWorkSportToDo(slot);
