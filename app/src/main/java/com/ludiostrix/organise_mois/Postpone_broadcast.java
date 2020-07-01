@@ -54,7 +54,7 @@ public class Postpone_broadcast extends BroadcastReceiver {
         // Determinate the time boudaries of the block to postpone
         int endI = startI;
 
-        while ((dailyTasks.get(endI) == dailyTasks.get(startI) || dailyTasks.get(endI) != timeSlot.currentTask.FREE) && endI < (dailyTasks.size() - 1)) {
+        while ((dailyTasks.get(endI) == dailyTasks.get(startI) || dailyTasks.get(endI) != timeSlot.currentTask.FREE || dailyTasks.get(endI) != timeSlot.currentTask.PAUSE) && endI < (dailyTasks.size() - 1)) {
             endI++;
         }
 

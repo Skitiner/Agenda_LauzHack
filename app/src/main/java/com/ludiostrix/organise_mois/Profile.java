@@ -4,8 +4,12 @@ import android.service.autofill.AutofillService;
 import android.util.Log;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -196,6 +200,21 @@ public class Profile implements Serializable {
 
     }
 
+    private byte[] floatToByteArray ( final float i ) throws IOException {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(bos);
+        dos.writeFloat(i);
+        dos.flush();
+        return bos.toByteArray();
+    }
+
+    private float convertByteArrayToFloat(byte[] floatBytes){
+        ByteBuffer byteBuffer = ByteBuffer.allocate(Float.BYTES);
+        byteBuffer.put(floatBytes);
+        byteBuffer.flip();
+        return byteBuffer.getFloat();
+    }
+
     public void Save(BufferedWriter bufferedWriter){
         try {
             bufferedWriter.write(String.valueOf(this.licenceAccepted));
@@ -219,6 +238,12 @@ public class Profile implements Serializable {
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(this.lateSportSlot));
             bufferedWriter.write("/");
+
+            /*byte[] lateSport = floatToByteArray(lateWorkSlot);
+            for (int i = 0; i < lateSport.length; i++) {
+                bufferedWriter.write(String.valueOf(lateSport[i]));
+            }*/
+
             bufferedWriter.write(String.valueOf(this.lateWorkSlot));
             bufferedWriter.write("/");
             bufferedWriter.write(String.valueOf(settingDay.getTimeInMillis()));
@@ -348,6 +373,10 @@ public class Profile implements Serializable {
     }
 
     public void decode(String lineData) {
+        current = new String();
+        currentPast = new String();
+        cancel_current = new String();
+        event_current = new String();
         String lA="";
         String nW="";
         String oW="";
@@ -440,7 +469,7 @@ public class Profile implements Serializable {
         writeSavedEvent();
 
         for (int i = 0; i < sDR.length(); i++){
-            this.sportDayRank.add(Integer.parseInt(String.valueOf(sDR.charAt(i))));
+            this.sportDayRank.set(i, Integer.parseInt(String.valueOf(sDR.charAt(i))));
         }
 
         this.licenceAccepted = Boolean.parseBoolean(lA);
@@ -463,7 +492,8 @@ public class Profile implements Serializable {
         this.wakeUp = wU;
         this.sportRoutine = Integer.parseInt(sR);
         this.lateSportSlot = Integer.parseInt(lSS);
-        this.lateWorkSlot = Float.parseFloat(lWS);
+        //byte[] lateWork = lWS.getBytes();
+        this.lateWorkSlot = Float.parseFloat(lWS); //convertByteArrayToFloat(lateWork);
         this.settingDay = Calendar.getInstance();               //pas nécessaire?
         this.settingDay.setTimeInMillis(Long.parseLong(timeMillis));
         this.lastConnection.setTimeInMillis(Long.parseLong(lastConnexionTimeMillis));
@@ -497,10 +527,6 @@ public class Profile implements Serializable {
                 this.pastAgenda.add(copy);
 
                 List<Boolean> copyCanceled = new ArrayList<>(canceled_slots.get(val).size());
-
-                for (boolean canceled : canceled_slots.get(val)) {
-                    copyCanceled.add(canceled);
-                }
 
                 for (boolean canceled : canceled_slots.get(val)) {
                     copyCanceled.add(canceled);
@@ -552,9 +578,10 @@ public class Profile implements Serializable {
                     dayCalcul += 7;
                 }
 
-                IA Agent = new IA(this.weight, this.sportDayRank, this.lastConnection, plan.daily_slots_generated, this.newEventAgenda.get(val),
-                        dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
-                        this.lateWorkSlot, this.sportRoutine, this.lateSportSlot);
+                IA Agent = new IA(this.weight, this.canceled_slots.get(val), this.sportDayRank, this.lastConnection,
+                        this.settingDay, plan.daily_slots_generated, this.agenda.get(val),
+                        this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
+                        this.lateWorkSlot, this.sportRoutine, this.lateSportSlot, true);
                 Agent.planDay();
                 this.sportDayRank = Agent.rank;
                 this.agenda.set(val, Agent.dailyAgenda);
@@ -630,10 +657,10 @@ public class Profile implements Serializable {
             this.fullAgenda.get(currentDay).get(position).task_2 =  this.agenda.get(currentDay).get(i+1);
             this.fullAgenda.get(currentDay).get(position).task_3 =  this.agenda.get(currentDay).get(i+2);
             this.fullAgenda.get(currentDay).get(position).task_4 =  this.agenda.get(currentDay).get(i+3);
-            this.fullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i);
-            this.fullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i+1);
-            this.fullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i+2);
-            this.fullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventAgenda.get((currentDay + convertedIndice())%7).get(i+3);
+            this.fullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventAgenda.get(currentDay).get(i);
+            this.fullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventAgenda.get(currentDay).get(i+1);
+            this.fullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventAgenda.get(currentDay).get(i+2);
+            this.fullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventAgenda.get(currentDay).get(i+3);
         }
     }
 
@@ -928,10 +955,12 @@ public class Profile implements Serializable {
         String min = "0";
         float hourt;
         float mint;
+        int nbHC = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHC < 2) {
                 hour += time.charAt(i);
+                nbHC++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
@@ -976,10 +1005,12 @@ public class Profile implements Serializable {
         String min = "0";
         float hourt;
         float mint;
+        int nbHC = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHC < 2) {
                 hour += time.charAt(i);
+                nbHC++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
@@ -1052,10 +1083,12 @@ public class Profile implements Serializable {
         String min = "0";
         float hourt;
         float mint;
+        int nbHC = 0;
 
         for (int i = 0; i < time.length(); i++){
-            if(time.charAt(i) != ':' && entier) {
+            if(time.charAt(i) != ':' && entier && nbHC < 2) {
                 hour += time.charAt(i);
+                nbHC++;
             }
             else if (time.charAt(i) != ':'){
                 min += time.charAt(i);
