@@ -80,7 +80,10 @@ public class IA {
         if(this.currentDay == convertedIndice()) {   //aujourdhui
             if (slot == 96){
                 for (int i = 0; i < dailyAgenda.size(); i++){
-                    if(currentAgenda.get(i) == timeSlot.currentTask.FREE && init){
+                    if (init){
+                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                    }
+                    else if(currentAgenda.get(i) == timeSlot.currentTask.FREE){
                         dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
                     }
                     else
@@ -102,7 +105,10 @@ public class IA {
                     updateWorkSportToDo(slot);
                 }
                 for (int i = 0; i < slot; i++) {
-                    if (currentAgenda.get(i) == timeSlot.currentTask.FREE && init) {
+                    if (init){
+                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                    }
+                    else if (currentAgenda.get(i) == timeSlot.currentTask.FREE && init) {
                         dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
                     } else
                         dailyAgenda.set(i, currentAgenda.get(i));
