@@ -72,6 +72,7 @@
     <string name="isSport">Sport</string>
     <string name="isFree">Temps libre</string>
     <string name="isWorkSportFree">Cette activité est-elle du travail, du sport ou du temps libre ?</string>
+    <string name="eventWeekly">Est-ce une activité hebdomadaire ?</string>
 
 
     <string name="eat_notif">C\'est l\'heure du repas :p</string>

@@ -121,7 +121,7 @@ public class Cancel_broadcast extends BroadcastReceiver {
             int val = (currentDay + convertedIndice() + dayOffset)%7; // à tester
             int dayCalcul = val;
 
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(userProfile, freeday, nextfreeday, val);
+            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(userProfile, freeday, nextfreeday, val,false);
 
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
