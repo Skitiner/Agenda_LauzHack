@@ -69,7 +69,7 @@
 
         <LinearLayout
             android:id="@+id/eventParameter"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:visibility="gone">
@@ -229,23 +229,26 @@
 
                     <RadioButton
                         android:id="@+id/workRadioButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
+                        android:layout_weight="1"
                         android:buttonTint="@color/lightGreen"
                         android:text="@string/isWork"/>
                     <RadioButton
                         android:id="@+id/sportRadioButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
+                        android:layout_weight="1"
                         android:buttonTint="@color/lightGreen"
                         android:text="@string/isSport"/>
                     <RadioButton
                         android:id="@+id/freeRadioButton"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textColor="@color/black"
+                        android:layout_weight="1"
                         android:buttonTint="@color/lightGreen"
                         android:text="@string/isFree"/>
                 </RadioGroup>
@@ -414,6 +417,51 @@
                     android:layout_weight="9" />
 
             </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20px" />
+
+            <LinearLayout
+                android:id="@+id/layoutWeeklyEvent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:text="@string/eventWeekly"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4" />
+
+                <Switch
+                    android:id="@+id/eventWeekly"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="3"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:buttonTint="@color/lightGreen"/>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <Space
