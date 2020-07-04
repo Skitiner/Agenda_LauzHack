@@ -338,7 +338,7 @@ public class IA {
     }*/
 
     private void setSport() {
-        if (this.lastConnection.get(Calendar.WEEK_OF_YEAR) < Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)){
+        if (this.lastConnection.get(Calendar.WEEK_OF_YEAR) != Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)){
             List<Double> score = scorePerDay();
             this.rank = rankDay(score);
         }

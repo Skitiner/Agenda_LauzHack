@@ -186,7 +186,8 @@ public class DaySlotsCalculation {
                     userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,
                     userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
-                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot, true);
+                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.agendaInit);
+            userProfile.agendaInit = false;
             Agent.planDay();
             userProfile.agenda.set(val, Agent.dailyAgenda);
             userProfile.lateSportSlot = Agent.sportSlot;
