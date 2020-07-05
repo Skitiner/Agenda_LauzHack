@@ -62,8 +62,10 @@ public class Profile implements Serializable {
     protected Map<String,Integer> Task = new HashMap<>();
     protected List<Integer> sportDayRank;
     protected boolean agendaInit = true;
-    protected List<Stat> pastStat;
-    protected List<Stat> weekStat;
+    protected int workCatchUp = 0;
+    protected int sportCatchUp = 0;
+    //protected List<Stat> pastStat;
+    //protected List<Stat> weekStat;
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -71,13 +73,13 @@ public class Profile implements Serializable {
         futur_agenda_back = new ArrayList<>();
         cancel_back = new ArrayList<>();
         event_back = new ArrayList<>();
-        pastStat = new ArrayList<>();
-        weekStat = new ArrayList<>();
+        //pastStat = new ArrayList<>();
+        //weekStat = new ArrayList<>();
 
-        for (int i = 0; i < 7; i++){
+        /*for (int i = 0; i < 7; i++){
             Stat newStat = new Stat();
             weekStat.add(newStat);
-        }
+        }*/
 
         this.licenceAccepted = false;
         this.nbWorkHours = "168";
@@ -432,27 +434,31 @@ public class Profile implements Serializable {
                 bufferedWriter.write(sportDayRank.get(j).toString());
             }
             bufferedWriter.write("/");
-            for (int i = 0; i < weekStat.size(); i++) {
-                bufferedWriter.write(weekStat.get(i).work);
+            /*for (int i = 0; i < weekStat.size(); i++) {
+                bufferedWriter.write(String.valueOf(weekStat.get(i).work));
                 bufferedWriter.write(",");
                 bufferedWriter.write(String.valueOf(weekStat.get(i).workDone));
                 bufferedWriter.write(",");
-                bufferedWriter.write(weekStat.get(i).sport);
+                bufferedWriter.write(String.valueOf(weekStat.get(i).sport));
                 bufferedWriter.write(",");
-                bufferedWriter.write(weekStat.get(i).sportDone);
+                bufferedWriter.write(String.valueOf(weekStat.get(i).sportDone));
                 bufferedWriter.write(",");
             }
             bufferedWriter.write("/");
             for (int i = 0; i < pastStat.size(); i++) {
-                bufferedWriter.write(pastStat.get(i).work);
+                bufferedWriter.write(String.valueOf(pastStat.get(i).work));
                 bufferedWriter.write(",");
                 bufferedWriter.write(String.valueOf(pastStat.get(i).workDone));
                 bufferedWriter.write(",");
-                bufferedWriter.write(pastStat.get(i).sport);
+                bufferedWriter.write(String.valueOf(pastStat.get(i).sport));
                 bufferedWriter.write(",");
-                bufferedWriter.write(pastStat.get(i).sportDone);
+                bufferedWriter.write(String.valueOf(pastStat.get(i).sportDone));
                 bufferedWriter.write(",");
             }
+            bufferedWriter.write("/");*/
+            bufferedWriter.write(String.valueOf(this.workCatchUp));
+            bufferedWriter.write("/");
+            bufferedWriter.write(String.valueOf(this.sportCatchUp));
             bufferedWriter.write("/");
             if (savedEvent != null) {
                 for (newEvent e : savedEvent) {
@@ -475,8 +481,8 @@ public class Profile implements Serializable {
                     }
                     bufferedWriter.write(",");
                 }
+                bufferedWriter.write("/");
             }
-            bufferedWriter.write("/");
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -511,8 +517,10 @@ public class Profile implements Serializable {
         String W = "";
         String sDR = "";
         String pastAS = "";
-        String ps = "";
-        String s = "";
+        /*String ps = "";
+        String s = "";*/
+        String wCU = "";
+        String sCU = "";
 
         int j = 0;
         int n = 0;
@@ -559,9 +567,13 @@ public class Profile implements Serializable {
                             break;
                     case 18 : sDR += lineData.charAt(i);
                             break;
-                    case 19 : s += lineData.charAt(i);
+                    /*case 19 : s += lineData.charAt(i);
                             break;
                     case 20 : ps += lineData.charAt(i);
+                            break;*/
+                    case 19 : wCU += lineData.charAt(i);
+                            break;
+                    case 20 : sCU += lineData.charAt(i);
                             break;
                     case 21 : getSavedEvent(lineData.charAt(i));
                             break;
@@ -590,26 +602,26 @@ public class Profile implements Serializable {
             pastCanceledSlots.add(backPCA);
         }
 
-        for (int i = 0; i < 7; i++){
+        /*for (int i = 0; i < 7; i++){
             int k = 0;
             String w = "";
             String wd = "";
             String sp = "";
             String spd = "";
 
-            while (k < 4){
-                if (s.charAt(k) == ','){
+            for (int l = 0; l < s.length(); l++){
+                if (s.charAt(l) == ','){
                     k++;
                 }
                 else {
                     switch (k){
-                        case 0 : w += s.charAt(k);
+                        case 0 : w += s.charAt(l);
                             break;
-                        case 1 : wd += s.charAt(k);
+                        case 1 : wd += s.charAt(l);
                             break;
-                        case 2 : sp += s.charAt(k);
+                        case 2 : sp += s.charAt(l);
                             break;
-                        case 3 : spd += s.charAt(k);
+                        case 3 : spd += s.charAt(l);
                             break;
                     }
                 }
@@ -631,19 +643,19 @@ public class Profile implements Serializable {
             String sp = "";
             String spd = "";
 
-            while (k < 4){
-                if (ps.charAt(k) == ','){
+            for (int l = 0; l < ps.length(); l++){
+                if (ps.charAt(l) == ','){
                     k++;
                 }
                 else {
                     switch (k){
-                        case 0 : w += ps.charAt(k);
+                        case 0 : w += ps.charAt(l);
                                 break;
-                        case 1 : wd += ps.charAt(k);
+                        case 1 : wd += ps.charAt(l);
                                 break;
-                        case 2 : sp += ps.charAt(k);
+                        case 2 : sp += ps.charAt(l);
                                 break;
-                        case 3 : spd += ps.charAt(k);
+                        case 3 : spd += ps.charAt(l);
                                 break;
                     }
                 }
@@ -652,13 +664,15 @@ public class Profile implements Serializable {
             pastStat.get(i).workDone = Float.parseFloat(wd);
             pastStat.get(i).sport = Integer.parseInt(sp);
             pastStat.get(i).sportDone = Integer.parseInt(spd);
-
-        }
+        }*/
 
         writeInAgenda();
         writeInFuturAgenda();
         writeCanceled();
         writeSavedEvent();
+
+        this.workCatchUp = Integer.parseInt(wCU);
+        this.sportCatchUp = Integer.parseInt(sCU);
 
         for (int i = 0; i < sDR.length(); i++){
             this.sportDayRank.set(i, Integer.parseInt(String.valueOf(sDR.charAt(i))));
@@ -773,13 +787,16 @@ public class Profile implements Serializable {
 
                 IA Agent = new IA(this.weight, this.canceled_slots.get(val), this.sportDayRank, this.lastConnection,
                         this.settingDay, plan.daily_slots_generated, this.agenda.get(val),
-                        this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday, Integer.parseInt(this.optWorkTime),
-                        this.lateWorkSlot, this.sportRoutine, this.lateSportSlot, true);
+                        this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday,
+                        Integer.parseInt(this.optWorkTime), this.lateWorkSlot, this.workCatchUp,
+                        this.sportRoutine, this.lateSportSlot, this.sportCatchUp, this.agendaInit);
                 Agent.planDay();
                 this.sportDayRank = Agent.rank;
                 this.agenda.set(val, Agent.dailyAgenda);
                 this.lateSportSlot = Agent.sportSlot;
                 this.lateWorkSlot = Agent.workSlot;
+                this.workCatchUp = Agent.workSlotCatchUp;
+                this.sportCatchUp = Agent.sportCatchUp;
 
                 int position;
                 for (int j = 0; j < 96; j += 4) {
@@ -1065,6 +1082,10 @@ public class Profile implements Serializable {
 
             } else if ("PAUSE".equals(past_agenda_back.get(i))) {
                 this.pastAgenda.get(j).set(k, timeSlot.currentTask.PAUSE);
+            } else if ("WORK_CATCH_UP".equals(past_agenda_back.get(i))) {
+                this.pastAgenda.get(j).set(k, timeSlot.currentTask.WORK_CATCH_UP);
+            } else if ("SPORT_CATCH_UP".equals(past_agenda_back.get(i))) {
+                this.pastAgenda.get(j).set(k, timeSlot.currentTask.SPORT_CATCH_UP);
             }
             else{
                 this.pastAgenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
@@ -1128,6 +1149,12 @@ public class Profile implements Serializable {
             } else if ("PAUSE".equals(agenda_back.get(i))) {
                 agenda.get(j).set(k, timeSlot.currentTask.PAUSE);
             }
+            else if ("WORK_CATCH_UP".equals(agenda_back.get(i))) {
+                this.agenda.get(j).set(k, timeSlot.currentTask.WORK_CATCH_UP);
+            }
+            else if ("SPORT_CATCH_UP".equals(agenda_back.get(i))) {
+                this.agenda.get(j).set(k, timeSlot.currentTask.SPORT_CATCH_UP);
+            }
             else{
                 agenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
                 newEventAgenda.get(j).set(k, agenda_back.get(i));
@@ -1190,6 +1217,12 @@ public class Profile implements Serializable {
 
             } else if ("PAUSE".equals(futur_agenda_back.get(i))) {
                 futurAgenda.get(j).set(k, timeSlot.currentTask.PAUSE);
+            }
+            else if ("WORK_CATCH_UP".equals(futur_agenda_back.get(i))) {
+                this.futurAgenda.get(j).set(k, timeSlot.currentTask.WORK_CATCH_UP);
+            }
+            else if ("SPORT_CATCH_UP".equals(futur_agenda_back.get(i))) {
+                this.futurAgenda.get(j).set(k, timeSlot.currentTask.SPORT_CATCH_UP);
             }
             else{
                 futurAgenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);

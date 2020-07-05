@@ -6,6 +6,8 @@
     <string name="fixed_work">Travail fixe</string>
     <string name="eat">Repas</string>
     <string name="work">Travail</string>
+    <string name="workCatchUp">Rattrapage de travail</string>
+    <string name="sportCatchUp">Rattrapage de sport</string>
     <string name="Sport">Sport</string>
     <string name="Wakeup">5. Réveil :</string>
     <string name="NBWork">"1. Nombre d'heure de travail par semaine : "</string>
@@ -73,7 +75,11 @@
     <string name="isFree">Temps libre</string>
     <string name="isWorkSportFree">Cette activité est-elle du travail, du sport ou du temps libre ?</string>
     <string name="eventWeekly">Est-ce une activité hebdomadaire ?</string>
-
+    <string name="sportTime">Sport time !</string>
+    <string name="workTime">Work time !</string>
+    <string name="sportCatchUpTime">Rattrapage de sport</string>
+    <string name="workCatchUpTime">Rattrapage de travail</string>
+    <string name="lastChance">C\'est votre dernière chance de vous rattraper.</string>
 
     <string name="eat_notif">C\'est l\'heure du repas :p</string>
     <string name="do_break_notif">Faites une pause, vous le méritez :)</string>

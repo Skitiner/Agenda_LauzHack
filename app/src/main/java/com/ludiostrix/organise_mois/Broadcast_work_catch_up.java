@@ -9,9 +9,9 @@ import android.graphics.BitmapFactory;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-public class Broadcast_work extends BroadcastReceiver {
+public class Broadcast_work_catch_up extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
-    private int notificationId = 153;
+    private int notificationId = 156;
     private static int life_time = 5*60000;
 
     @Override
@@ -38,10 +38,10 @@ public class Broadcast_work extends BroadcastReceiver {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.organise_work)
                 .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.mipmap.organisemois))
-                .setContentTitle(context.getString(R.string.workTime))
-                .setContentText(context.getString(R.string.check_notif))
+                .setContentTitle(context.getString(R.string.workCatchUpTime))
+                .setContentText(context.getString(R.string.check_notif) + context.getString(R.string.lastChance))
                 .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(context.getString(R.string.check_notif)))
+                        .bigText(context.getString(R.string.check_notif) + context.getString(R.string.lastChance)))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(click)
                 .setAutoCancel(true)

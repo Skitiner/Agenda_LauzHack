@@ -128,8 +128,13 @@ public class DaySlotsCalculation {
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));*/
 
 
+        // TODO: 05.07.2020 recompter
+
         userProfile.lateWorkSlot = Float.valueOf(0);
         userProfile.lateSportSlot = 0;
+        userProfile.workCatchUp = 0;
+        userProfile.sportCatchUp = 0;
+
         for (int i = 0; i < slots_generated.size(); i++) {
             int val = i % 7; //(i + offset)%7;
 
@@ -186,12 +191,15 @@ public class DaySlotsCalculation {
                     userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,
                     userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
-                    userProfile.lateWorkSlot, userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.agendaInit);
+                    userProfile.lateWorkSlot, userProfile.workCatchUp, userProfile.sportRoutine,
+                    userProfile.lateSportSlot, userProfile.sportCatchUp, userProfile.agendaInit);
             userProfile.agendaInit = false;
             Agent.planDay();
             userProfile.agenda.set(val, Agent.dailyAgenda);
             userProfile.lateSportSlot = Agent.sportSlot;
             userProfile.lateWorkSlot = Agent.workSlot;
+            userProfile.workCatchUp = Agent.workSlotCatchUp;
+            userProfile.sportCatchUp = Agent.sportCatchUp;
 
             int position;
             for(int j = 0; j < 96; j +=4 ) {
@@ -568,6 +576,7 @@ public class DaySlotsCalculation {
     private void daily_compare(ArrayList<timeSlot.currentTask> day_slots, List<Boolean> day_canceledSlots){
         for (int j = 0; j < day_slots.size(); j++) {
             if (day_slots.get(j) == timeSlot.currentTask.WORK_FIX || day_slots.get(j) == timeSlot.currentTask.EAT ||
+                    day_slots.get(j) == timeSlot.currentTask.WORK_CATCH_UP || day_slots.get(j) == timeSlot.currentTask.SPORT_CATCH_UP ||
                     day_slots.get(j) == timeSlot.currentTask.NEWEVENT || day_canceledSlots.get(j)){
                 this.daily_slots_generated.set(j,day_slots.get(j));
             }

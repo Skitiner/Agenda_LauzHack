@@ -88,10 +88,12 @@ public class MainActivity extends AppCompatActivity {
                 logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_eat));
                 break;
 
+            case WORK_CATCH_UP:
             case WORK:
                 logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_work));
                 break;
 
+            case SPORT_CATCH_UP:
             case SPORT:
                 logo.setImageDrawable(getApplicationContext().getDrawable(R.drawable.main_logo_sport));
                 break;
@@ -179,6 +181,12 @@ public class MainActivity extends AppCompatActivity {
                         task = userProfile.agenda.get(indice).get(j);
                         continue;
                     }
+                    // No difference between PAUSE and FREE for the notifications
+                    if((task == timeSlot.currentTask.PAUSE || task == timeSlot.currentTask.FREE)
+                            && (userProfile.agenda.get(indice).get(j) == timeSlot.currentTask.PAUSE || userProfile.agenda.get(indice).get(j) == timeSlot.currentTask.FREE)) {
+                        task = userProfile.agenda.get(indice).get(j);
+                        continue;
+                    }
                     canceled = userProfile.canceled_slots.get(indice).get(j);
                     task = userProfile.agenda.get(indice).get(j);
                     Intent intentForService;
@@ -192,6 +200,12 @@ public class MainActivity extends AppCompatActivity {
                             break;
                         case SPORT:
                             intentForService = new Intent(context, Broadcast_sport.class);
+                            break;
+                        case WORK_CATCH_UP:
+                            intentForService = new Intent(context, Broadcast_work_catch_up.class);
+                            break;
+                        case SPORT_CATCH_UP:
+                            intentForService = new Intent(context, Broadcast_sport_catch_up.class);
                             break;
                         case EAT:
                             intentForService = new Intent(context, Broadcast_eat.class);
