@@ -28,6 +28,8 @@ public class IA {
     float workSlot;
     int sportCategory;
     int sportSlot;
+    int sportCatchUp;
+    int workSlotCatchUp;
     public List<Integer> rank;
     public List<Boolean> canceledAgenda;
     private Calendar lastConnection;
@@ -35,13 +37,14 @@ public class IA {
     private boolean freeDay;
 
     private boolean init;
+    private boolean convertInPastDay;
 
     private List<Integer> lightSport = Arrays.asList(8, 8, 2);
     private List<Integer> intermediateSport = Arrays.asList(8, 8, 2);
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int sCategory, int sSlot, boolean init){
+    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean init, boolean convertInPastDay){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -49,6 +52,7 @@ public class IA {
         this.settingDay = settingDay;
 
         this.init = init;
+        this.convertInPastDay = convertInPastDay;
 
         this.dailyAgenda = day;
         this.currentAgenda = currentAgenda;
@@ -63,12 +67,14 @@ public class IA {
         this.Day = weight;
 
         this.currentDay = dayNb;
-        this.sportSlot = sSlot;
+        this.sportSlot = sSlot + sportCatchUp;
         this.rank = weekRank;
         this.sportCategory = sCategory;
         this.freeDay = freeday;
         this.workSizeOpti = workSize;
         this.workSlot = wSlot;
+        this.workSlotCatchUp = workSlotCatchUp;
+        this.sportCatchUp = sportCatchUp;
 
         //searchFreeSlot(agenda, freeDayList);
 
@@ -108,7 +114,7 @@ public class IA {
                     if (init){
                         dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
                     }
-                    else if (currentAgenda.get(i) == timeSlot.currentTask.FREE && init) {
+                    else if (currentAgenda.get(i) == timeSlot.currentTask.FREE) {
                         dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
                     } else
                         dailyAgenda.set(i, currentAgenda.get(i));
@@ -140,21 +146,24 @@ public class IA {
     }
 
     private void updateWorkSportToDo(int slot){
-        for (int i = slot; i < currentAgenda.size(); i++){
-            if (currentAgenda.get(i) == timeSlot.currentTask.SPORT && !canceledAgenda.get(i)){
-                sportSlot++;
-            }
-            else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)){
-                workSlot++;
-            }
-            else if (currentAgenda.get(i) == timeSlot.currentTask.NEWEVENT && !canceledAgenda.get(i)){
-                for(newEvent event : savedEvent){
-                    if (newEventAgenda.get(i).equals(event.name)){
-                        if (event.sport){
-                            sportSlot++;
-                        }
-                        else if (event.work){
-                            workSlot++;
+        if (!convertInPastDay && !init) {
+            for (int i = slot; i < currentAgenda.size(); i++) {
+                if (currentAgenda.get(i) == timeSlot.currentTask.SPORT && !canceledAgenda.get(i)) {
+                    sportSlot++;
+                } else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                    workSlot++;
+                } else if (currentAgenda.get(i) == timeSlot.currentTask.SPORT_CATCH_UP && !canceledAgenda.get(i)) {
+                    sportCatchUp++;
+                } else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK_CATCH_UP || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                    workSlotCatchUp++;
+                } else if (currentAgenda.get(i) == timeSlot.currentTask.NEWEVENT && !canceledAgenda.get(i)) {
+                    for (newEvent event : savedEvent) {
+                        if (newEventAgenda.get(i).equals(event.name)) {
+                            if (event.sport) {
+                                sportSlot++;
+                            } else if (event.work) {
+                                workSlot++;
+                            }
                         }
                     }
                 }
@@ -273,6 +282,19 @@ public class IA {
             }
         }
 
+        while (workSlotCatchUp > 0 && score.size() > 0){
+            for (int i = 0; i < score.size(); i++){
+                if (Collections.max(score) == score.get(i)){
+                    for (int j = 0; j < groupPosition.get(i).size(); j++) {
+                        dailyAgenda.set(groupPosition.get(i).get(j), timeSlot.currentTask.WORK_CATCH_UP);
+                        workSlotCatchUp--;
+                    }
+                    score.remove(i);
+                    groupPosition.remove(i);
+                }
+            }
+        }
+
         for (int i = 0; i < pausePosition.size(); i++){
             dailyAgenda.set(pausePosition.get(i), timeSlot.currentTask.PAUSE);
         }
@@ -289,7 +311,7 @@ public class IA {
         }
         List<Integer> workPosition = new ArrayList<>();
 
-        for (int j = 0; j < newEventAgenda.size(); j++) {
+        /*for (int j = 0; j < newEventAgenda.size(); j++) {
             if (workEvent.size() != 0) {
                 for (String eventName : workEvent) {
                     if (newEventAgenda.get(j).equals(eventName)){
@@ -297,8 +319,20 @@ public class IA {
                     }
                 }
             }
+        }*/
+
+        for (int j = 0; j < dailyAgenda.size(); j++){
             if (dailyAgenda.get(j) == timeSlot.currentTask.WORK_FIX){
                 workPosition.add(j);
+            }
+            if (dailyAgenda.get(j) == timeSlot.currentTask.NEWEVENT){
+                if (workEvent.size() != 0) {
+                    for (String eventName : workEvent) {
+                        if (newEventAgenda.get(j).equals(eventName)){
+                            workPosition.add(j);
+                        }
+                    }
+                }
             }
         }
 
@@ -338,7 +372,7 @@ public class IA {
     }*/
 
     private void setSport() {
-        if (this.lastConnection.get(Calendar.WEEK_OF_YEAR) < Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)){
+        if (this.lastConnection.get(Calendar.WEEK_OF_YEAR) != Calendar.getInstance().get(Calendar.WEEK_OF_YEAR)){
             List<Double> score = scorePerDay();
             this.rank = rankDay(score);
         }
@@ -381,28 +415,28 @@ public class IA {
                     if (maxSport.get(rank.get(currentDay)) <= sportSlot) {
                         placed = placeSportAround(maxSport.get(rank.get(currentDay)) - sportPosition.size(), sportPosition,
                                 afterLunchtime, afterLunchtimepenalty);
-                        if (placed) {
+                        /*if (placed) {
                             sportSlot -= maxSport.get(rank.get(currentDay));
-                        }
+                        }*/
                     } else {
                         placed = placeSportAround(sportSlot - sportPosition.size(), sportPosition,
                                 afterLunchtime, afterLunchtimepenalty);
-                        if (placed) {
+                        /*if (placed) {
                             sportSlot = 0;
-                        }
+                        }*/
                     }
                     if (!placed) {
                         if (maxSport.get(rank.get(currentDay)) <= sportSlot) {
                             placed = placeSport(maxSport.get(rank.get(currentDay)) - sportPosition.size(),
                                     afterLunchtime, afterLunchtimepenalty);
-                            if (placed) {
+                            /*if (placed) {
                                 sportSlot -= maxSport.get(rank.get(currentDay));
-                            }
+                            }*/
                         } else {
                             placed = placeSport(sportSlot, afterLunchtime, afterLunchtimepenalty);
-                            if (placed) {
+                            /*if (placed) {
                                 sportSlot = 0;
-                            }
+                            }*/
                         }
                     }
                 } else {
@@ -522,9 +556,17 @@ public class IA {
                     maxScoreIndice = i;
                 }
             }
+            sportSlot -= sportCatchUp;
             if (maxScoreIndice != -1) {
                 for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
-                    dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                    if (i < scoresPosition.get(maxScoreIndice).size() - sportCatchUp) {
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                        sportSlot--;
+                    }
+                    else{
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT_CATCH_UP);
+                        sportCatchUp--;
+                    }
                 }
                 slotFound = true;
             }
@@ -587,9 +629,17 @@ public class IA {
                 }
             }
 
+            sportSlot -= sportCatchUp;
             if (maxScoreIndice != -1) {
                 for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
-                    dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                    if (i < scoresPosition.get(maxScoreIndice).size() - sportCatchUp) {
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                        sportSlot--;
+                    }
+                    else{
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT_CATCH_UP);
+                        sportCatchUp--;
+                    }
                 }
                 slotFound = true;
             }

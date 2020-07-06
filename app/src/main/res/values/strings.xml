@@ -3,8 +3,8 @@
     <string name="Agenda">Agenda</string>
     <string name="today">today</string>
     <string name="fixed_work">Fixed work</string>
-    <string name="eat">lunch</string>
-    <string name="work">work</string>
+    <string name="eat">Lunch</string>
+    <string name="work">Work</string>
     <string name="Sport">Sport</string>
     <string name="Wakeup">5. Wake up :</string>
     <string name="NBWork">1. Number of work hours per week :</string>
@@ -45,7 +45,7 @@
     <string name="wrongwakeUp">The wake up hour is not valid ! (e.g 8:00)</string>
     <string name="wrongnbWorkHours">The number of work hours is not valid ! It could maximum be 70:00.</string>
     <string name="wrongnbOptWorkHours">The optimal work time before a break is not valid ! It should be between 0:30 and 2:00.</string>
-    <string name="allFreeDay">Why did you install this app ? Set at least one working day !</string>
+    <string name="allFreeDay">WSet at least one working day !</string>
     <string name="notif_sport_easy">Could be good to walk for example.</string>
     <string name="notif_sport_hard">Could be good to run for example.</string>
     <string name="next_day">Next Day</string>
@@ -72,15 +72,22 @@
     <string name="isFree">Free time</string>
     <string name="isWorkSportFree">Is this activity work, sport or free time ?</string>
     <string name="eventWeekly">Is this a weekly activity?</string>
+    <string name="workCatchUp">Work catch up</string>
+    <string name="sportCatchUp">Sport catch up</string>
+    <string name="sportTime">Sport time !</string>
+    <string name="workTime">Work time !</string>
+    <string name="sportCatchUpTime">Catch up sport time !</string>
+    <string name="workCatchUpTime">Catch up work time !</string>
+    <string name="lastChance">This is youre last chance to catch up.</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="eat_notif">Time to eat :p</string>
-    <string name="check_notif">Go Check in the application</string>
+    <string name="check_notif">Go Check in the application.</string>
     <string name="do_break_notif">Take a break, you deserve it :)</string>
-    <string name="time_sleep">Time to sleep</string>
+    <string name="time_sleep">Time to sleep Zzzzz</string>
     <string name="go_to_bed_notif">If you want to sleep 8h you should go to bed now.</string>
-    <string name="awake_notif">I am awake</string>
+    <string name="awake_notif">I am awake.</string>
     <string name="wakeup_notif">WAKE UP !</string>
 
     <!--

@@ -731,6 +731,34 @@ public class AgendaActivity extends AppCompatActivity {
                     textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
+                case WORK_CATCH_UP:
+                    textView.setText(R.string.workCatchUp);
+                    textView.setBackgroundColor(getResources().getColor(R.color.salmonpink, null));
+                    if (date_offset < 0 && Math.abs(date_offset + 1) < userProfile.pastFullAgenda.size()){
+                        if(userProfile.pastCanceledSlots.get(userProfile.pastFullAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.salmonpink_canceled, null));
+                    }
+                    else {
+                        if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.salmonpink_canceled, null));
+                    }
+                    break;
+
+                case SPORT_CATCH_UP:
+                    textView.setText(R.string.sportCatchUp);
+                    textView.setBackgroundColor(getResources().getColor(R.color.orange, null));
+                    if (date_offset < 0 && Math.abs(date_offset + 1) < userProfile.pastFullAgenda.size()){
+                        if(userProfile.pastCanceledSlots.get(userProfile.pastFullAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.orange_canceled, null));
+                    }
+                    else {
+                        if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
+                            textView.setBackgroundColor(getResources().getColor(R.color.orange_canceled, null));
+                    }
+
+                    break;
+
+
                 case NEWEVENT:
                     boolean eventExist = false;
                     for (int i = 0; i < userProfile.savedEvent.size(); i++){
@@ -753,7 +781,7 @@ public class AgendaActivity extends AppCompatActivity {
                 if(userProfile.pastCanceledSlots.get(userProfile.pastFullAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
                     textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-            else {
+            else if (date_offset < 7){
                 if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
                     textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
@@ -1246,11 +1274,12 @@ public class AgendaActivity extends AppCompatActivity {
 
                             int past = Math.abs(date_offset + 1);
 
-                            if (userProfile.pastFullAgenda.size() - 1 - past >= 0) {
+                            if (userProfile.pastFullAgenda.size() - 1 - past >= 0 && date_offset < 0) {
                                 userProfile.updatePastAgenda(userProfile.pastFullAgenda.size() - 1 - past);
                             }
-                            userProfile.updateFullAgenda(currentDay);
-                            userProfile.updateFuturAgenda(currentDay);
+                            int day = (currentDay + convertedIndice()) % 7;
+                            userProfile.updateFullAgenda(day);
+                            userProfile.updateFuturAgenda(day);
                             saveToFile();
                             if (date_offset < 7){
                                 plan();                   // si jour actuelle, ne pas update ce qui est déja passé
@@ -1313,14 +1342,16 @@ public class AgendaActivity extends AppCompatActivity {
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
-                    freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.sportRoutine,
-                    userProfile.lateSportSlot, false);
+                    freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
+                    userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,false, false);
             Agent.planDay();
 
             userProfile.sportDayRank = Agent.rank;
             userProfile.agenda.set(val, Agent.dailyAgenda);
             userProfile.lateSportSlot = Agent.sportSlot;
             userProfile.lateWorkSlot = Agent.workSlot;
+            userProfile.workCatchUp = Agent.workSlotCatchUp;
+            userProfile.sportCatchUp = Agent.sportCatchUp;
 
             userProfile.updateFullAgenda(val);
             /*int position;
@@ -1342,7 +1373,8 @@ public class AgendaActivity extends AppCompatActivity {
                 dayOffset++;
             } while (!freeday);*/
             dayOffset++;
-        } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot != 0) && dayOffset < 7);
+        } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot != 0 ||
+                userProfile.workCatchUp > 0 || userProfile.sportCatchUp > 0) && dayOffset < 7);
         saveToFile();
 
         int isOK = 0;               //pas tres utile...
@@ -1383,6 +1415,11 @@ public class AgendaActivity extends AppCompatActivity {
                 } else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.SPORT && !newEvent.sport) {
                     userProfile.lateSportSlot++;
                 }
+                /*else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.WORK_CATCH_UP && !newEvent.work) {
+                    userProfile.workCatchUp++;
+                } else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.SPORT_CATCH_UP && !newEvent.sport) {
+                    userProfile.sportCatchUp++;
+                }*/
 
                 userProfile.agenda.get(day).set(i, timeSlot.currentTask.NEWEVENT);
                 userProfile.newEventAgenda.get(day).set(i, newEvent.name);
@@ -1508,17 +1545,21 @@ public class AgendaActivity extends AppCompatActivity {
                     for (newEvent event : userProfile.savedEvent) {
                         if (event.name.equals(userProfile.newEventPastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i))) {
                             if (event.sport && !newEvent.sport) {
-                                userProfile.lateSportSlot++;
+                                //userProfile.lateSportSlot++;
+                                userProfile.sportCatchUp++;
                             } else if (event.work && !newEvent.work) {
-                                userProfile.lateWorkSlot++;
+                                //userProfile.lateWorkSlot++;
+                                userProfile.workCatchUp++;
                             }
                         }
                     }
                 } else if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i) == timeSlot.currentTask.WORK ||
                         userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).get(i) == timeSlot.currentTask.WORK_FIX && !newEvent.work) {
-                    userProfile.lateWorkSlot++;
+                    //userProfile.lateWorkSlot++;
+                    userProfile.workCatchUp++;
                 } else if (userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).get(i) == timeSlot.currentTask.SPORT && !newEvent.sport) {
-                    userProfile.lateSportSlot++;
+                    //userProfile.lateSportSlot++;
+                    userProfile.sportCatchUp++;
                 }
 
                 userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).set(i, timeSlot.currentTask.NEWEVENT);

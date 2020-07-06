@@ -14,9 +14,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-public class Broadcast_sport extends BroadcastReceiver {
+public class Broadcast_sport_catch_up extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
-    private int notificationId = 152;
+    private int notificationId = 155;
     private static int life_time = 5*60000;
 
     Profile userProfile = new Profile();
@@ -45,7 +45,7 @@ public class Broadcast_sport extends BroadcastReceiver {
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.organise_sport)
-                .setContentTitle(context.getString(R.string.sportTime))
+                .setContentTitle(context.getString(R.string.sportCatchUpTime))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setContentIntent(click)
                 .setAutoCancel(true)
@@ -56,16 +56,16 @@ public class Broadcast_sport extends BroadcastReceiver {
 
         switch (userProfile.sportRoutine) {
             case 0:
-                builder.setContentText(context.getString(R.string.notif_sport_easy));
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_easy)));
+                builder.setContentText(context.getString(R.string.notif_sport_easy) + "\n" + context.getString(R.string.lastChance));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_easy) + "\n" + context.getString(R.string.lastChance)));
                 break;
             case 1:
-                builder.setContentText(context.getString(R.string.notif_sport_hard));
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard)));
+                builder.setContentText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance)));
                 break;
             case 2:
-                builder.setContentText(context.getString(R.string.notif_sport_hard));
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard)));
+                builder.setContentText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance)));
                 break;
         }
 

@@ -3,7 +3,7 @@ package com.ludiostrix.organise_mois;
 import java.io.Serializable;
 
 public class timeSlot implements Serializable {
-    public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX, MORNING_ROUTINE, SLEEP, PAUSE, NEWEVENT}
+    public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX, MORNING_ROUTINE, SLEEP, PAUSE, NEWEVENT, WORK_CATCH_UP, SPORT_CATCH_UP}
 
     protected int time;
     protected currentTask task_1;

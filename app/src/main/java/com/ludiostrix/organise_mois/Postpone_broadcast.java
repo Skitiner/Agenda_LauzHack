@@ -62,6 +62,20 @@ public class Postpone_broadcast extends BroadcastReceiver {
             userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
             userProfile.newEventAgenda.get(converted_indice).set(i, newEvent.get(i-1));
         }
+
+        if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_FIX ||
+                userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK) {
+            userProfile.lateWorkSlot--;
+        }
+        else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT) {
+            userProfile.lateWorkSlot--;
+        }
+        else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_CATCH_UP) {
+            userProfile.workCatchUp--;
+        }
+        else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT_CATCH_UP) {
+            userProfile.sportCatchUp--;
+        }
         updateDay();
         saveToFile();
         setAlarmOfTheDay(context);

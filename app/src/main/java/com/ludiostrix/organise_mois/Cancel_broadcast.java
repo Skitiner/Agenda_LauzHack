@@ -55,26 +55,37 @@ public class Cancel_broadcast extends BroadcastReceiver {
             if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
-                userProfile.lateWorkSlot++;
+                //userProfile.lateWorkSlot++;
+                userProfile.workCatchUp++;
             }
-            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_CATCH_UP &&
+                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
+                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
+            }
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
-                userProfile.lateSportSlot++;
+                //userProfile.lateSportSlot++;
+                userProfile.sportCatchUp++;
             }
-
-            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_FIX){
-                userProfile.lateWorkSlot++;
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT_CATCH_UP &&
+                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
+                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
             }
-
-            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.NEWEVENT){
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_FIX){
+                //userProfile.lateWorkSlot++;
+                userProfile.workCatchUp++;
+            }
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.NEWEVENT){
                 for (newEvent event : userProfile.savedEvent){
                     if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(startI))){
                         if (event.sport){
-                            userProfile.lateSportSlot++;
+                            //userProfile.lateSportSlot++;
+                            userProfile.sportCatchUp++;
                         }
                         else if(event.work){
-                            userProfile.lateWorkSlot++;
+                            //userProfile.lateWorkSlot++;
+                            userProfile.workCatchUp++;
                         }
                     }
                 }
@@ -126,14 +137,16 @@ public class Cancel_broadcast extends BroadcastReceiver {
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
-                    freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot,
-                    userProfile.sportRoutine, userProfile.lateSportSlot, false);
+                    freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
+                    userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp, userProfile.agendaInit, false);
             Agent.planDay();
 
             userProfile.sportDayRank = Agent.rank;
             userProfile.agenda.set(val, Agent.dailyAgenda);
             userProfile.lateSportSlot = Agent.sportSlot;
             userProfile.lateWorkSlot = Agent.workSlot;
+            userProfile.workCatchUp = Agent.workSlotCatchUp;
+            userProfile.sportCatchUp = Agent.sportCatchUp;
 
             userProfile.updateFullAgenda(val);
             /*int position;
@@ -155,7 +168,8 @@ public class Cancel_broadcast extends BroadcastReceiver {
                 dayOffset++;
             } while (!freeday);*/
             dayOffset++;
-        } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot == 0) && dayOffset < 7);
+        } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot != 0 ||
+                userProfile.workCatchUp > 0 || userProfile.sportCatchUp > 0) && dayOffset < 7);
         saveToFile();
     }
     public static int conversionDayIndice() {

@@ -26,6 +26,8 @@
         <receiver android:name=".RemindBroadcast" />
         <receiver android:name=".Broadcast_work" />
         <receiver android:name=".Broadcast_sport" />
+        <receiver android:name=".Broadcast_work_catch_up" />
+        <receiver android:name=".Broadcast_sport_catch_up" />
         <receiver android:name=".Broadcast_eat" />
         <receiver android:name=".Broadcast_sleep" />
         <receiver android:name=".Broadcast_wake_up" />

@@ -382,8 +382,8 @@ public class ProfileActivity extends AppCompatActivity {
         DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
         daySlotsCalculation.slotCalculation();
 
-        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+        //startActivity(intent);
         finish();
     }
 
