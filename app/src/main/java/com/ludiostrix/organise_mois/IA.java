@@ -37,13 +37,14 @@ public class IA {
     private boolean freeDay;
 
     private boolean init;
+    private boolean convertInPastDay;
 
     private List<Integer> lightSport = Arrays.asList(8, 8, 2);
     private List<Integer> intermediateSport = Arrays.asList(8, 8, 2);
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean init){
+    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean init, boolean convertInPastDay){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -51,6 +52,7 @@ public class IA {
         this.settingDay = settingDay;
 
         this.init = init;
+        this.convertInPastDay = convertInPastDay;
 
         this.dailyAgenda = day;
         this.currentAgenda = currentAgenda;
@@ -144,27 +146,24 @@ public class IA {
     }
 
     private void updateWorkSportToDo(int slot){
-        for (int i = slot; i < currentAgenda.size(); i++){
-            if (currentAgenda.get(i) == timeSlot.currentTask.SPORT && !canceledAgenda.get(i)){
-                sportSlot++;
-            }
-            else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)){
-                workSlot++;
-            }
-            else if (currentAgenda.get(i) == timeSlot.currentTask.SPORT_CATCH_UP && !canceledAgenda.get(i)){
-                sportCatchUp++;
-            }
-            else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK_CATCH_UP || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)){
-                workSlotCatchUp++;
-            }
-            else if (currentAgenda.get(i) == timeSlot.currentTask.NEWEVENT && !canceledAgenda.get(i)){
-                for(newEvent event : savedEvent){
-                    if (newEventAgenda.get(i).equals(event.name)){
-                        if (event.sport){
-                            sportSlot++;
-                        }
-                        else if (event.work){
-                            workSlot++;
+        if (!convertInPastDay && !init) {
+            for (int i = slot; i < currentAgenda.size(); i++) {
+                if (currentAgenda.get(i) == timeSlot.currentTask.SPORT && !canceledAgenda.get(i)) {
+                    sportSlot++;
+                } else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                    workSlot++;
+                } else if (currentAgenda.get(i) == timeSlot.currentTask.SPORT_CATCH_UP && !canceledAgenda.get(i)) {
+                    sportCatchUp++;
+                } else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK_CATCH_UP || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                    workSlotCatchUp++;
+                } else if (currentAgenda.get(i) == timeSlot.currentTask.NEWEVENT && !canceledAgenda.get(i)) {
+                    for (newEvent event : savedEvent) {
+                        if (newEventAgenda.get(i).equals(event.name)) {
+                            if (event.sport) {
+                                sportSlot++;
+                            } else if (event.work) {
+                                workSlot++;
+                            }
                         }
                     }
                 }
@@ -312,7 +311,7 @@ public class IA {
         }
         List<Integer> workPosition = new ArrayList<>();
 
-        for (int j = 0; j < newEventAgenda.size(); j++) {
+        /*for (int j = 0; j < newEventAgenda.size(); j++) {
             if (workEvent.size() != 0) {
                 for (String eventName : workEvent) {
                     if (newEventAgenda.get(j).equals(eventName)){
@@ -320,8 +319,20 @@ public class IA {
                     }
                 }
             }
+        }*/
+
+        for (int j = 0; j < dailyAgenda.size(); j++){
             if (dailyAgenda.get(j) == timeSlot.currentTask.WORK_FIX){
                 workPosition.add(j);
+            }
+            if (dailyAgenda.get(j) == timeSlot.currentTask.NEWEVENT){
+                if (workEvent.size() != 0) {
+                    for (String eventName : workEvent) {
+                        if (newEventAgenda.get(j).equals(eventName)){
+                            workPosition.add(j);
+                        }
+                    }
+                }
             }
         }
 

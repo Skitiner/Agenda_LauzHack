@@ -49,7 +49,7 @@
     <string name="wrongnbOptWorkHours">Le temps de travail optimal avant une pause est incorrecte ! Il doit être entre 0:30 et 2:00.</string>
     <string name="allFreeDay">Veuillez selectioner au moins un jour de travail.</string>
     <string name="notif_sport_easy">Allez marcher par exemple.</string>
-    <string name="notif_sport_hard">Allez courrir par exemple</string>
+    <string name="notif_sport_hard">Allez courrir par exemple.</string>
     <string name="next_day">Prochain jour</string>
     <string name="bad_parameters">Les paramètres que vous avez entrés ne permettent pas la génération d\'un agenda.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>

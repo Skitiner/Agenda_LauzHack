@@ -789,7 +789,7 @@ public class Profile implements Serializable {
                         this.settingDay, plan.daily_slots_generated, this.agenda.get(val),
                         this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday,
                         Integer.parseInt(this.optWorkTime), this.lateWorkSlot, this.workCatchUp,
-                        this.sportRoutine, this.lateSportSlot, this.sportCatchUp, this.agendaInit);
+                        this.sportRoutine, this.lateSportSlot, this.sportCatchUp, this.agendaInit, true);
                 Agent.planDay();
                 this.sportDayRank = Agent.rank;
                 this.agenda.set(val, Agent.dailyAgenda);

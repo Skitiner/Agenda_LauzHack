@@ -56,16 +56,16 @@ public class Broadcast_sport_catch_up extends BroadcastReceiver {
 
         switch (userProfile.sportRoutine) {
             case 0:
-                builder.setContentText(context.getString(R.string.notif_sport_easy + R.string.lastChance));
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_easy + R.string.lastChance)));
+                builder.setContentText(context.getString(R.string.notif_sport_easy) + "\n" + context.getString(R.string.lastChance));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_easy) + "\n" + context.getString(R.string.lastChance)));
                 break;
             case 1:
-                builder.setContentText(context.getString(R.string.notif_sport_hard + R.string.lastChance));
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard + R.string.lastChance)));
+                builder.setContentText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance)));
                 break;
             case 2:
-                builder.setContentText(context.getString(R.string.notif_sport_hard + R.string.lastChance));
-                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard + R.string.lastChance)));
+                builder.setContentText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance));
+                builder.setStyle(new NotificationCompat.BigTextStyle().bigText(context.getString(R.string.notif_sport_hard) + "\n" + context.getString(R.string.lastChance)));
                 break;
         }
 

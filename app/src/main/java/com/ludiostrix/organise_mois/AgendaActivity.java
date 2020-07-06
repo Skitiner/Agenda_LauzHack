@@ -781,7 +781,7 @@ public class AgendaActivity extends AppCompatActivity {
                 if(userProfile.pastCanceledSlots.get(userProfile.pastFullAgenda.size() - 1 - (Math.abs(date_offset + 1))).get(slot_indice) == Boolean.TRUE)
                     textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
-            else {
+            else if (date_offset < 7){
                 if (cancel_day_taks.get(currentDay).get(slot_indice) == Boolean.TRUE)
                     textView.setPaintFlags(textView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
             }
@@ -1274,11 +1274,12 @@ public class AgendaActivity extends AppCompatActivity {
 
                             int past = Math.abs(date_offset + 1);
 
-                            if (userProfile.pastFullAgenda.size() - 1 - past >= 0) {
+                            if (userProfile.pastFullAgenda.size() - 1 - past >= 0 && date_offset < 0) {
                                 userProfile.updatePastAgenda(userProfile.pastFullAgenda.size() - 1 - past);
                             }
-                            userProfile.updateFullAgenda(currentDay);
-                            userProfile.updateFuturAgenda(currentDay);
+                            int day = (currentDay + convertedIndice()) % 7;
+                            userProfile.updateFullAgenda(day);
+                            userProfile.updateFuturAgenda(day);
                             saveToFile();
                             if (date_offset < 7){
                                 plan();                   // si jour actuelle, ne pas update ce qui est déja passé
@@ -1342,7 +1343,7 @@ public class AgendaActivity extends AppCompatActivity {
                     userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
                     freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
-                    userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,false);
+                    userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,false, false);
             Agent.planDay();
 
             userProfile.sportDayRank = Agent.rank;
