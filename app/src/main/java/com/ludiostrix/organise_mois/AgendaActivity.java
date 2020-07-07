@@ -1602,7 +1602,7 @@ public class AgendaActivity extends AppCompatActivity {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt > 23 || hourt < 0){
+            if ((hourt > 23 && (hourt > 24 || mint > 0)) || hourt < 0 ){
                 ok = false;
             }
             else if (mint >= 60 || mint < 0){
@@ -1610,7 +1610,7 @@ public class AgendaActivity extends AppCompatActivity {
             }
             else {
                 hourt = hourt + roundFifty(mint/60);
-                while (hourt>=24){
+                while (hourt>24){
                     hourt -=24;
                 }
             }
