@@ -1259,7 +1259,7 @@ public class Profile implements Serializable {
     }
 
     private void getPastAgenda(char charAt) {
-        if(charAt == '[' || charAt == ' ' || charAt == ']')
+        if(charAt == '[' || charAt == ']')
             return;
         else if(charAt == ',') {
             past_agenda_back.add(currentPast);
@@ -1271,7 +1271,7 @@ public class Profile implements Serializable {
     }
 
     private void getAgenda(char charAt) {
-        if(charAt == '[' || charAt == ' ' || charAt == ']')
+        if(charAt == '[' || charAt == ']')
             return;
         else if(charAt == ',') {
             agenda_back.add(current);
@@ -1283,7 +1283,7 @@ public class Profile implements Serializable {
     }
 
     private void getFuturAgenda(char charAt) {
-        if(charAt == '[' || charAt == ' ' || charAt == ']')
+        if(charAt == '[' || charAt == ']')
             return;
         else if(charAt == ',') {
             futur_agenda_back.add(currentFutur);

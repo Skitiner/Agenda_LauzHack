@@ -187,7 +187,7 @@ public class DaySlotsCalculation {
                 }
             }
 
-            userProfile.agendaInit = true;
+            //userProfile.agendaInit = true;
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,

@@ -260,8 +260,8 @@ public class AgendaActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent intent = new Intent(AgendaActivity.this, MainActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(AgendaActivity.this, MainActivity.class);
+        //startActivity(intent);
         finish();
     }
 
