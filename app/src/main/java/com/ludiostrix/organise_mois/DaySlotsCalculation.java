@@ -187,13 +187,13 @@ public class DaySlotsCalculation {
                 }
             }
 
-            //userProfile.agendaInit = true;
+            userProfile.agendaInit = true;
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,
                     userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
                     userProfile.lateWorkSlot, userProfile.workCatchUp, userProfile.sportRoutine,
-                    userProfile.lateSportSlot, userProfile.sportCatchUp, userProfile.agendaInit, false);
+                    userProfile.lateSportSlot, userProfile.sportCatchUp, userProfile.agendaInit, false, true);
             Agent.planDay();
             userProfile.agendaInit = false;
             userProfile.agenda.set(val, Agent.dailyAgenda);

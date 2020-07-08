@@ -37,6 +37,7 @@ public class IA {
     private boolean freeDay;
 
     private boolean init;
+    private boolean firstinit;
     private boolean convertInPastDay;
 
     private List<Integer> lightSport = Arrays.asList(8, 8, 2);
@@ -44,7 +45,7 @@ public class IA {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean init, boolean convertInPastDay){
+    public IA(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean firstinit, boolean convertInPastDay, boolean init){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -52,6 +53,7 @@ public class IA {
         this.settingDay = settingDay;
 
         this.init = init;
+        this.firstinit = firstinit;
         this.convertInPastDay = convertInPastDay;
 
         this.dailyAgenda = day;
@@ -86,7 +88,7 @@ public class IA {
         if(this.currentDay == convertedIndice()) {   //aujourdhui
             if (slot == 96){
                 for (int i = 0; i < dailyAgenda.size(); i++){
-                    if (init){
+                    if (firstinit){
                         dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
                     }
                     else if(currentAgenda.get(i) == timeSlot.currentTask.FREE){
@@ -111,7 +113,7 @@ public class IA {
                     updateWorkSportToDo(slot);
                 }
                 for (int i = 0; i < slot; i++) {
-                    if (init){
+                    if (firstinit){
                         dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
                     }
                     else if (currentAgenda.get(i) == timeSlot.currentTask.FREE) {
@@ -433,7 +435,8 @@ public class IA {
                                 sportSlot -= maxSport.get(rank.get(currentDay));
                             }*/
                         } else {
-                            placed = placeSport(sportSlot, afterLunchtime, afterLunchtimepenalty);
+                            placed = placeSport(sportSlot - sportPosition.size(),
+                                    afterLunchtime, afterLunchtimepenalty);
                             /*if (placed) {
                                 sportSlot = 0;
                             }*/
@@ -443,14 +446,14 @@ public class IA {
                     if (maxSport.get(rank.get(currentDay)) <= sportSlot) {
                         placed = placeSport(maxSport.get(rank.get(currentDay)),
                                 afterLunchtime, afterLunchtimepenalty);
-                        if (placed) {
+                        /*if (placed) {
                             sportSlot -= maxSport.get(rank.get(currentDay));
-                        }
+                        }*/
                     } else {
                         placed = placeSport(sportSlot, afterLunchtime, afterLunchtimepenalty);
-                        if (placed) {
+                        /*if (placed) {
                             sportSlot = 0;
-                        }
+                        }*/
                     }
                 }
             }

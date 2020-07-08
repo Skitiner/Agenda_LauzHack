@@ -1343,7 +1343,7 @@ public class AgendaActivity extends AppCompatActivity {
                     userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
                     freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
-                    userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,false, false);
+                    userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,userProfile.agendaInit, false, false);
             Agent.planDay();
 
             userProfile.sportDayRank = Agent.rank;
