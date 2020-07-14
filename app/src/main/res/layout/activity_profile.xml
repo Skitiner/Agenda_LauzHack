@@ -85,6 +85,8 @@
                 android:textColor="@color/black"
                 android:ems="10"
                 android:text=""
+                android:hint="42:00"
+                android:textColorHint="@color/grey"
                 android:inputType="time"
                 android:layout_weight="3"
                 android:gravity="center"/>
@@ -137,6 +139,8 @@
                 android:textColor="@color/black"
                 android:ems="10"
                 android:text=""
+                android:hint="1:30"
+                android:textColorHint="@color/grey"
                 android:inputType="time"
                 android:layout_weight="3"
                 android:gravity="center"/>
@@ -212,7 +216,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/monday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -228,7 +232,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/tuesday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -244,7 +248,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/wednesday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -260,7 +264,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/thursday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -276,7 +280,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/friday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -292,7 +296,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/saturday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -308,7 +312,7 @@
                 android:background="@color/lightBlue"
                 android:onClick="clickedDayButtonXmlCallback"
                 android:text="@string/sunday"
-                android:textColor="@color/green" />
+                android:textColor="@color/red" />
 
             <Space
                 android:layout_width="match_parent"
@@ -401,6 +405,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:ems="10"
+                android:hint="8:00"
+                android:textColorHint="@color/grey"
                 android:gravity="center"
                 android:inputType="time"
                 android:text=""

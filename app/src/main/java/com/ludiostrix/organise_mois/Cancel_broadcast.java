@@ -17,6 +17,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
+
+/*
+
+Cette classe est utilisée quand l'utilisateur annule un événement.
+Elle met à jour le score du travail et du sport si nécessaire et replanifie le planning du jour.
+
+ */
+
 public class Cancel_broadcast extends BroadcastReceiver {
 
     private Context context;
@@ -117,6 +125,7 @@ public class Cancel_broadcast extends BroadcastReceiver {
 
             boolean freeday = true;
             boolean nextfreeday = true;
+            boolean pastfreeday = true;
             for (int k = 0; k < freedaylist.length; k++) {
                 if (freedaylist[k] == (currentDay + conversionDayIndice() + dayOffset) % 7) {
                     freeday = false;
@@ -124,15 +133,18 @@ public class Cancel_broadcast extends BroadcastReceiver {
                 if (freedaylist[k] == (currentDay + conversionDayIndice() + 1 + dayOffset) % 7) {
                     nextfreeday = false;
                 }
+                if (freedaylist[k] == (currentDay + conversionDayIndice() + 1 + 7 + dayOffset) % 7) {
+                   pastfreeday = false;
+                }
             }
 
             int val = (currentDay + convertedIndice() + dayOffset)%7; // à tester
             int dayCalcul = val;
 
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(userProfile, freeday, nextfreeday, val,false);
+            AgendaInitialisation agendaInitialisation = new AgendaInitialisation(userProfile, freeday, nextfreeday, pastfreeday, val,false);
 
-            IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
-                    userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
+            DayPlan Agent = new DayPlan(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
+                    userProfile.lastConnection, userProfile.settingDay, agendaInitialisation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
                     freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
                     userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp, userProfile.agendaInit, false, false);

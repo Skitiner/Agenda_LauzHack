@@ -15,7 +15,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class DaySlotsCalculation {
+
+/*
+
+Classe d'initialisation de l'agenda et de préparation à l'autocomplétion.
+
+ */
+
+public class AgendaInitialisation {
 
     private int nb_work_h;
     private boolean[] free_day;
@@ -33,7 +40,7 @@ public class DaySlotsCalculation {
     private int weekSport;
     private float weekWork;
 
-    public DaySlotsCalculation(Context context) {
+    public AgendaInitialisation(Context context) {
 
         weekSport = userProfile.lateSportSlot;
         weekWork = userProfile.lateWorkSlot;
@@ -64,7 +71,13 @@ public class DaySlotsCalculation {
         futur_slots_generated = new ArrayList<>();
     }
 
-    public DaySlotsCalculation(Profile userProfile, boolean freeday, boolean nextfreeday, int day, boolean convertInPastDay) {
+
+/*
+
+Pré-autocompletion
+
+ */
+    public AgendaInitialisation(Profile userProfile, boolean freeday, boolean nextfreeday, boolean pastfreeday, int day, boolean convertInPastDay) {
 
         nb_work_h = Integer.parseInt(userProfile.nbWorkHours);
         free_day = userProfile.freeDay;
@@ -90,7 +103,7 @@ public class DaySlotsCalculation {
 
         daily_init();
         if (!freeday) {
-            setDailyMorningRoutine();
+            setDailyMorningRoutine(freeday, pastfreeday);
         }
         if (!freeday || !nextfreeday){
             setDailyNight(freeday, nextfreeday);
@@ -104,7 +117,59 @@ public class DaySlotsCalculation {
         }
     }
 
+    private void setDailyNight(boolean freeday, boolean nextfreeday){
+        for (int j = 0; j < 32; j++) {
+            if ((wake_up*4)-j-1 < 0) {
+                if (!nextfreeday) {
+                    this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                }
+            }
+            else if (!freeday) {
+                this.daily_slots_generated.set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+            }
+        }
+    }
 
+    private void setDailyMorningRoutine(boolean freeday, boolean pastfreeday) {
+        for (int j = 0; j < 4; j++) {
+            if ((wake_up*4) + j >= 96) {
+                if (!pastfreeday) {
+                    this.daily_slots_generated.set(Math.round(wake_up * 4) + j, timeSlot.currentTask.MORNING_ROUTINE);
+                }
+            }
+            else if (!freeday) {
+                this.daily_slots_generated.set((Math.round(wake_up * 4) + j)%96, timeSlot.currentTask.MORNING_ROUTINE);
+            }
+        }
+    }
+
+    private void daily_compare(ArrayList<timeSlot.currentTask> day_slots, List<Boolean> day_canceledSlots){
+        for (int j = 0; j < day_slots.size(); j++) {
+            if (day_slots.get(j) == timeSlot.currentTask.WORK_FIX || day_slots.get(j) == timeSlot.currentTask.EAT ||
+                    day_slots.get(j) == timeSlot.currentTask.WORK_CATCH_UP || day_slots.get(j) == timeSlot.currentTask.SPORT_CATCH_UP ||
+                    day_slots.get(j) == timeSlot.currentTask.NEWEVENT || day_canceledSlots.get(j)){
+                this.daily_slots_generated.set(j,day_slots.get(j));
+            }
+        }
+    }
+
+
+    private void daily_init(){
+        timeSlot.currentTask task;
+
+        for (int i = 0; i < 96; i++) {
+
+            task = timeSlot.currentTask.FREE;
+            this.daily_slots_generated.add(task);
+        }
+    }
+
+
+/*
+
+Initialisation de l'agenda.
+
+ */
     public int slotCalculation() {
 
         readFromFile();
@@ -119,7 +184,7 @@ public class DaySlotsCalculation {
 
         //initSportVariable();
 
-        //List<IA> calculatedWeek;
+        //List<DayPlan> calculatedWeek;
 
         /*int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
@@ -128,12 +193,10 @@ public class DaySlotsCalculation {
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));*/
 
 
-        // TODO: 05.07.2020 recompter
-
-        userProfile.lateWorkSlot = Float.valueOf(0);
-        userProfile.lateSportSlot = 0;
-        userProfile.workCatchUp = 0;
-        userProfile.sportCatchUp = 0;
+        //userProfile.lateWorkSlot = Float.valueOf(0);
+        //userProfile.lateSportSlot = 0;
+        //userProfile.workCatchUp = 0;
+        //userProfile.sportCatchUp = 0;
 
         for (int i = 0; i < slots_generated.size(); i++) {
             int val = i % 7; //(i + offset)%7;
@@ -188,7 +251,7 @@ public class DaySlotsCalculation {
             }
 
             //userProfile.agendaInit = true;
-            IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
+            DayPlan Agent = new DayPlan(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,
                     userProfile.savedEvent, freeday, Integer.parseInt(userProfile.optWorkTime),
@@ -258,6 +321,215 @@ public class DaySlotsCalculation {
         return 0;
     }
 
+    private void setNight(){
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 32; j++) {
+                for (int k = 0; k < freedaylist.length; k ++){
+                    if ((wake_up*4)-j-1 < 0) {
+                        if (freedaylist[(k+1) % freedaylist.length] == (i + 1) % 7) {
+                            this.slots_generated.get(i).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                            this.futur_slots_generated.get(i).set(futur_slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                        }
+                    }
+                    else if (i == freedaylist[k]){
+                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    }
+
+                }
+                /*if ((wake_up*4)-j-1 < 0) {
+                    if (freedaylist[(i+1) % freedaylist.length] == (freedaylist[i] + 1) % 7) {
+                        this.slots_generated.get(freedaylist[i]).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                    }
+                }
+                else {
+                    this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
+                }*/
+            }
+        }
+    }
+
+    private void setMorningRoutine() {
+        for (int i = 0; i < 7; i++) {
+            for (int j = 0; j < 4; j++) {
+                for (int k = 0; k < freedaylist.length; k ++){
+                    if ((wake_up*4) + j >= 96) {
+                        if (freedaylist[(k-1 + freedaylist.length) % freedaylist.length] == (i - 1) % 7) {
+                            this.slots_generated.get(i).set((Math.round(wake_up * 4) + j)%96, timeSlot.currentTask.MORNING_ROUTINE);
+                            this.futur_slots_generated.get(i).set((Math.round(wake_up*4) + j)%96, timeSlot.currentTask.MORNING_ROUTINE);
+                        }
+                    }
+                    else if (i == freedaylist[k]){
+                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) + j, timeSlot.currentTask.MORNING_ROUTINE);
+                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up*4) + j, timeSlot.currentTask.MORNING_ROUTINE);
+                    }
+
+                }
+            }
+        }
+    }
+
+    private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
+        int nbFixedWork = 0;
+        for (int i = 0; i < free_day.length; i++) {
+            for (int j = 0; j < week_slots.get(0).size(); j++) {
+                if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT || week_slots.get(i).get(j) == timeSlot.currentTask.NEWEVENT){
+                    this.slots_generated.get(i).set(j,week_slots.get(i).get(j));
+                    if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX){
+                        nbFixedWork++;
+                    }
+                }
+            }
+        }
+        return nbFixedWork;
+    }
+
+    private void futurCompare(){
+        for (int i = 0; i < free_day.length; i++) {
+            for (int j = 0; j < userProfile.futurAgenda.get(0).size(); j++) {
+                if (userProfile.futurAgenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX || userProfile.futurAgenda.get(i).get(j) == timeSlot.currentTask.EAT ||
+                        userProfile.futurAgenda.get(i).get(j) == timeSlot.currentTask.NEWEVENT){
+                    this.futur_slots_generated.get(i).set(j,userProfile.futurAgenda.get(i).get(j));
+
+                }
+            }
+        }
+    }
+
+    private void init(){
+        timeSlot.currentTask task;
+
+        for(int j = 0; j < 7; j++ ) {
+            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
+            for (int i = 0; i < 96; i++) {
+
+                task = timeSlot.currentTask.FREE;
+                tasks.add(task);
+
+            }
+            this.slots_generated.add(tasks);
+        }
+        for(int j = 0; j < 7; j++ ) {
+            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
+            for (int i = 0; i < 96; i++) {
+
+                task = timeSlot.currentTask.FREE;
+                tasks.add(task);
+
+            }
+            this.futur_slots_generated.add(tasks);
+        }
+    }
+
+
+/*
+
+Fonction de conversiion du jour.
+
+ */
+
+    private int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
+    }
+
+/*
+
+Fonction de sauvegarde et de récupération.
+
+ */
+
+    private void readFromFile() {
+        try {
+            FileInputStream fileInputStream = context.openFileInput(userProfile.FileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String lineData = bufferedReader.readLine();
+
+            userProfile.decode(lineData);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveToFile(){
+
+        try {
+            File file = new File(context.getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            updateFullAgenda();
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*
+
+Fonction de mise à jour de l'agenda
+
+ */
+    public void updateFullAgenda(){
+        int position;
+        for(int j = 0; j < 7; j++) {
+            for (int i = 0; i < 96; i += 4) {
+                position = i / 4;
+                userProfile.fullAgenda.get(j).get(position).task_1 = userProfile.agenda.get(j).get(i);
+                userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
+                userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
+                userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
+            }
+        }
+    }
+
+/*
+
+Première version de l'algorithme de plannification.
+
+ */
+
+    /*
     private void countWeekWorkAndSport(){
         for (int i = 0; i < userProfile.agenda.size();i++){
             for (int j = 0; j < userProfile.agenda.get(i).size(); j++){
@@ -280,7 +552,7 @@ public class DaySlotsCalculation {
             }
         }
     }
-  
+
     public Boolean setWork(int nbFixedWork){
 
         int nbWorkTimeSlots;
@@ -385,7 +657,7 @@ public class DaySlotsCalculation {
 
         return memip;
     }
-  
+
     public void initSportVariable(){
         switch (sport_routine){
             case 0:
@@ -517,216 +789,5 @@ public class DaySlotsCalculation {
         }
         return memi;
     }
-
-    private void setDailyNight(boolean freeday, boolean nextfreeday){
-        for (int j = 0; j < 32; j++) {
-            if ((wake_up*4)-j-1 < 0) {
-                if (!nextfreeday) {
-                    this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                }
-            }
-            else if (!freeday) {
-                this.daily_slots_generated.set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-            }
-        }
-    }
-
-    private void setDailyMorningRoutine() {
-        for (int j = 0; j < 4; j++) {
-            this.daily_slots_generated.set(Math.round(wake_up * 4) + j, timeSlot.currentTask.MORNING_ROUTINE);
-        }
-    }
-
-    private void setNight(){
-        for (int i = 0; i < 7; i++) {
-            for (int j = 0; j < 32; j++) {
-                for (int k = 0; k < freedaylist.length; k ++){
-                    if ((wake_up*4)-j-1 < 0) {
-                        if (freedaylist[(k+1) % freedaylist.length] == (i + 1) % 7) {
-                            this.slots_generated.get(i).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                            this.futur_slots_generated.get(i).set(futur_slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                        }
-                    }
-                    else if (i == freedaylist[k]){
-                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                    }
-
-                }
-                /*if ((wake_up*4)-j-1 < 0) {
-                    if (freedaylist[(i+1) % freedaylist.length] == (freedaylist[i] + 1) % 7) {
-                        this.slots_generated.get(freedaylist[i]).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                    }
-                }
-                else {
-                    this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.currentTask.SLEEP);
-                }*/
-            }
-        }
-    }
-
-    private void setMorningRoutine() {
-        for (int i = 0; i < freedaylist.length; i++) {
-            for (int j = 0; j < 4; j++) {
-                this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) + j, timeSlot.currentTask.MORNING_ROUTINE);
-                this.futur_slots_generated.get(freedaylist[i]).set(Math.round(wake_up*4) + j, timeSlot.currentTask.MORNING_ROUTINE);
-            }
-        }
-    }
-
-    private void daily_compare(ArrayList<timeSlot.currentTask> day_slots, List<Boolean> day_canceledSlots){
-        for (int j = 0; j < day_slots.size(); j++) {
-            if (day_slots.get(j) == timeSlot.currentTask.WORK_FIX || day_slots.get(j) == timeSlot.currentTask.EAT ||
-                    day_slots.get(j) == timeSlot.currentTask.WORK_CATCH_UP || day_slots.get(j) == timeSlot.currentTask.SPORT_CATCH_UP ||
-                    day_slots.get(j) == timeSlot.currentTask.NEWEVENT || day_canceledSlots.get(j)){
-                this.daily_slots_generated.set(j,day_slots.get(j));
-            }
-        }
-    }
-
-
-    private void daily_init(){
-        timeSlot.currentTask task;
-
-        for (int i = 0; i < 96; i++) {
-
-            task = timeSlot.currentTask.FREE;
-            this.daily_slots_generated.add(task);
-        }
-    }
-
-    private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
-        int nbFixedWork = 0;
-        for (int i = 0; i < free_day.length; i++) {
-            for (int j = 0; j < week_slots.get(0).size(); j++) {
-                if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.currentTask.EAT || week_slots.get(i).get(j) == timeSlot.currentTask.NEWEVENT){
-                    this.slots_generated.get(i).set(j,week_slots.get(i).get(j));
-                    if (week_slots.get(i).get(j) == timeSlot.currentTask.WORK_FIX){
-                        nbFixedWork++;
-                    }
-                }
-            }
-        }
-        return nbFixedWork;
-    }
-
-    private void futurCompare(){
-        for (int i = 0; i < free_day.length; i++) {
-            for (int j = 0; j < userProfile.futurAgenda.get(0).size(); j++) {
-                if (userProfile.futurAgenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX || userProfile.futurAgenda.get(i).get(j) == timeSlot.currentTask.EAT ||
-                        userProfile.futurAgenda.get(i).get(j) == timeSlot.currentTask.NEWEVENT){
-                    this.futur_slots_generated.get(i).set(j,userProfile.futurAgenda.get(i).get(j));
-
-                }
-            }
-        }
-    }
-
-    private void init(){
-        timeSlot.currentTask task;
-
-        for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
-            for (int i = 0; i < 96; i++) {
-
-                task = timeSlot.currentTask.FREE;
-                tasks.add(task);
-
-            }
-            this.slots_generated.add(tasks);
-        }
-        for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
-            for (int i = 0; i < 96; i++) {
-
-                task = timeSlot.currentTask.FREE;
-                tasks.add(task);
-
-            }
-            this.futur_slots_generated.add(tasks);
-        }
-    }
-    private int conversionDayIndice() {
-        int offset = 0;
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-
-        switch (day) {
-            case Calendar.MONDAY:
-                offset = 0;
-                break;
-            case Calendar.TUESDAY:
-                offset = 1;
-                break;
-            case Calendar.WEDNESDAY:
-                offset = 2;
-                break;
-            case Calendar.THURSDAY:
-                offset = 3;
-                break;
-            case Calendar.FRIDAY:
-                offset = 4;
-                break;
-            case Calendar.SATURDAY:
-                offset = 5;
-                break;
-            case Calendar.SUNDAY:
-                offset = 6;
-                break;
-
-        }
-
-        return offset;
-    }
-
-    private void readFromFile() {
-        try {
-            FileInputStream fileInputStream = context.openFileInput(userProfile.FileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String lineData = bufferedReader.readLine();
-
-            userProfile.decode(lineData);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void saveToFile(){
-
-        try {
-            File file = new File(context.getFilesDir(), userProfile.FileName);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
-
-            updateFullAgenda();
-
-            userProfile.Save(bufferedWriter);
-
-            bufferedWriter.flush();
-            bufferedWriter.close();
-            outputStreamWriter.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void updateFullAgenda(){
-        int position;
-        for(int j = 0; j < 7; j++) {
-            for (int i = 0; i < 96; i += 4) {
-                position = i / 4;
-                userProfile.fullAgenda.get(j).get(position).task_1 = userProfile.agenda.get(j).get(i);
-                userProfile.fullAgenda.get(j).get(position).task_2 = userProfile.agenda.get(j).get(i + 1);
-                userProfile.fullAgenda.get(j).get(position).task_3 = userProfile.agenda.get(j).get(i + 2);
-                userProfile.fullAgenda.get(j).get(position).task_4 = userProfile.agenda.get(j).get(i + 3);
-            }
-        }
-    }
+    */
 }

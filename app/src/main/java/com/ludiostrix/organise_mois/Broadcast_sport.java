@@ -14,6 +14,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+
+/*
+
+Notification de sport.
+
+ */
+
 public class Broadcast_sport extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 152;

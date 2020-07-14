@@ -21,6 +21,12 @@ import java.util.List;
 
 import static com.ludiostrix.organise_mois.MainActivity.setAlarmOfTheDay;
 
+/*
+
+Classe utilisée lors du report d'une activité.
+
+ */
+
 public class Postpone_broadcast extends BroadcastReceiver {
 
     private Context context;

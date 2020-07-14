@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -26,6 +25,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+
+/*
+
+Activitl prinipale.
+Se lance à l'ouverture de l'application.
+Ouvre premièrement les conditions générales si elles n'ont pas encore été accetées.
+Sinon, Active les notifications et offre la possibilité d'aller au profil ou à l'agenda.
+Le logo change en fonction de l'activité en cours.
+
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         if (!userProfile.licenceAccepted){
             File file = new File(getFilesDir(), userProfile.LastFileName);
             file.delete();
-            Intent intent = new Intent(MainActivity.this, popupActivity.class);
+            Intent intent = new Intent(MainActivity.this, GeneralTermsOfUseActivity.class);
             intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
             startActivity(intent);
             finish();
@@ -148,8 +158,8 @@ public class MainActivity extends AppCompatActivity {
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
 
         if(offset >= 7) {
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
-            daySlotsCalculation.slotCalculation();
+            AgendaInitialisation agendaInitialisation = new AgendaInitialisation(getApplicationContext());
+            agendaInitialisation.slotCalculation();
         }
     }
 

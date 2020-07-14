@@ -16,6 +16,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Calendar;
 
+
+/*
+
+Notification de nouvel événement.
+
+ */
+
 public class Broadcast_new_event extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 154;

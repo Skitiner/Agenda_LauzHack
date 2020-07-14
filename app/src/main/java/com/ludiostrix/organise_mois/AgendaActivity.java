@@ -8,14 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,6 +44,15 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+
+/*
+
+Activité de l'agenda.
+Cette activité est utilisee pour l'agenda, mais également dans le cadre de la mise en place des
+heures de travail fixe et des repas. (la booléene fixed_work ou lunch_time est, dans ces situations, vrai.)
+
+ */
 
 public class AgendaActivity extends AppCompatActivity {
 
@@ -110,12 +115,12 @@ public class AgendaActivity extends AppCompatActivity {
 
         readFromFile();
 
-        /*userProfile.convertInPastDay();
+        userProfile.convertInPastDay();
 
         saveToFile();
         readFromFile(); // pas très opti, mais permet de généré aussi le pastAgenda et newEventPastAgenda
 
-        MainActivity.setAlarmOfTheDay(AgendaActivity.this);*/
+        MainActivity.setAlarmOfTheDay(AgendaActivity.this);
 
         setWeekSlots();
 
@@ -265,6 +270,30 @@ public class AgendaActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WEEK_SAVE, week);
+        outState.putSerializable(DAILY_TASK, dailyTasks);
+    }
+
+    private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
+        int nbFixedWork = 0;
+
+        int offset_indice = convertedIndice();
+
+        for (int i = 0; i < 7; i++) {
+            int indice = (i + offset_indice)%7;
+
+            for (int j = 0; j < week_slots.get(indice).size(); j++) {
+                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT || week_slots.get(indice).get(j) == timeSlot.currentTask.NEWEVENT)){
+                    dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
+                }
+            }
+        }
+        return nbFixedWork;
+    }
+
     // Fonction pour adapter le dailyTask au jour actuel
     public void setWeekSlots() {
 
@@ -299,10 +328,17 @@ public class AgendaActivity extends AppCompatActivity {
         }*/
     }
 
+/*
+
+Fonctions de placement des heures de travail fixe ou de repas.
+
+ */
     public void saveTimeSlots(View view) {
         day_already_setted++;
 
-        if(day_already_setted >= nb_day_to_set)
+        if(day_already_setted >= nb_day_to_set && fixed_work)
+            settingFinish = true;
+        else if (day_already_setted >= 7 && lunch_time)
             settingFinish = true;
 
         if(settingFinish) {
@@ -362,47 +398,25 @@ public class AgendaActivity extends AppCompatActivity {
 
     }
 
-    public static int conversionDayIndice() {
-        int offset = 0;
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-
-        switch (day) {
-            case Calendar.MONDAY:
-                offset = 0;
-                break;
-            case Calendar.TUESDAY:
-                offset = 1;
-                break;
-            case Calendar.WEDNESDAY:
-                offset = 2;
-                break;
-            case Calendar.THURSDAY:
-                offset = 3;
-                break;
-            case Calendar.FRIDAY:
-                offset = 4;
-                break;
-            case Calendar.SATURDAY:
-                offset = 5;
-                break;
-            case Calendar.SUNDAY:
-                offset = 6;
-                break;
-
-        }
-
-        return offset;
-    }
-
     private void setScheduleOverDays() {
         int indice;
 
         for (int i = 0; i < 7; i++) {
             indice = (conversionDayIndice() +i)%7;
 
-            if(userProfile.freeDay[indice] == true)
+            if(userProfile.freeDay[indice] == true) {
+                for(int j = 0; j < 96; j++) {
+                    if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time) {
+                        dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+                        userProfile.futurAgenda.get(i).set(j, timeSlot.currentTask.EAT);
+                    }
+                    if(dailyTasks.get(i).get(j) == timeSlot.currentTask.EAT && lunch_time && dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE) {
+                        dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+                        userProfile.futurAgenda.get(i).set(j, timeSlot.currentTask.FREE);
+                    }
+                }
                 continue;
+            }
 
             for(int j = 0; j < 96; j++) {
                 if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work) {
@@ -431,13 +445,12 @@ public class AgendaActivity extends AppCompatActivity {
         adapter.updateWeek();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WEEK_SAVE, week);
-        outState.putSerializable(DAILY_TASK, dailyTasks);
-    }
 
+/*
+
+Fonctions de changement de jour de l'agenda.
+
+ */
     public void goToday(View view) {
         if (!lunch_time && !fixed_work) {
             switch (view.getId()) {
@@ -490,7 +503,7 @@ public class AgendaActivity extends AppCompatActivity {
             int indice = (conversionDayIndice() + currentDay)%7;
             int i = 0;
 
-            if(lunch_time || fixed_work) {
+            if(fixed_work) {
                 while (userProfile.freeDay[indice] && i < 7) {
                     currentDay++;
                     currentDay %= 7;
@@ -512,7 +525,7 @@ public class AgendaActivity extends AppCompatActivity {
             int indice = (conversionDayIndice() + currentDay)%7;
             int i = 0;
 
-            if(lunch_time || fixed_work) {
+            if(fixed_work) {
                 while (userProfile.freeDay[indice] && i < 7) {
                     if (currentDay == 0)
                         currentDay = 6;
@@ -585,43 +598,11 @@ public class AgendaActivity extends AppCompatActivity {
         date.setText(dt);
     }
 
-    private void saveToFile(){
+/*
 
-        try {
-            File file = new File(getFilesDir(), userProfile.FileName);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+Classe s'occupant du rendu visuel de l'agenda.
 
-            userProfile.Save(bufferedWriter);
-
-            bufferedWriter.flush();
-            bufferedWriter.close();
-            outputStreamWriter.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void readFromFile() {
-        try {
-            Context ctx = getApplicationContext();
-            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String lineData = bufferedReader.readLine();
-
-            userProfile.decode(lineData);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+ */
     private class myAdapter extends ArrayAdapter<timeSlot> {
 
         private int time_layout;
@@ -1042,6 +1023,12 @@ public class AgendaActivity extends AppCompatActivity {
             }
         }
     }
+
+/*
+
+Fonctions liées aux nouveaux événements.
+
+ */
     public void addEventXmlCallback(View view){
         eventCreation(view);
     }
@@ -1300,6 +1287,7 @@ public class AgendaActivity extends AppCompatActivity {
 
     }
 
+    // fonction de recalcul du planning d'au moins un jour.
     public void plan(){
         int dayOffset = 0;
         int actualDay;
@@ -1326,6 +1314,7 @@ public class AgendaActivity extends AppCompatActivity {
 
             boolean freeday = true;
             boolean nextfreeday = true;
+            boolean pastfreeday = true;
             for (int k = 0; k < freedaylist.length; k++) {
                 if (freedaylist[k] == (actualDay + conversionDayIndice() + dayOffset) % 7) {
                     freeday = false;
@@ -1333,15 +1322,18 @@ public class AgendaActivity extends AppCompatActivity {
                 if (freedaylist[k] == (actualDay + conversionDayIndice() + 1 + dayOffset) % 7) {
                     nextfreeday = false;
                 }
+                if (freedaylist[k] == (actualDay + conversionDayIndice() - 1 + 7 + dayOffset) % 7) {
+                    pastfreeday = false;
+                }
             }
 
             int val = (actualDay + convertedIndice() + dayOffset)%7; // à tester
             int dayCalcul = val;
 
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(userProfile, freeday, nextfreeday, val, false);
+            AgendaInitialisation agendaInitialisation = new AgendaInitialisation(userProfile, freeday, nextfreeday, pastfreeday, val, false);
 
-            IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
-                    userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
+            DayPlan Agent = new DayPlan(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
+                    userProfile.lastConnection, userProfile.settingDay, agendaInitialisation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
                     freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
                     userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,userProfile.agendaInit, false, false);
@@ -1661,23 +1653,54 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
 
-    private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
-        int nbFixedWork = 0;
+/*
 
-        int offset_indice = convertedIndice();
+Fonctions de sauvegarde et de récupération.
 
-        for (int i = 0; i < 7; i++) {
-            int indice = (i + offset_indice)%7;
+ */
 
-            for (int j = 0; j < week_slots.get(indice).size(); j++) {
-                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT || week_slots.get(indice).get(j) == timeSlot.currentTask.NEWEVENT)){
-                    dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
-                }
-            }
+    private void saveToFile(){
+
+        try {
+            File file = new File(getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return nbFixedWork;
     }
 
+    private void readFromFile() {
+        try {
+            Context ctx = getApplicationContext();
+            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String lineData = bufferedReader.readLine();
+
+            userProfile.decode(lineData);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*
+
+Fonctions de conversion des jours.
+
+ */
     private int convertedIndice() {
         int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
@@ -1690,5 +1713,38 @@ public class AgendaActivity extends AppCompatActivity {
         }
 
         return offset%7;
+    }
+
+    public static int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
     }
 }

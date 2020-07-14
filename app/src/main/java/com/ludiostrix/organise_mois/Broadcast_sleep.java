@@ -8,6 +8,13 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+
+/*
+
+Notification de dormir.
+
+ */
+
 public class Broadcast_sleep  extends BroadcastReceiver {
 
     private String CHANNEL_ID = "CHANNEL_ID";

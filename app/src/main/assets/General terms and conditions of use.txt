@@ -1,52 +1,50 @@
-﻿General terms and conditions of use
-These general terms of use apply to the entire Organise-MOIs app. We reserve our right to modify these terms of use at any time.
-By using this app, you fully accept these terms and conditions of use in their integrality. They are accessible at any time from the menu.
+﻿<br><h1><b>General terms and conditions of use</h1></b>
+<p>These general terms of use apply to the entire Organise-MOIs app. We reserve our right to modify these terms of use at any time.<br>
+By using this app, you fully accept these terms and conditions of use in their integrality. They are accessible at any time from the menu.</p>
 
-1. Definitions
-In these general terms of use it should be understood by the terms:
-➢ “Organise-MOIs": the app downloaded to keep you motivated to work and helping you to schedule your weeks. 
-➢ “Profile”: the button at the top right of the screen when Organise-MOIs is open.
-➢ “This app": Organise-MOIs and its code.
-➢ “We/us": the team that, in April 2020, created the Organise-MOIs app. You can contact us at the following e-mail address: organise.mois@gmail.com.
-➢ “You": any person using and/or enjoying the Organise-MOIs app. 
-➢ “Your data": all the personal data that you enter in the app.
-➢ “Your device": your mobile phone with (at least) Android® 6.0, Marshmallow API 23, as operating system on which you download and use the app.
+<h2><b>1. Definitions</h2></b>
+<p>In these general terms of use it should be understood by the terms:<br>
+➢ “Organise-MOIs": the app downloaded to keep you motivated to work and helping you to schedule your weeks. <br>
+➢ “Profile”: the button at the top right of the screen when Organise-MOIs is open.<br>
+➢ “This app": Organise-MOIs and its code.<br>
+➢ “We/us": the team that, in April 2020, created the Organise-MOIs app. You can contact us at the following e-mail address: organise.mois@gmail.com.<br>
+➢ “You": any person using and/or enjoying the Organise-MOIs app. <br>
+➢ “Your data": all the personal data that you enter in the app.<br>
+➢ “Your device": your mobile phone with (at least) Android® 6.0, Marshmallow API 23, as operating system on which you download and use the app.</p>
 
-2. Services
-We grant you the right to use the Organise-MOIs app properly and without fraudulent distortions or negligent behaviors.  
+<h2><b>2. Services</h2></b>
+<p>We grant you the right to use the Organise-MOIs app properly and without fraudulent distortions or negligent behaviors. </p>
 
-3. Intellectual Property
-You acknowledge that the Organise-MOIs’ Code is exclusively owned by the team Organise-MOIs. Therefore, it may not, in particular, be copied, reproduced, rebroadcast or commercially exploited in all or any part. 
+<h2><b>3. Intellectual Property</h2></b>
+<p>You acknowledge that the Organise-MOIs’ Code is exclusively owned by the team Organise-MOIs. Therefore, it may not, in particular, be copied, reproduced, rebroadcast or commercially exploited in all or any part. </p>
 
-4. Terms of access
-To access and use this app, you must own a device with (at least) Android® 6.0, Marshmallow API 23. Unfortunately, we are still not available on iOS ®.
-To use this app, for the moment, you don't need to pay (except for the device in which you will install the app and an access to internet in order to be able to download Organise-MOIs). 
+<h2><b>4. Terms of access</h2></b>
+<p>To access and use this app, you must own a device with (at least) Android® 6.0, Marshmallow API 23. Unfortunately, we are still not available on iOS ®.<br>
+To use this app, for the moment, you don't need to pay (except for the device in which you will install the app and an access to internet in order to be able to download Organise-MOIs). </p>
 
-5. Use
-You agree to make a proper use of the app in accordance to good faith and common sense of a diligent person in the same circumstances. None of your malicious, fraudulent, abusive and/or negligent use can be reproached to us. You shoulder the burden of the consequences and liability.
+<h2><b>5. Use</h2></b>
+<p>You agree to make a proper use of the app in accordance to good faith and common sense of a diligent person in the same circumstances. None of your malicious, fraudulent, abusive and/or negligent use can be reproached to us. You shoulder the burden of the consequences and liability.</p>
 
-6. Liability
-OUR LIABILITY IS LIMITED TO GROSS NEGLIGENCE OR WILLFUL MISCONDUCT, ACCORDING TO ARTICLE 100 PARAGRAPH 1 OF THE SWISS CODE OF OBLIGATIONS.
-In cases of force majeure, we are not obliged to guarantee the access to the app, we are not liable for any damage caused and are released from any liability.
-Finally, we are not liable for the termination of the app, as per art. 9 of the current General terms and conditions of use. 
+<h2><b>6. Liability</h2></b>
+<p>OUR LIABILITY IS LIMITED TO GROSS NEGLIGENCE OR WILLFUL MISCONDUCT, ACCORDING TO ARTICLE 100 PARAGRAPH 1 OF THE SWISS CODE OF OBLIGATIONS.<br>
+In cases of force majeure, we are not obliged to guarantee the access to the app, we are not liable for any damage caused and are released from any liability.<br>
+Finally, we are not liable for the termination of the app, as per art. 9 of the current General terms and conditions of use. </p>
 
-7. Confidentiality and privacy policy
-We respect your privacy. By using this app, you agree to have your data stored in your device. However, we have no access to them. 
+<h2><b>7. Confidentiality and privacy policy</h2></b>
+<p>We respect your privacy. By using this app, you agree to have your data stored in your device. However, we have no access to them. </p>
 
-8. Security and data storage 
-For the moment, we have done our utmost to guarantee the security of your data. Nevertheless, by using Organise-MOIs, you accept its possible security vulnerabilities and take care to minimize the personal and/or confidential information you enter.
-All your data are stored in your own device. BY USING THIS APP, YOU ASSUME THE FULL RESPONSIBILITY REGARDING THE SECURITY ON YOUR DEVICE AND THE DATA STORED IN IT. Therefore, you are expected to protect your mobile phone, in particular, by installing an antivirus software, antimalware software, avoiding downloading unreliable content, using a secure internet connection, etc.
+<h2><b>8. Security and data storage </h2></b>
+<p>For the moment, we have done our utmost to guarantee the security of your data. Nevertheless, by using Organise-MOIs, you accept its possible security vulnerabilities and take care to minimize the personal and/or confidential information you enter.<br>
+All your data are stored in your own device. BY USING THIS APP, YOU ASSUME THE FULL RESPONSIBILITY REGARDING THE SECURITY ON YOUR DEVICE AND THE DATA STORED IN IT. Therefore, you are expected to protect your mobile phone, in particular, by installing an antivirus software, antimalware software, avoiding downloading unreliable content, using a secure internet connection, etc.</p>
 
-9. Termination and uninstallation of the app
-You are free to stop and uninstall the app at any time. We also reserve the right to end or suspend the access to Organise-MOIs at any time at our discretion and without notice.
-To the uninstallation of the app, press "uninstall". As far as your data are concerned, they will be deleted with the app since they are only stored in your mobile phone.
+<h2><b>9. Termination and uninstallation of the app</h2></b>
+<p>You are free to stop and uninstall the app at any time. We also reserve the right to end or suspend the access to Organise-MOIs at any time at our discretion and without notice.<br>
+To the uninstallation of the app, press "uninstall". As far as your data are concerned, they will be deleted with the app since they are only stored in your mobile phone.</p>
 
-10. Complaints, forum and applicable law
-We are students and are still learning from our mistakes. If you wish to complain, you can do so in a constructive way at the following e-mail address: organise.mois@gmail.com. Of course, we invite you to settle disputes amicably. Nevertheless, in case of litigious and procedural will, you will be respectfully asked to do so at the relevant jurisdiction in Lausanne, in the canton of Vaud, Switzerland. Thus, you accept that the place of jurisdiction is Lausanne and that any dispute will be governed exclusively by the Swiss law.
+<h2><b>10. Complaints, forum and applicable law</h2></b>
+<p>We are students and are still learning from our mistakes. If you wish to complain, you can do so in a constructive way at the following e-mail address: organise.mois@gmail.com. Of course, we invite you to settle disputes amicably. Nevertheless, in case of litigious and procedural will, you will be respectfully asked to do so at the relevant jurisdiction in Lausanne, in the canton of Vaud, Switzerland. Thus, you accept that the place of jurisdiction is Lausanne and that any dispute will be governed exclusively by the Swiss law.</p>
 
-
-Lausanne, 27th April 2020
-
+<br>Lausanne, 27th April 2020 <br><br>
 
 
-						      The team		                 Organise-MOIs
+						      The team		                 Organise-MOIs<br>

@@ -1,6 +1,5 @@
 package com.ludiostrix.organise_mois;
 
-import android.service.autofill.AutofillService;
 import android.util.Log;
 
 import java.io.BufferedWriter;
@@ -9,14 +8,20 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+
+/*
+
+Classe du Profil.
+Contient toutes les informations du profil de l'utilisateur et les fonctions permettant de convertir,
+ utiliser et vérifier ces informations, ainsi que les fonctions de sauvegarde, de récupération et de
+ conversion en jour passé.
+
+ */
 
 public class Profile implements Serializable {
     private static final String TAG = "Profile";
@@ -64,8 +69,15 @@ public class Profile implements Serializable {
     protected boolean agendaInit = true;
     protected int workCatchUp = 0;
     protected int sportCatchUp = 0;
-    //protected List<Stat> pastStat;
-    //protected List<Stat> weekStat;
+    //protected List<StatPerDay> pastStat;
+    //protected List<StatPerDay> weekStat;
+
+
+/*
+
+Section d'initialisation
+
+ */
 
     public Profile(){
         agenda_back = new ArrayList<>();
@@ -77,7 +89,7 @@ public class Profile implements Serializable {
         //weekStat = new ArrayList<>();
 
         /*for (int i = 0; i < 7; i++){
-            Stat newStat = new Stat();
+            StatPerDay newStat = new StatPerDay();
             weekStat.add(newStat);
         }*/
 
@@ -257,6 +269,13 @@ public class Profile implements Serializable {
         }
 
     }
+
+
+/*
+
+Section de sauvegarde du profil
+
+ */
 
     private byte[] floatToByteArray ( final float i ) throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -491,6 +510,13 @@ public class Profile implements Serializable {
         //Log.w("CANCELED SAVE", canceled_slots.toString());
     }
 
+
+/*
+
+Section de récupération du profil
+
+ */
+
     public void decode(String lineData) {
         current = new String();
         currentFutur = new String();
@@ -633,7 +659,7 @@ public class Profile implements Serializable {
         }
 
         for (int i = 0; i < pastAgendaSize; i++){
-            Stat initStat = new Stat();
+            StatPerDay initStat = new StatPerDay();
             pastStat.add(initStat);
         }
         for (int i = 0; i < pastAgendaSize; i++){
@@ -706,249 +732,6 @@ public class Profile implements Serializable {
         this.lastConnection.setTimeInMillis(Long.parseLong(lastConnexionTimeMillis));
 
         Log.w("CANCELED READ", canceled_slots.toString());
-    }
-
-    public void convertInPastDay(){
-        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-        int daySinceLastConnection = actual_day - this.lastConnection.get(Calendar.DAY_OF_YEAR);
-
-        if (daySinceLastConnection > 0) {
-            int offset;
-
-            offset = (convertedIndice() - daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
-
-            for (int i = 0; i < daySinceLastConnection; i++) {
-                int val = (i + offset) % 7;
-                if (val < 0) {
-                    val += 7;
-                }
-                //ArrayList<ArrayList<timeSlot>> copy = (ArrayList<ArrayList<timeSlot>>)this.fullAgenda.clone();
-                ArrayList<timeSlot> copy = new ArrayList<>(fullAgenda.get(val).size());
-                //ArrayList<ArrayList<timeSlot>> copy = fullAgenda.stream().collect(Collectors.toCollection());
-                //Collections.copy(copy, fullAgenda);
-
-                for (timeSlot task : fullAgenda.get(val)) {
-                    copy.add(new timeSlot(task));
-                }
-
-                this.pastFullAgenda.add(copy);
-
-                List<Boolean> copyCanceled = new ArrayList<>(canceled_slots.get(val).size());
-
-                for (boolean canceled : canceled_slots.get(val)) {
-                    copyCanceled.add(canceled);
-                }
-
-                this.pastCanceledSlots.add(copyCanceled);
-
-                int nbWorkDay = 0;
-                for (int j = 0; j < freeDay.length; j++) {
-                    if (!freeDay[j]) {
-                        nbWorkDay++;
-                    }
-                }
-                int[] freedaylist = new int[nbWorkDay];
-                int n = 0;
-                for (int j = 0; j < this.freeDay.length; j++) {
-                    if (!freeDay[j]) {
-                        freedaylist[n] = j;
-                        n++;
-                    }
-                }
-
-                boolean freeday = true;
-                boolean nextfreeday = true;
-                for (int k = 0; k < freedaylist.length; k++) {
-                    if (freedaylist[k] == (i + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) { // (daySinceLastConnection / 7) * 7) make it >= 0
-                        freeday = false;
-                    }
-                    if (freedaylist[k] == (i + 1 + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) {
-                        nextfreeday = false;
-                    }
-                }
-
-                if (!freeday) {
-                    this.lateWorkSlot += Float.parseFloat(nbWorkHours) / (float) nbWorkDay;
-                }
-
-                if (sportRoutine == 2) {
-                    this.lateSportSlot += 4;
-                } else {
-                    this.lateSportSlot += 2;
-                }
-
-                DaySlotsCalculation plan = new DaySlotsCalculation(this, freeday, nextfreeday, val, true);
-
-
-                int dayCalcul = (i - daySinceLastConnection) % 7;
-                if (dayCalcul < 0) {
-                    dayCalcul += 7;
-                }
-
-                IA Agent = new IA(this.weight, this.canceled_slots.get(val), this.sportDayRank, this.lastConnection,
-                        this.settingDay, plan.daily_slots_generated, this.agenda.get(val),
-                        this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday,
-                        Integer.parseInt(this.optWorkTime), this.lateWorkSlot, this.workCatchUp,
-                        this.sportRoutine, this.lateSportSlot, this.sportCatchUp, this.agendaInit, true, false);
-                Agent.planDay();
-                this.sportDayRank = Agent.rank;
-                this.agenda.set(val, Agent.dailyAgenda);
-                this.lateSportSlot = Agent.sportSlot;
-                this.lateWorkSlot = Agent.workSlot;
-                this.workCatchUp = Agent.workSlotCatchUp;
-                this.sportCatchUp = Agent.sportCatchUp;
-
-                int position;
-                for (int j = 0; j < 96; j += 4) {
-                    position = j / 4;
-                    this.fullAgenda.get(val).get(position).task_1 = this.agenda.get(val).get(j);
-                    this.fullAgenda.get(val).get(position).task_2 = this.agenda.get(val).get(j + 1);
-                    this.fullAgenda.get(val).get(position).task_3 = this.agenda.get(val).get(j + 2);
-                    this.fullAgenda.get(val).get(position).task_4 = this.agenda.get(val).get(j + 3);
-                }
-
-                for (int j = 0 ; j < this.canceled_slots.get(val).size(); j++) {
-                    this.canceled_slots.get(val).set(j, false);
-                }
-
-            }
-            this.lastConnection = Calendar.getInstance();
-            this.lastConnection.setTimeInMillis(System.currentTimeMillis());
-        }
-        else if (daySinceLastConnection < 0){
-            for (int i = pastAgendaSize; i > this.pastAgendaSize + daySinceLastConnection; i--) { //daySinceLastConnection <0
-                if (pastFullAgenda.size() > 0) {
-                    this.pastFullAgenda.remove(i - 1);
-                    this.pastCanceledSlots.remove(i-1);
-                }
-            }
-
-            /*int offset_indice = convertedIndice() + daySinceLastConnection;
-            while (offset_indice < 0){
-                offset_indice += 7;
-            }
-
-            ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks = new ArrayList<>(this.agenda);
-            ArrayList<ArrayList<timeSlot>> week = new ArrayList<>(this.fullAgenda);
-            ArrayList<ArrayList<String>> newEventWeek = new ArrayList<>(this.newEventAgenda);
-
-            for (int i = 0; i < 7; i++) {
-                int indice = (i + offset_indice)%7;
-                dailyTasks.set(i, this.agenda.get(indice));
-                week.set(i,this.fullAgenda.get(indice));
-                newEventWeek.set(i,this.newEventAgenda.get(indice));
-            }
-
-            remove_canceled_days();
-
-            this.agenda = dailyTasks;
-            this.fullAgenda = week;
-            this.newEventAgenda = newEventWeek;
-
-            this.settingDay = Calendar.getInstance();*/
-            this.lastConnection = Calendar.getInstance();
-            this.lastConnection.setTimeInMillis(System.currentTimeMillis());
-        }
-    }
-
-    public void remove_canceled_days() {
-        for (int i = 0; i < 7; i++) {
-            for(int j = 0; j < 96; j++) {
-                this.canceled_slots.get(i).set(j, Boolean.FALSE);
-            }
-        }
-    }
-
-    public void updateFullAgenda(int currentDay) {
-        int position;
-        for(int i = 0; i < 96; i +=4 ) {
-            position = i/4;
-            this.fullAgenda.get(currentDay).get(position).task_1 =  this.agenda.get(currentDay).get(i);
-            this.fullAgenda.get(currentDay).get(position).task_2 =  this.agenda.get(currentDay).get(i+1);
-            this.fullAgenda.get(currentDay).get(position).task_3 =  this.agenda.get(currentDay).get(i+2);
-            this.fullAgenda.get(currentDay).get(position).task_4 =  this.agenda.get(currentDay).get(i+3);
-            this.fullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventAgenda.get(currentDay).get(i);
-            this.fullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventAgenda.get(currentDay).get(i+1);
-            this.fullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventAgenda.get(currentDay).get(i+2);
-            this.fullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventAgenda.get(currentDay).get(i+3);
-        }
-    }
-
-    public void updateFuturAgenda(int currentDay) {
-        int position;
-        for(int i = 0; i < 96; i +=4 ) {
-            position = i/4;
-            this.futurFullAgenda.get(currentDay).get(position).task_1 =  this.futurAgenda.get(currentDay).get(i);
-            this.futurFullAgenda.get(currentDay).get(position).task_2 =  this.futurAgenda.get(currentDay).get(i+1);
-            this.futurFullAgenda.get(currentDay).get(position).task_3 =  this.futurAgenda.get(currentDay).get(i+2);
-            this.futurFullAgenda.get(currentDay).get(position).task_4 =  this.futurAgenda.get(currentDay).get(i+3);
-            this.futurFullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventFuturAgenda.get(currentDay).get(i);
-            this.futurFullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventFuturAgenda.get(currentDay).get(i+1);
-            this.futurFullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventFuturAgenda.get(currentDay).get(i+2);
-            this.futurFullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventFuturAgenda.get(currentDay).get(i+3);
-        }
-    }
-
-    public void updatePastAgenda(int currentDay) {
-        int position;
-        for(int i = 0; i < 96; i +=4 ) {
-            position = i/4;
-            this.pastFullAgenda.get(currentDay).get(position).task_1 =  this.pastAgenda.get(currentDay).get(i);
-            this.pastFullAgenda.get(currentDay).get(position).task_2 =  this.pastAgenda.get(currentDay).get(i+1);
-            this.pastFullAgenda.get(currentDay).get(position).task_3 =  this.pastAgenda.get(currentDay).get(i+2);
-            this.pastFullAgenda.get(currentDay).get(position).task_4 =  this.pastAgenda.get(currentDay).get(i+3);
-            this.pastFullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventPastAgenda.get(currentDay).get(i);
-            this.pastFullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventPastAgenda.get(currentDay).get(i+1);
-            this.pastFullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventPastAgenda.get(currentDay).get(i+2);
-            this.pastFullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventPastAgenda.get(currentDay).get(i+3);
-        }
-    }
-
-    private int convertedIndice() {
-        int setting_day = this.settingDay.get(Calendar.DAY_OF_YEAR);
-        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-
-        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - this.settingDay.get(Calendar.YEAR);
-        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
-
-        while (offset < 0){
-            offset += 7;
-        }
-
-        return offset%7;
-    }
-
-    private int conversionDayIndice() {
-        int offset = 0;
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
-
-        switch (day) {
-            case Calendar.MONDAY:
-                offset = 0;
-                break;
-            case Calendar.TUESDAY:
-                offset = 1;
-                break;
-            case Calendar.WEDNESDAY:
-                offset = 2;
-                break;
-            case Calendar.THURSDAY:
-                offset = 3;
-                break;
-            case Calendar.FRIDAY:
-                offset = 4;
-                break;
-            case Calendar.SATURDAY:
-                offset = 5;
-                break;
-            case Calendar.SUNDAY:
-                offset = 6;
-                break;
-
-        }
-
-        return offset;
     }
 
     private void getSavedEvent(char charAt) {
@@ -1294,6 +1077,278 @@ public class Profile implements Serializable {
 
     }
 
+
+/*
+
+Fonction de conversion en jour passé et recalcul du septième jour.
+
+ */
+
+    public void convertInPastDay(){
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        int daySinceLastConnection = actual_day - this.lastConnection.get(Calendar.DAY_OF_YEAR);
+
+        if (daySinceLastConnection > 0) {
+            int offset;
+
+            offset = (convertedIndice() - daySinceLastConnection) % 7;            //- daySinceLastConnection pour avoir le jour d'avant
+
+            for (int i = 0; i < daySinceLastConnection; i++) {
+                int val = (i + offset) % 7;
+                if (val < 0) {
+                    val += 7;
+                }
+                //ArrayList<ArrayList<timeSlot>> copy = (ArrayList<ArrayList<timeSlot>>)this.fullAgenda.clone();
+                ArrayList<timeSlot> copy = new ArrayList<>(fullAgenda.get(val).size());
+                //ArrayList<ArrayList<timeSlot>> copy = fullAgenda.stream().collect(Collectors.toCollection());
+                //Collections.copy(copy, fullAgenda);
+
+                for (timeSlot task : fullAgenda.get(val)) {
+                    copy.add(new timeSlot(task));
+                }
+
+                this.pastFullAgenda.add(copy);
+
+                List<Boolean> copyCanceled = new ArrayList<>(canceled_slots.get(val).size());
+
+                for (boolean canceled : canceled_slots.get(val)) {
+                    copyCanceled.add(canceled);
+                }
+
+                this.pastCanceledSlots.add(copyCanceled);
+
+                int nbWorkDay = 0;
+                for (int j = 0; j < freeDay.length; j++) {
+                    if (!freeDay[j]) {
+                        nbWorkDay++;
+                    }
+                }
+                int[] freedaylist = new int[nbWorkDay];
+                int n = 0;
+                for (int j = 0; j < this.freeDay.length; j++) {
+                    if (!freeDay[j]) {
+                        freedaylist[n] = j;
+                        n++;
+                    }
+                }
+
+                boolean freeday = true;
+                boolean nextfreeday = true;
+                boolean pastfreeday = true;
+                for (int k = 0; k < freedaylist.length; k++) {
+                    if (freedaylist[k] == (i + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) { // (daySinceLastConnection / 7) * 7) make it >= 0
+                        freeday = false;
+                    }
+                    if (freedaylist[k] == (i + 1 + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) {
+                        nextfreeday = false;
+                    }
+                    if (freedaylist[k] == (i - 1 + 7 + conversionDayIndice() - daySinceLastConnection + (daySinceLastConnection / 7) * 7) % 7) {
+                        pastfreeday = false;
+                    }
+                }
+
+                if (!freeday) {
+                    this.lateWorkSlot += Float.parseFloat(nbWorkHours) / (float) nbWorkDay;
+                }
+
+                if (sportRoutine == 2) {
+                    this.lateSportSlot += 4;
+                } else {
+                    this.lateSportSlot += 2;
+                }
+
+                AgendaInitialisation plan = new AgendaInitialisation(this, freeday, nextfreeday, pastfreeday, val, true);
+
+
+                int dayCalcul = (i - daySinceLastConnection) % 7;
+                if (dayCalcul < 0) {
+                    dayCalcul += 7;
+                }
+
+                DayPlan Agent = new DayPlan(this.weight, this.canceled_slots.get(val), this.sportDayRank, this.lastConnection,
+                        this.settingDay, plan.daily_slots_generated, this.agenda.get(val),
+                        this.newEventAgenda.get(val), dayCalcul, this.savedEvent, freeday,
+                        Integer.parseInt(this.optWorkTime), this.lateWorkSlot, this.workCatchUp,
+                        this.sportRoutine, this.lateSportSlot, this.sportCatchUp, this.agendaInit, true, false);
+                Agent.planDay();
+                this.sportDayRank = Agent.rank;
+                this.agenda.set(val, Agent.dailyAgenda);
+                this.lateSportSlot = Agent.sportSlot;
+                this.lateWorkSlot = Agent.workSlot;
+                this.workCatchUp = Agent.workSlotCatchUp;
+                this.sportCatchUp = Agent.sportCatchUp;
+
+                int position;
+                for (int j = 0; j < 96; j += 4) {
+                    position = j / 4;
+                    this.fullAgenda.get(val).get(position).task_1 = this.agenda.get(val).get(j);
+                    this.fullAgenda.get(val).get(position).task_2 = this.agenda.get(val).get(j + 1);
+                    this.fullAgenda.get(val).get(position).task_3 = this.agenda.get(val).get(j + 2);
+                    this.fullAgenda.get(val).get(position).task_4 = this.agenda.get(val).get(j + 3);
+                }
+
+                for (int j = 0 ; j < this.canceled_slots.get(val).size(); j++) {
+                    this.canceled_slots.get(val).set(j, false);
+                }
+
+            }
+            this.lastConnection = Calendar.getInstance();
+            this.lastConnection.setTimeInMillis(System.currentTimeMillis());
+        }
+        else if (daySinceLastConnection < 0){
+            for (int i = pastAgendaSize; i > this.pastAgendaSize + daySinceLastConnection; i--) { //daySinceLastConnection <0
+                if (pastFullAgenda.size() > 0) {
+                    this.pastFullAgenda.remove(i - 1);
+                    this.pastCanceledSlots.remove(i-1);
+                }
+            }
+
+            /*int offset_indice = convertedIndice() + daySinceLastConnection;
+            while (offset_indice < 0){
+                offset_indice += 7;
+            }
+
+            ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks = new ArrayList<>(this.agenda);
+            ArrayList<ArrayList<timeSlot>> week = new ArrayList<>(this.fullAgenda);
+            ArrayList<ArrayList<String>> newEventWeek = new ArrayList<>(this.newEventAgenda);
+
+            for (int i = 0; i < 7; i++) {
+                int indice = (i + offset_indice)%7;
+                dailyTasks.set(i, this.agenda.get(indice));
+                week.set(i,this.fullAgenda.get(indice));
+                newEventWeek.set(i,this.newEventAgenda.get(indice));
+            }
+
+            remove_canceled_days();
+
+            this.agenda = dailyTasks;
+            this.fullAgenda = week;
+            this.newEventAgenda = newEventWeek;
+
+            this.settingDay = Calendar.getInstance();*/
+            this.lastConnection = Calendar.getInstance();
+            this.lastConnection.setTimeInMillis(System.currentTimeMillis());
+        }
+    }
+
+
+/*
+
+Fonction utilitaire de mises à jour de variable
+
+ */
+
+    public void remove_canceled_days() {
+        for (int i = 0; i < 7; i++) {
+            for(int j = 0; j < 96; j++) {
+                this.canceled_slots.get(i).set(j, Boolean.FALSE);
+            }
+        }
+    }
+
+    public void updateFullAgenda(int currentDay) {
+        int position;
+        for(int i = 0; i < 96; i +=4 ) {
+            position = i/4;
+            this.fullAgenda.get(currentDay).get(position).task_1 =  this.agenda.get(currentDay).get(i);
+            this.fullAgenda.get(currentDay).get(position).task_2 =  this.agenda.get(currentDay).get(i+1);
+            this.fullAgenda.get(currentDay).get(position).task_3 =  this.agenda.get(currentDay).get(i+2);
+            this.fullAgenda.get(currentDay).get(position).task_4 =  this.agenda.get(currentDay).get(i+3);
+            this.fullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventAgenda.get(currentDay).get(i);
+            this.fullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventAgenda.get(currentDay).get(i+1);
+            this.fullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventAgenda.get(currentDay).get(i+2);
+            this.fullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventAgenda.get(currentDay).get(i+3);
+        }
+    }
+
+    public void updateFuturAgenda(int currentDay) {
+        int position;
+        for(int i = 0; i < 96; i +=4 ) {
+            position = i/4;
+            this.futurFullAgenda.get(currentDay).get(position).task_1 =  this.futurAgenda.get(currentDay).get(i);
+            this.futurFullAgenda.get(currentDay).get(position).task_2 =  this.futurAgenda.get(currentDay).get(i+1);
+            this.futurFullAgenda.get(currentDay).get(position).task_3 =  this.futurAgenda.get(currentDay).get(i+2);
+            this.futurFullAgenda.get(currentDay).get(position).task_4 =  this.futurAgenda.get(currentDay).get(i+3);
+            this.futurFullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventFuturAgenda.get(currentDay).get(i);
+            this.futurFullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventFuturAgenda.get(currentDay).get(i+1);
+            this.futurFullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventFuturAgenda.get(currentDay).get(i+2);
+            this.futurFullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventFuturAgenda.get(currentDay).get(i+3);
+        }
+    }
+
+    public void updatePastAgenda(int currentDay) {
+        int position;
+        for(int i = 0; i < 96; i +=4 ) {
+            position = i/4;
+            this.pastFullAgenda.get(currentDay).get(position).task_1 =  this.pastAgenda.get(currentDay).get(i);
+            this.pastFullAgenda.get(currentDay).get(position).task_2 =  this.pastAgenda.get(currentDay).get(i+1);
+            this.pastFullAgenda.get(currentDay).get(position).task_3 =  this.pastAgenda.get(currentDay).get(i+2);
+            this.pastFullAgenda.get(currentDay).get(position).task_4 =  this.pastAgenda.get(currentDay).get(i+3);
+            this.pastFullAgenda.get(currentDay).get(position).new_task_1 =  this.newEventPastAgenda.get(currentDay).get(i);
+            this.pastFullAgenda.get(currentDay).get(position).new_task_2 =  this.newEventPastAgenda.get(currentDay).get(i+1);
+            this.pastFullAgenda.get(currentDay).get(position).new_task_3 =  this.newEventPastAgenda.get(currentDay).get(i+2);
+            this.pastFullAgenda.get(currentDay).get(position).new_task_4 =  this.newEventPastAgenda.get(currentDay).get(i+3);
+        }
+    }
+
+
+/*
+
+Fonction de conversion d'indice
+
+ */
+    private int convertedIndice() {
+        int setting_day = this.settingDay.get(Calendar.DAY_OF_YEAR);
+        int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+
+        int year_offset =  Calendar.getInstance().get(Calendar.YEAR) - this.settingDay.get(Calendar.YEAR);
+        int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
+
+        while (offset < 0){
+            offset += 7;
+        }
+
+        return offset%7;
+    }
+
+    private int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
+    }
+
+/*
+
+Fonction de control d'heure et de conversion d'heure en tranche horaire.
+
+ */
     public boolean stringWorkTimeToSlot(String time){
         boolean ok;
         boolean entier = true;
@@ -1447,7 +1502,10 @@ public class Profile implements Serializable {
             hourt = Float.parseFloat(hour);
             mint = Float.parseFloat(min);
             ok = true;
-            if (hourt >= 23 || hourt < 0){
+            if (hourt > 12 || hourt < 0){
+                ok = false;
+            }
+            if (hourt == 12 && mint > 0){
                 ok = false;
             }
             if (mint >= 60 || mint < 0){
@@ -1455,7 +1513,7 @@ public class Profile implements Serializable {
             }
             else {
                 hourt = hourt + roundFifty(mint/60);
-                while (hourt>=24){
+                while (hourt>24){
                     hourt -=24;
                 }
             }

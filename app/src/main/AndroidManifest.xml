@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/organisemois"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".popupActivity" />
+        <activity android:name=".GeneralTermsOfUseActivity" />
         <activity android:name=".ProfileActivity" />
         <activity android:name=".AgendaActivity" />
         <activity android:name=".MainActivity">

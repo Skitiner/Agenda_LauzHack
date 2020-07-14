@@ -8,6 +8,12 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+/*
+
+Cette classe prend en charge le rendu visuel d'une notification.
+
+ */
+
 public class RemindBroadcast extends BroadcastReceiver {
     private String CHANNEL_ID = "";
     private int notificationId = 0;

@@ -19,6 +19,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/*
+
+Cette classe est utilisée quand l'utilisateur accepte une notification.
+Elle met à jour le score du travail et du sport si nécessaire.
+
+ */
+
 public class Start_broadcast extends BroadcastReceiver {
 
     private Context context;

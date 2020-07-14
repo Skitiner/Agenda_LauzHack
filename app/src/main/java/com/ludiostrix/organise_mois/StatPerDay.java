@@ -4,7 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stat implements Serializable {
+/*
+
+Cette classe n'est pas utilisée dans la version actuelle du code
+
+ */
+
+public class StatPerDay implements Serializable {
     int work;
     float workDone;
     int sport;
