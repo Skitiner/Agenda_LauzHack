@@ -187,7 +187,7 @@ public class DaySlotsCalculation {
                 }
             }
 
-            userProfile.agendaInit = true;
+            //userProfile.agendaInit = true;
             IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
                     userProfile.lastConnection, userProfile.settingDay, slots_generated.get(val),
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), val,
@@ -444,21 +444,21 @@ public class DaySlotsCalculation {
         boolean memiComplete = false;
         int[] memi;
 
-        memi = FreeTime(15*4, 19*4, nbSportSlotsPerDay, false);
+        memi = FreeTime(14*4, 20*4, nbSportSlotsPerDay, false);
         memiComplete = ismemiComplete(memi);
 
         if (!memiComplete){
-            memi = FreeTime(8*4, 13*4, nbSportSlotsPerDay, true);
+            memi = FreeTime(7*4, 14*4, nbSportSlotsPerDay, true);
             memiComplete = ismemiComplete(memi);
         }
 
         if (!memiComplete){
-            memi = FreeTime(19*4, 23*4, nbSportSlotsPerDay, true);
+            memi = FreeTime(20*4, (24*4)-1, nbSportSlotsPerDay, true);
             memiComplete = ismemiComplete(memi);
         }
 
         if (!memiComplete){
-            memi = FreeTime(0, 23*4, nbSportSlotsPerDay, true);
+            memi = FreeTime(0, (24*4)-1, nbSportSlotsPerDay, true);
         }
 
         return memi;

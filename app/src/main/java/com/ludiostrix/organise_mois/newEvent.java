@@ -1,7 +1,9 @@
 package com.ludiostrix.organise_mois;
 
 
-public class newEvent {
+import java.io.Serializable;
+
+public class newEvent implements Serializable {
     public String name;
     public Integer color;
     public boolean sport;

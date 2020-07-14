@@ -66,6 +66,7 @@ public class popupActivity extends AppCompatActivity {
         TextView conditionTextView = findViewById(R.id.utilisationCondition);
         conditionTextView.setTextColor(getResources().getColor(R.color.black, null));
         conditionTextView.setText(result);
+        //conditionTextView.setText(Html.fromHtml(result));
     }
 
     public void saveToFile(){

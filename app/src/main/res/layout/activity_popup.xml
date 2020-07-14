@@ -19,12 +19,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/backToProfile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|top"
+                android:layout_margin="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:backgroundTint="@color/pastel"
                 android:onClick="clickedBackToProfileButtonXmlCallback"
                 android:src="@android:drawable/ic_menu_revert" />
@@ -38,15 +40,40 @@
                 android:layout_marginRight="20dp"
                 android:text="abc" />
 
-            <Button
-                android:id="@+id/acceptButton"
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20px" />
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/green"
-                android:textColor="@color/black"
-                android:onClick="clickedAcceptButtonXmlCallback"
-                android:text="@string/accept" />
+                android:orientation="horizontal">
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4" />
+
+                <Button
+                    android:id="@+id/acceptButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/green"
+                    android:textColor="@color/black"
+                    android:layout_weight="1"
+                    android:onClick="clickedAcceptButtonXmlCallback"
+                    android:text="@string/accept" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="20px" />
 
         </LinearLayout>
 

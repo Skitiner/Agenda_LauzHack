@@ -110,12 +110,12 @@ public class AgendaActivity extends AppCompatActivity {
 
         readFromFile();
 
-        userProfile.convertInPastDay();
+        /*userProfile.convertInPastDay();
 
         saveToFile();
         readFromFile(); // pas très opti, mais permet de généré aussi le pastAgenda et newEventPastAgenda
 
-        MainActivity.setAlarmOfTheDay(AgendaActivity.this);
+        MainActivity.setAlarmOfTheDay(AgendaActivity.this);*/
 
         setWeekSlots();
 
@@ -727,7 +727,8 @@ public class AgendaActivity extends AppCompatActivity {
                     textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
                     break;
                 case PAUSE:
-                    textView.setText(R.string.pause);
+                    //textView.setText(R.string.pause);
+                    textView.setText("-");
                     textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 

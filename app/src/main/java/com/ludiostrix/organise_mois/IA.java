@@ -402,8 +402,10 @@ public class IA {
                 for (int i = 0; i < dailyAgenda.size(); i ++){
                     if (dailyAgenda.get(i) == timeSlot.currentTask.EAT || dailyAgenda.get(i) == timeSlot.currentTask.MORNING_ROUTINE){
                         for(int j = 1; j < 5; j ++) {
-                            if (dailyAgenda.get(i + j) == timeSlot.currentTask.FREE) {
-                                afterLunchtime.add(i + j);
+                            if (i+j < dailyAgenda.size()) {
+                                if (dailyAgenda.get(i + j) == timeSlot.currentTask.FREE) {
+                                    afterLunchtime.add(i + j);
+                                }
                             }
                             else
                                 break;
@@ -619,13 +621,13 @@ public class IA {
                 score.set(i, score.get(i) / scoresPosition.get(i).size());
             }
 
-            //choisi le dernier max (ajoute de préférence après le newevent)
+            //choisi de préférence un max entre 5h et 20h (le dernier)
             double maxScore = 0;
             int maxScoreIndice = -1;
             for (int i = 0; i < score.size(); i++) {
                 if (score.get(i) >= maxScore && (score.get(i) > maxScore ||
                         (scoresPosition.get(i).get(0) < 20*4 + 1 && scoresPosition.get(i).get(0) >= 5*4) ||
-                        (scoresPosition.get(i).get(0) >= 20*4 && scoresPosition.get(maxScoreIndice).get(0) < 5*4) ||
+                        //(scoresPosition.get(i).get(0) >= 20*4 && scoresPosition.get(maxScoreIndice).get(0) < 5*4) ||
                         maxScoreIndice == -1)) {
                     maxScore = score.get(i);
                     maxScoreIndice = i;
@@ -707,6 +709,8 @@ public class IA {
 
         return meanPerDay;
     }
+
+
     /*private void setSport(int sport){
         preSelectDay();
 

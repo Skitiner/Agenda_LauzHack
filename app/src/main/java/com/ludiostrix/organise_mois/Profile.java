@@ -90,7 +90,7 @@ public class Profile implements Serializable {
         this.lateSportSlot = 0;
         this.lateWorkSlot = Float.valueOf(0);
         calculation = false;
-        this.FileName = "userProfileV0.txt";
+        this.FileName = "userProfileV2.txt";
         this.LastFileName = "userProfile.txt";
         initAgenda();
         initFullAgenda();
