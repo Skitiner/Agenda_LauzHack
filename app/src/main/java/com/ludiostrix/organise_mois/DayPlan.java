@@ -113,9 +113,15 @@ public class DayPlan {
                 /*while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
                     slot--;
                 }*/
-                while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot < dailyAgenda.size()) {
+                while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK || dailyAgenda.get(slot) == timeSlot.currentTask.SPORT ||
+                        dailyAgenda.get(slot) == timeSlot.currentTask.WORK_CATCH_UP ||
+                        dailyAgenda.get(slot) == timeSlot.currentTask.SPORT_CATCH_UP && slot < dailyAgenda.size() - 1) {
                     slot++;
                 }
+                if (slot < dailyAgenda.size() - 1){
+                    slot++;
+                }
+
                 if (!init) {
                     updateWorkSportToDo(slot);
                 }

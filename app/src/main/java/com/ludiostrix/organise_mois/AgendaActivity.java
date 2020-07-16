@@ -708,8 +708,8 @@ Classe s'occupant du rendu visuel de l'agenda.
                     textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
                     break;
                 case PAUSE:
-                    //textView.setText(R.string.pause);
-                    textView.setText("-");
+                    textView.setText(R.string.pause);
+                    //textView.setText("-");
                     textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
@@ -1268,11 +1268,12 @@ Fonctions liées aux nouveaux événements.
                             int day = (currentDay + convertedIndice()) % 7;
                             userProfile.updateFullAgenda(day);
                             userProfile.updateFuturAgenda(day);
+                            userProfile.updateFuturAgenda(day);
                             saveToFile();
                             if (date_offset < 7){
                                 plan();                   // si jour actuelle, ne pas update ce qui est déja passé
-                                MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                             }
+                            MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                         }
                         else if (startTime == -1){
                             Toast.makeText(AgendaActivity.this, R.string.wrongEventStart, Toast.LENGTH_SHORT).show();

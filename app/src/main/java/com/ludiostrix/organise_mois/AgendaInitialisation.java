@@ -144,11 +144,18 @@ Pré-autocompletion
     }
 
     private void daily_compare(ArrayList<timeSlot.currentTask> day_slots, List<Boolean> day_canceledSlots){
+        ArrayList<timeSlot.currentTask> copy = new ArrayList<>(day_slots.size());
+
+        for (timeSlot.currentTask task : day_slots) {
+            copy.add(task);
+        }
+
         for (int j = 0; j < day_slots.size(); j++) {
             if (day_slots.get(j) == timeSlot.currentTask.WORK_FIX || day_slots.get(j) == timeSlot.currentTask.EAT ||
                     day_slots.get(j) == timeSlot.currentTask.WORK_CATCH_UP || day_slots.get(j) == timeSlot.currentTask.SPORT_CATCH_UP ||
                     day_slots.get(j) == timeSlot.currentTask.NEWEVENT || day_canceledSlots.get(j)){
-                this.daily_slots_generated.set(j,day_slots.get(j));
+
+                this.daily_slots_generated.set(j,copy.get(j));
             }
         }
     }
