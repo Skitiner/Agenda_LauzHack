@@ -9,13 +9,13 @@ Cette classe représente la structure du fullAgenda.
  */
 
 public class timeSlot implements Serializable {
-    public enum currentTask {SPORT, WORK, EAT, FREE, WORK_FIX, MORNING_ROUTINE, SLEEP, PAUSE, NEWEVENT, WORK_CATCH_UP, SPORT_CATCH_UP}
+    public enum CurrentTask {SPORT, WORK, EAT, FREE, WORK_FIX, MORNING_ROUTINE, SLEEP, PAUSE, NEWEVENT, WORK_CATCH_UP, SPORT_CATCH_UP}
 
     protected int time;
-    protected currentTask task_1;
-    protected currentTask task_2;
-    protected currentTask task_3;
-    protected currentTask task_4;
+    protected CurrentTask task_1;
+    protected CurrentTask task_2;
+    protected CurrentTask task_3;
+    protected CurrentTask task_4;
 
     protected String new_task_1;
     protected String new_task_2;

@@ -51,54 +51,53 @@ public class Postpone_broadcast extends BroadcastReceiver {
         int startI = calendar.get(Calendar.HOUR_OF_DAY)*4 + calendar.get(Calendar.MINUTE)/15;
         int converted_indice = convertedIndice();
 
-        if(startI != 0){
-            startI--;
-        }
 
-        ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
+        ArrayList<timeSlot.CurrentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
         List<String> newEvent = new ArrayList<>(userProfile.newEventAgenda.get(converted_indice));
 
         // Determinate the time boudaries of the block to postpone
         int endI = startI;
 
-        while ((dailyTasks.get(endI) == dailyTasks.get(startI) || (dailyTasks.get(endI) != timeSlot.currentTask.FREE &&
-                dailyTasks.get(endI) != timeSlot.currentTask.SPORT && dailyTasks.get(endI) != timeSlot.currentTask.SPORT_CATCH_UP &&
-                dailyTasks.get(endI) != timeSlot.currentTask.WORK && dailyTasks.get(endI) != timeSlot.currentTask.WORK_CATCH_UP))
-                && endI < (dailyTasks.size() - 1)) {
+        while ((dailyTasks.get(endI) != timeSlot.CurrentTask.FREE &&
+                dailyTasks.get(endI) != timeSlot.CurrentTask.PAUSE && dailyTasks.get(endI) != timeSlot.CurrentTask.WORK &&
+                dailyTasks.get(endI) != timeSlot.CurrentTask.WORK_CATCH_UP) && endI < (dailyTasks.size())) {
             endI++;
         }
 
         // si le endI est le dernier du jours il est supprimé
-        if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.currentTask.NEWEVENT) {
-            for (newEvent event : userProfile.savedEvent) {
-                if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(endI))) {
-                    if (event.sport) {
-                        userProfile.lateSportSlot++;
-                    } else if (event.work) {
-                        userProfile.lateWorkSlot++;
+        if (endI == 95){
+            if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.NEWEVENT) {
+                for (newEvent event : userProfile.savedEvent) {
+                    if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(endI))) {
+                        if (event.sport) {
+                            userProfile.lateSportSlot++;
+                        } else if (event.work) {
+                            userProfile.lateWorkSlot++;
+                        }
                     }
                 }
+            } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.WORK ||
+                    userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.WORK_FIX) {
+                userProfile.lateWorkSlot++;
+            } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.SPORT) {
+                userProfile.lateSportSlot++;
             }
-        } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.currentTask.WORK ||
-                userProfile.agenda.get(converted_indice).get(endI) == timeSlot.currentTask.WORK_FIX) {
-            userProfile.lateWorkSlot++;
-        } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.currentTask.SPORT) {
-            userProfile.lateSportSlot++;
-        }
-        else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.currentTask.WORK_CATCH_UP) {
-            userProfile.workCatchUp++;
-        } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.currentTask.SPORT_CATCH_UP) {
-            userProfile.sportCatchUp++;
+            else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.WORK_CATCH_UP) {
+                userProfile.workCatchUp++;
+            } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.SPORT_CATCH_UP) {
+                userProfile.sportCatchUp++;
+            }
         }
 
-        for(int i = startI; i < (endI + 1); i++) {
+
+        for(int i = startI; i <= endI; i++) {
             userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
             userProfile.newEventAgenda.get(converted_indice).set(i, newEvent.get(i-1));
         }
 
 
         //le StartI est prolongé
-        if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.NEWEVENT) {
+        if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.NEWEVENT) {
             for (newEvent event : userProfile.savedEvent) {
                 if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(startI))) {
                     if (event.sport) {
@@ -108,15 +107,15 @@ public class Postpone_broadcast extends BroadcastReceiver {
                     }
                 }
             }
-        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK ||
-                userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_FIX) {
+        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK ||
+                userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_FIX) {
             userProfile.lateWorkSlot--;
-        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT) {
+        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT) {
             userProfile.lateSportSlot--;
         }
-        else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_CATCH_UP) {
+        else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_CATCH_UP) {
             userProfile.workCatchUp--;
-        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT_CATCH_UP) {
+        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT_CATCH_UP) {
             userProfile.sportCatchUp--;
         }
 
@@ -185,6 +184,7 @@ public class Postpone_broadcast extends BroadcastReceiver {
             dayOffset++;
         } while ((userProfile.lateWorkSlot > 0 || userProfile.lateWorkSlot < -8 || userProfile.lateSportSlot != 0 ||
                 userProfile.workCatchUp > 0 || userProfile.sportCatchUp > 0) && dayOffset < 7);
+
         saveToFile();
     }
 

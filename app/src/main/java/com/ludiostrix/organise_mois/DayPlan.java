@@ -23,12 +23,12 @@ Classe d'autocomplétion de l'agenda.
 public class DayPlan {
     protected Map<String,Integer> Task = new HashMap<>();
     protected List<List<List<Integer>>> Day;
-    protected ArrayList<timeSlot.currentTask> dailyAgenda;
-    protected ArrayList<timeSlot.currentTask> currentAgenda;
+    protected ArrayList<timeSlot.CurrentTask> dailyAgenda;
+    protected ArrayList<timeSlot.CurrentTask> currentAgenda;
     private List<String> newEventAgenda;
     private int currentDay;
     private Calendar settingDay;
-    //public List<List<timeSlot.currentTask>> calculatedAgenda;
+    //public List<List<timeSlot.CurrentTask>> calculatedAgenda;
     private List<newEvent> savedEvent;
     private int workSizeOpti;
     float workSlot;
@@ -51,7 +51,7 @@ public class DayPlan {
     private List<Integer> intenseSport = Arrays.asList(8, 8, 6, 6, 4);
 
 
-    public DayPlan(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.currentTask> day, ArrayList<timeSlot.currentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean firstinit, boolean convertInPastDay, boolean init){
+    public DayPlan(List<List<List<Integer>>> weight, List<Boolean> canceledSlots, List<Integer>weekRank, Calendar lastConnection, Calendar settingDay, ArrayList<timeSlot.CurrentTask> day, ArrayList<timeSlot.CurrentTask> currentAgenda, List<String> newEventDay, int dayNb, List<newEvent> savedevent, boolean freeday, int workSize, float wSlot, int workSlotCatchUp, int sCategory, int sSlot, int sportCatchUp, boolean firstinit, boolean convertInPastDay, boolean init){
         this.Task.put("Sport",0);
         this.Task.put("Work",1);           //Task.get("Sport")
 
@@ -96,10 +96,10 @@ public class DayPlan {
             if (slot == 96){
                 for (int i = 0; i < dailyAgenda.size(); i++){
                     if (firstinit){
-                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                        dailyAgenda.set(i, timeSlot.CurrentTask.PAUSE);
                     }
-                    else if(currentAgenda.get(i) == timeSlot.currentTask.FREE){
-                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                    else if(currentAgenda.get(i) == timeSlot.CurrentTask.FREE){
+                        dailyAgenda.set(i, timeSlot.CurrentTask.PAUSE);
                     }
                     else
                         dailyAgenda.set(i, currentAgenda.get(i));
@@ -110,15 +110,15 @@ public class DayPlan {
                 }
             }
             else {
-                /*while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK && slot > 0) {
+                /*while (dailyAgenda.get(slot) == timeSlot.CurrentTask.WORK && slot > 0) {
                     slot--;
                 }*/
-                while (dailyAgenda.get(slot) == timeSlot.currentTask.WORK || dailyAgenda.get(slot) == timeSlot.currentTask.SPORT ||
-                        dailyAgenda.get(slot) == timeSlot.currentTask.WORK_CATCH_UP ||
-                        dailyAgenda.get(slot) == timeSlot.currentTask.SPORT_CATCH_UP && slot < dailyAgenda.size() - 1) {
+                while (dailyAgenda.get(slot) == timeSlot.CurrentTask.WORK || dailyAgenda.get(slot) == timeSlot.CurrentTask.SPORT ||
+                        dailyAgenda.get(slot) == timeSlot.CurrentTask.WORK_CATCH_UP ||
+                        dailyAgenda.get(slot) == timeSlot.CurrentTask.SPORT_CATCH_UP && slot < dailyAgenda.size() - 1) {
                     slot++;
                 }
-                if (slot < dailyAgenda.size() - 1){
+                if (slot < dailyAgenda.size() - 1 && (dailyAgenda.get(slot) == timeSlot.CurrentTask.WORK || dailyAgenda.get(slot) == timeSlot.CurrentTask.WORK_CATCH_UP)){
                     slot++;
                 }
 
@@ -127,10 +127,10 @@ public class DayPlan {
                 }
                 for (int i = 0; i < slot; i++) {
                     if (firstinit){
-                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                        dailyAgenda.set(i, timeSlot.CurrentTask.PAUSE);
                     }
-                    else if (currentAgenda.get(i) == timeSlot.currentTask.FREE) {
-                        dailyAgenda.set(i, timeSlot.currentTask.PAUSE);
+                    else if (currentAgenda.get(i) == timeSlot.CurrentTask.FREE) {
+                        dailyAgenda.set(i, timeSlot.CurrentTask.PAUSE);
                     } else
                         dailyAgenda.set(i, currentAgenda.get(i));
                 }
@@ -154,15 +154,15 @@ public class DayPlan {
     private void updateWorkSportToDo(int slot){
         if (!convertInPastDay && !init) {
             for (int i = slot; i < currentAgenda.size(); i++) {
-                if (currentAgenda.get(i) == timeSlot.currentTask.SPORT && !canceledAgenda.get(i)) {
+                if (currentAgenda.get(i) == timeSlot.CurrentTask.SPORT && !canceledAgenda.get(i)) {
                     sportSlot++;
-                } else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                } else if ((currentAgenda.get(i) == timeSlot.CurrentTask.WORK || currentAgenda.get(i) == timeSlot.CurrentTask.WORK_FIX) && !canceledAgenda.get(i)) {
                     workSlot++;
-                } else if (currentAgenda.get(i) == timeSlot.currentTask.SPORT_CATCH_UP && !canceledAgenda.get(i)) {
+                } else if (currentAgenda.get(i) == timeSlot.CurrentTask.SPORT_CATCH_UP && !canceledAgenda.get(i)) {
                     sportCatchUp++;
-                } else if ((currentAgenda.get(i) == timeSlot.currentTask.WORK_CATCH_UP || currentAgenda.get(i) == timeSlot.currentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                } else if ((currentAgenda.get(i) == timeSlot.CurrentTask.WORK_CATCH_UP || currentAgenda.get(i) == timeSlot.CurrentTask.WORK_FIX) && !canceledAgenda.get(i)) {
                     workSlotCatchUp++;
-                } else if (currentAgenda.get(i) == timeSlot.currentTask.NEWEVENT && !canceledAgenda.get(i)) {
+                } else if (currentAgenda.get(i) == timeSlot.CurrentTask.NEWEVENT && !canceledAgenda.get(i)) {
                     for (newEvent event : savedEvent) {
                         if (newEventAgenda.get(i).equals(event.name)) {
                             if (event.sport) {
@@ -259,7 +259,7 @@ Section de placement des heures de travail et de sport.
             for (int i = 0; i < score.size(); i++){
                 if (Collections.max(score) == score.get(i)){
                     for (int j = 0; j < groupPosition.get(i).size(); j++) {
-                        dailyAgenda.set(groupPosition.get(i).get(j), timeSlot.currentTask.WORK);
+                        dailyAgenda.set(groupPosition.get(i).get(j), timeSlot.CurrentTask.WORK);
                         workSlot--;
                     }
                     score.remove(i);
@@ -272,7 +272,7 @@ Section de placement des heures de travail et de sport.
             for (int i = 0; i < score.size(); i++){
                 if (Collections.max(score) == score.get(i)){
                     for (int j = 0; j < groupPosition.get(i).size(); j++) {
-                        dailyAgenda.set(groupPosition.get(i).get(j), timeSlot.currentTask.WORK_CATCH_UP);
+                        dailyAgenda.set(groupPosition.get(i).get(j), timeSlot.CurrentTask.WORK_CATCH_UP);
                         workSlotCatchUp--;
                         if (workSlotCatchUp <= 0){
                             break;
@@ -285,7 +285,7 @@ Section de placement des heures de travail et de sport.
         }
 
         for (int i = 0; i < pausePosition.size(); i++){
-            dailyAgenda.set(pausePosition.get(i), timeSlot.currentTask.PAUSE);
+            dailyAgenda.set(pausePosition.get(i), timeSlot.CurrentTask.PAUSE);
         }
 
     }
@@ -311,10 +311,10 @@ Section de placement des heures de travail et de sport.
         }*/
 
         for (int j = 0; j < dailyAgenda.size(); j++){
-            if (dailyAgenda.get(j) == timeSlot.currentTask.WORK_FIX){
+            if (dailyAgenda.get(j) == timeSlot.CurrentTask.WORK_FIX){
                 workPosition.add(j);
             }
-            if (dailyAgenda.get(j) == timeSlot.currentTask.NEWEVENT){
+            if (dailyAgenda.get(j) == timeSlot.CurrentTask.NEWEVENT){
                 if (workEvent.size() != 0) {
                     for (String eventName : workEvent) {
                         if (newEventAgenda.get(j).equals(eventName)){
@@ -330,7 +330,7 @@ Section de placement des heures de travail et de sport.
         List<Integer> freeGroupSlot = new ArrayList<>();
 
         for (int i = 0; i < dailyAgenda.size(); i++) {
-            if (dailyAgenda.get(i) == timeSlot.currentTask.FREE && workPosition.indexOf(i - 1) == -1 && workPosition.indexOf(i + 1) == -1 ){
+            if (dailyAgenda.get(i) == timeSlot.CurrentTask.FREE && workPosition.indexOf(i - 1) == -1 && workPosition.indexOf(i + 1) == -1 ){
                 freeGroupSlot.add(i);
             }
             else {
@@ -388,10 +388,10 @@ Section de placement des heures de travail et de sport.
                 List<Integer> afterLunchtime = new ArrayList<>();
 
                 for (int i = 0; i < dailyAgenda.size(); i ++){
-                    if (dailyAgenda.get(i) == timeSlot.currentTask.EAT || dailyAgenda.get(i) == timeSlot.currentTask.MORNING_ROUTINE){
+                    if (dailyAgenda.get(i) == timeSlot.CurrentTask.EAT || dailyAgenda.get(i) == timeSlot.CurrentTask.MORNING_ROUTINE){
                         for(int j = 1; j < 5; j ++) {
                             if (i+j < dailyAgenda.size()) {
-                                if (dailyAgenda.get(i + j) == timeSlot.currentTask.FREE) {
+                                if (dailyAgenda.get(i + j) == timeSlot.CurrentTask.FREE) {
                                     afterLunchtime.add(i + j);
                                 }
                             }
@@ -476,12 +476,12 @@ Section de placement des heures de travail et de sport.
             for (int i = nbSportSlot; i >= 0; i--){
                 position = new ArrayList<>();
                 if (i != 0) {
-                    if (dailyAgenda.get(start - i) == timeSlot.currentTask.FREE && start - i >= 0) {
+                    if (dailyAgenda.get(start - i) == timeSlot.CurrentTask.FREE && start - i >= 0) {
                         position.add(start - i);
                         int decalage = 1;
                         for (int l = 1; l < nbSportSlot; l++) {
                             if (start - i + l < start) {
-                                if (dailyAgenda.get(start - i + l) == timeSlot.currentTask.FREE) {
+                                if (dailyAgenda.get(start - i + l) == timeSlot.CurrentTask.FREE) {
                                     position.add(start - i + l);
                                     decalage = position.size();
                                     if (l == nbSportSlot-1){
@@ -493,7 +493,7 @@ Section de placement des heures de travail et de sport.
                             }
                             else {
                                 if (stop + l - decalage + 1 < dailyAgenda.size()) {
-                                    if (dailyAgenda.get(stop + l - decalage + 1) == timeSlot.currentTask.FREE) {
+                                    if (dailyAgenda.get(stop + l - decalage + 1) == timeSlot.CurrentTask.FREE) {
                                         position.add(stop + l - decalage + 1);
                                         if (l == nbSportSlot - 1) {
                                             scoresPosition.add(position);
@@ -510,7 +510,7 @@ Section de placement des heures de travail et de sport.
                     position.add(stop + 1);
                     for (int l = 2; l <= nbSportSlot; l++) {
                         if (stop + l < dailyAgenda.size()) {
-                            if (dailyAgenda.get(stop + l) == timeSlot.currentTask.FREE) {
+                            if (dailyAgenda.get(stop + l) == timeSlot.CurrentTask.FREE) {
                                 position.add(stop + l);
                                 if (l == nbSportSlot - 1) {
                                     scoresPosition.add(position);
@@ -553,11 +553,11 @@ Section de placement des heures de travail et de sport.
             if (maxScoreIndice != -1) {
                 for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
                     if (i < scoresPosition.get(maxScoreIndice).size() - sportCatchUp) {
-                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.CurrentTask.SPORT);
                         sportSlot--;
                     }
                     else{
-                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT_CATCH_UP);
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.CurrentTask.SPORT_CATCH_UP);
                         sportCatchUp--;
                     }
                 }
@@ -578,11 +578,11 @@ Section de placement des heures de travail et de sport.
 
         for (int i = 0; i < dailyAgenda.size() - nbSportSlot + 1; i++) {
             position = new ArrayList<>();
-            if (dailyAgenda.get(i) == timeSlot.currentTask.FREE) {
+            if (dailyAgenda.get(i) == timeSlot.CurrentTask.FREE) {
                 position.add(i);
                 for (int j = i + 1; j < i + nbSportSlot; j++){
                     if (j < dailyAgenda.size()) {
-                        if (dailyAgenda.get(j) == timeSlot.currentTask.FREE) {
+                        if (dailyAgenda.get(j) == timeSlot.CurrentTask.FREE) {
                             position.add(j);
                             if (j == i + nbSportSlot - 1) {
                                 scoresPosition.add(position);
@@ -628,11 +628,11 @@ Section de placement des heures de travail et de sport.
             if (maxScoreIndice != -1) {
                 for (int i = 0; i < scoresPosition.get(maxScoreIndice).size(); i++) {
                     if (i < scoresPosition.get(maxScoreIndice).size() - sportCatchUp) {
-                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT);
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.CurrentTask.SPORT);
                         sportSlot--;
                     }
                     else{
-                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.currentTask.SPORT_CATCH_UP);
+                        dailyAgenda.set(scoresPosition.get(maxScoreIndice).get(i), timeSlot.CurrentTask.SPORT_CATCH_UP);
                         sportCatchUp--;
                     }
                 }
@@ -947,14 +947,14 @@ Début du deuxième algorithme abandonné en cours route.
         boolean isFree = true;
         int count = 0;
         for (int i = 0; i < nbSlot; i++){
-            if (userProfile.agenda.get(searchDay).get(stop + i) == timeSlot.currentTask.FREE){
+            if (userProfile.agenda.get(searchDay).get(stop + i) == timeSlot.CurrentTask.FREE){
                 count++;
             }
             else
                 break;
         }
         for (int i = 0; i < nbSlot; i++){
-            if (userProfile.agenda.get(searchDay).get(start - i) == timeSlot.currentTask.FREE){
+            if (userProfile.agenda.get(searchDay).get(start - i) == timeSlot.CurrentTask.FREE){
                 count++;
             }
             else
@@ -977,7 +977,7 @@ Début du deuxième algorithme abandonné en cours route.
                 isFree = true;
                 break;
             }
-            else if (userProfile.agenda.get(searchDay).get(i) == timeSlot.currentTask.FREE) {
+            else if (userProfile.agenda.get(searchDay).get(i) == timeSlot.CurrentTask.FREE) {
                 count++;
             } else {
                 if (count > countMax) {
@@ -1018,7 +1018,7 @@ Début du deuxième algorithme abandonné en cours route.
         List<Integer> sportSlot = new ArrayList<>();
 
         for (int i = 0; i < userProfile.agenda.get(dayToSearch).size(); i++){
-            if (userProfile.agenda.get(dayToSearch).get(i) == timeSlot.currentTask.NEWEVENT){
+            if (userProfile.agenda.get(dayToSearch).get(i) == timeSlot.CurrentTask.NEWEVENT){
                 //cherche le nom de l'evenement
                 String eventName = "";
                 if (i%4 == 0){

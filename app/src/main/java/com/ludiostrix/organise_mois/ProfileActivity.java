@@ -48,6 +48,8 @@ public class ProfileActivity extends AppCompatActivity {
     private int positionSport;
     private boolean[] NewFreeDay;
 
+    private boolean settings = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +73,9 @@ public class ProfileActivity extends AppCompatActivity {
             if (savedInstanceState.getSerializable("OptWorkTime") != null) {
                 userProfile.optWorkTime = (String) savedInstanceState.getSerializable("OptWorkTime");
             }
+            if (savedInstanceState.getSerializable("settings") != null) {
+                settings = (boolean) savedInstanceState.getSerializable("settings");
+            }
         }
         else {
             positionSport = userProfile.sportRoutine;
@@ -78,10 +83,25 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         setProfileInfo();
-        if (!userProfile.agendaInit) {
+        if (!userProfile.agendaInit && settings) {
             //setProfileInfo();
             resetWorkAndSportToDo();
+            settings = false;
+
+            userProfile.sportRoutine = positionSport;
+            int newOffsetSettings = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
+            for (int i = 0; i < newOffsetSettings ; i++) {
+                ArrayList<timeSlot> tempDay = userProfile.fullAgenda.get(0);
+                userProfile.fullAgenda.remove(0);
+                userProfile.fullAgenda.add(tempDay);
+                ArrayList<timeSlot> futurTempDay = userProfile.futurFullAgenda.get(0);
+                userProfile.futurFullAgenda.remove(0);
+                userProfile.futurFullAgenda.add(futurTempDay);
+            }
+            userProfile.settingDay = Calendar.getInstance();
+            userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
         }
+        saveToFile();
     }
 
     private void resetWorkAndSportToDo(){
@@ -91,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
                 start = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*4 + Calendar.getInstance().get(Calendar.MINUTE)*4/60 + 1;
             }
             for(int j = start; j < userProfile.agenda.get(i).size(); j++){
-                if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.NEWEVENT) {
+                if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.NEWEVENT) {
                     for (newEvent event : userProfile.savedEvent) {
                         if (event.name.equals(userProfile.newEventAgenda.get(i).get(j))) {
                             if (event.sport) {
@@ -101,15 +121,15 @@ public class ProfileActivity extends AppCompatActivity {
                             }
                         }
                     }
-                } else if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK ||
-                        userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK_FIX) {
+                } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK ||
+                        userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX) {
                     userProfile.lateWorkSlot++;
-                } else if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.SPORT) {
+                } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.SPORT) {
                     userProfile.lateSportSlot++;
                 }
-                else if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.WORK_CATCH_UP) {
+                else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK_CATCH_UP) {
                     userProfile.workCatchUp++;
-                } else if (userProfile.agenda.get(i).get(j) == timeSlot.currentTask.SPORT_CATCH_UP) {
+                } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.SPORT_CATCH_UP) {
                     userProfile.sportCatchUp++;
                 }
             }
@@ -126,7 +146,7 @@ public class ProfileActivity extends AppCompatActivity {
         for(int j = 0; j < userProfile.agenda.get(today).size(); j++){
             int sport = 0;
             int work = 0;
-            if (userProfile.agenda.get(today).get(j) == timeSlot.currentTask.NEWEVENT) {
+            if (userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.NEWEVENT) {
                 for (newEvent event : userProfile.savedEvent) {
                     if (event.name.equals(userProfile.newEventAgenda.get(today).get(j))) {
                         if (event.sport) {
@@ -136,10 +156,10 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } else if (userProfile.agenda.get(today).get(j) == timeSlot.currentTask.WORK ||
-                    userProfile.agenda.get(today).get(j) == timeSlot.currentTask.WORK_FIX) {
+            } else if (userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.WORK ||
+                    userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.WORK_FIX) {
                 work = 1;
-            } else if (userProfile.agenda.get(today).get(j) == timeSlot.currentTask.SPORT) {
+            } else if (userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.SPORT) {
                 sport = 1;
             }
 
@@ -151,8 +171,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-        sportRatio = 1 - (float)sportDone/(float)sportTotal;
-        workRatio = 1 - (float)workDone/(float)workTotal;
+        if (sportTotal != 0){
+            sportRatio = 1 - (float)sportDone/(float)sportTotal;
+        }
+
+        if (workTotal != 0) {
+            workRatio = 1 - (float) workDone / (float) workTotal;
+        }
 
         int nbWorkDay = 0;
         for (int j = 0; j < userProfile.freeDay.length; j++){
@@ -164,7 +189,7 @@ public class ProfileActivity extends AppCompatActivity {
         if (userProfile.settingDay.get(Calendar.DAY_OF_YEAR) != Calendar.getInstance().get(Calendar.DAY_OF_YEAR)) {
             if (!userProfile.freeDay[conversionDayIndice()]) {
                 userProfile.lateWorkSlot -= ((float)(nbWorkDay-1) / (float)nbWorkDay)*Float.parseFloat(userProfile.nbWorkHours);
-                userProfile.lateWorkSlot -= workRatio * (Float.valueOf(1) / (float)nbWorkDay)*Float.parseFloat(userProfile.nbWorkHours);
+                userProfile.lateWorkSlot -= workRatio * (Float.parseFloat(userProfile.nbWorkHours) / (float)nbWorkDay);
             }
             else {
                 userProfile.lateWorkSlot -= Float.parseFloat(userProfile.nbWorkHours);
@@ -233,9 +258,16 @@ public class ProfileActivity extends AppCompatActivity {
         state.putSerializable("freeDay", NewFreeDay);
         state.putSerializable("sportRoutine", positionSport);
         state.putSerializable("OptWorkTime", userProfile.optWorkTime);
+        state.putSerializable("settings", settings);
     }
 
     public static final String PREFS_NAME = "MyPrefsFile";
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        readFromFile();
+    }
 
     /*protected void onPause(){
         super.onPause();
@@ -391,8 +423,8 @@ public class ProfileActivity extends AppCompatActivity {
         int indice = ((7-conversionDayIndice()) + position)%7;
 
         for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
-            if(userProfile.agenda.get(indice).get(i) != timeSlot.currentTask.NEWEVENT) {
-                userProfile.agenda.get(indice).set(i, timeSlot.currentTask.FREE);
+            if(userProfile.agenda.get(indice).get(i) != timeSlot.CurrentTask.NEWEVENT) {
+                userProfile.agenda.get(indice).set(i, timeSlot.CurrentTask.FREE);
             }
         }
 
@@ -527,20 +559,11 @@ public class ProfileActivity extends AppCompatActivity {
             } else if (!correctwakeUp) {
                 Toast.makeText(ProfileActivity.this, R.string.wrongwakeUp, Toast.LENGTH_SHORT).show();
             } else {
-                userProfile.sportRoutine = positionSport;
-                int newOffsetSettings = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
-                for (int i = 0; i < newOffsetSettings ; i++) {
-                    ArrayList<timeSlot> tempDay = userProfile.fullAgenda.get(0);
-                    userProfile.fullAgenda.remove(0);
-                    userProfile.fullAgenda.add(tempDay);
-                    ArrayList<timeSlot> futurTempDay = userProfile.futurFullAgenda.get(0);
-                    userProfile.futurFullAgenda.remove(0);
-                    userProfile.futurFullAgenda.add(futurTempDay);
-                }
-                userProfile.settingDay = Calendar.getInstance();
-                userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
 
                 saveToFile();
+                readFromFile();
+
+                int a = convertedIndice();
 
                 AgendaInitialisation agendaInitialisation = new AgendaInitialisation(getApplicationContext());
                 int isOK = agendaInitialisation.slotCalculation();

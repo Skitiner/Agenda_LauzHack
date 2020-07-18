@@ -37,9 +37,9 @@ public class Profile implements Serializable {
     protected boolean calculation;
     protected String FileName;
     protected String LastFileName;
-    protected ArrayList<ArrayList<timeSlot.currentTask>> agenda;
-    protected ArrayList<ArrayList<timeSlot.currentTask>> futurAgenda;
-    protected ArrayList<ArrayList<timeSlot.currentTask>> pastAgenda;
+    protected ArrayList<ArrayList<timeSlot.CurrentTask>> agenda;
+    protected ArrayList<ArrayList<timeSlot.CurrentTask>> futurAgenda;
+    protected ArrayList<ArrayList<timeSlot.CurrentTask>> pastAgenda;
     protected ArrayList<ArrayList<String>> newEventAgenda;
     protected ArrayList<ArrayList<String>> newEventFuturAgenda;
     protected ArrayList<ArrayList<String>> newEventPastAgenda;
@@ -121,11 +121,11 @@ Section d'initialisation
 
         this.freeWeekDay = new ArrayList<>();
 
-        timeSlot.currentTask task;
+        timeSlot.CurrentTask task;
 
         for (int i = 0; i < 24; i++) {
 
-            task = timeSlot.currentTask.FREE;
+            task = timeSlot.CurrentTask.FREE;
             timeSlot slot = new timeSlot();
             slot.time = i;
             slot.task_1 = task;
@@ -189,13 +189,13 @@ Section d'initialisation
         futurFullAgenda = new ArrayList<>();
         pastFullAgenda = new ArrayList<>();
 
-        timeSlot.currentTask task;
+        timeSlot.CurrentTask task;
 
         for(int j = 0; j < 7; j++ ) {
             ArrayList<timeSlot> mySlots = new ArrayList<>();
             for (int i = 0; i < 24; i++) {
 
-                task = timeSlot.currentTask.FREE;
+                task = timeSlot.CurrentTask.FREE;
                 timeSlot slot = new timeSlot();
                 slot.time = i;
                 slot.task_1 = task;
@@ -213,7 +213,7 @@ Section d'initialisation
             ArrayList<timeSlot> mySlots = new ArrayList<>();
             for (int i = 0; i < 24; i++) {
 
-                task = timeSlot.currentTask.FREE;
+                task = timeSlot.CurrentTask.FREE;
                 timeSlot slot = new timeSlot();
                 slot.time = i;
                 slot.task_1 = task;
@@ -238,14 +238,14 @@ Section d'initialisation
         canceled_slots = new ArrayList<>();
         pastCanceledSlots = new ArrayList<>();
 
-        timeSlot.currentTask task;
+        timeSlot.CurrentTask task;
         for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
+            ArrayList<timeSlot.CurrentTask> tasks = new ArrayList<>();
             List<Boolean> cancel = new ArrayList<>();
             ArrayList<String> newEvent = new ArrayList<>();
 
             for (int i = 0; i < 96; i++) {
-                task = timeSlot.currentTask.FREE;
+                task = timeSlot.CurrentTask.FREE;
                 tasks.add(task);
                 cancel.add(Boolean.FALSE);
                 newEvent.add("");
@@ -256,11 +256,11 @@ Section d'initialisation
         }
 
         for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
+            ArrayList<timeSlot.CurrentTask> tasks = new ArrayList<>();
             ArrayList<String> newFuturEvent = new ArrayList<>();
 
             for (int i = 0; i < 96; i++) {
-                task = timeSlot.currentTask.FREE;
+                task = timeSlot.CurrentTask.FREE;
                 tasks.add(task);
                 newFuturEvent.add("");
             }
@@ -333,28 +333,28 @@ Section de sauvegarde du profil
             bufferedWriter.write("/");
             for (int i = 0; i < pastFullAgenda.size() ; i++){
                 for (int j = 0; j < pastFullAgenda.get(i).size(); j++){
-                    if (pastFullAgenda.get(i).get(j).task_1 == timeSlot.currentTask.NEWEVENT){
+                    if (pastFullAgenda.get(i).get(j).task_1 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).new_task_1);
                     }
                     else {
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).task_1.toString());
                     }
                     bufferedWriter.write(",");
-                    if (pastFullAgenda.get(i).get(j).task_2 == timeSlot.currentTask.NEWEVENT){
+                    if (pastFullAgenda.get(i).get(j).task_2 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).new_task_2);
                     }
                     else {
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).task_2.toString());
                     }
                     bufferedWriter.write(",");
-                    if (pastFullAgenda.get(i).get(j).task_3 == timeSlot.currentTask.NEWEVENT){
+                    if (pastFullAgenda.get(i).get(j).task_3 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).new_task_3);
                     }
                     else {
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).task_3.toString());
                     }
                     bufferedWriter.write(",");
-                    if (pastFullAgenda.get(i).get(j).task_4 == timeSlot.currentTask.NEWEVENT){
+                    if (pastFullAgenda.get(i).get(j).task_4 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(pastFullAgenda.get(i).get(j).new_task_4);
                     }
                     else {
@@ -376,28 +376,28 @@ Section de sauvegarde du profil
             bufferedWriter.write("/");
             for (int i = 0; i < fullAgenda.size() ; i++){
                 for (int j = 0; j < fullAgenda.get(i).size(); j++){
-                    if (fullAgenda.get(i).get(j).task_1 == timeSlot.currentTask.NEWEVENT){
+                    if (fullAgenda.get(i).get(j).task_1 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(fullAgenda.get(i).get(j).new_task_1);
                     }
                     else {
                         bufferedWriter.write(fullAgenda.get(i).get(j).task_1.toString());
                     }
                     bufferedWriter.write(",");
-                    if (fullAgenda.get(i).get(j).task_2 == timeSlot.currentTask.NEWEVENT){
+                    if (fullAgenda.get(i).get(j).task_2 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(fullAgenda.get(i).get(j).new_task_2);
                     }
                     else {
                         bufferedWriter.write(fullAgenda.get(i).get(j).task_2.toString());
                     }
                     bufferedWriter.write(",");
-                    if (fullAgenda.get(i).get(j).task_3 == timeSlot.currentTask.NEWEVENT){
+                    if (fullAgenda.get(i).get(j).task_3 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(fullAgenda.get(i).get(j).new_task_3);
                     }
                     else {
                         bufferedWriter.write(fullAgenda.get(i).get(j).task_3.toString());
                     }
                     bufferedWriter.write(",");
-                    if (fullAgenda.get(i).get(j).task_4 == timeSlot.currentTask.NEWEVENT){
+                    if (fullAgenda.get(i).get(j).task_4 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(fullAgenda.get(i).get(j).new_task_4);
                     }
                     else {
@@ -409,28 +409,28 @@ Section de sauvegarde du profil
             bufferedWriter.write("/");
             for (int i = 0; i < futurFullAgenda.size() ; i++){
                 for (int j = 0; j < futurFullAgenda.get(i).size(); j++){
-                    if (futurFullAgenda.get(i).get(j).task_1 == timeSlot.currentTask.NEWEVENT){
+                    if (futurFullAgenda.get(i).get(j).task_1 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).new_task_1);
                     }
                     else {
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).task_1.toString());
                     }
                     bufferedWriter.write(",");
-                    if (futurFullAgenda.get(i).get(j).task_2 == timeSlot.currentTask.NEWEVENT){
+                    if (futurFullAgenda.get(i).get(j).task_2 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).new_task_2);
                     }
                     else {
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).task_2.toString());
                     }
                     bufferedWriter.write(",");
-                    if (futurFullAgenda.get(i).get(j).task_3 == timeSlot.currentTask.NEWEVENT){
+                    if (futurFullAgenda.get(i).get(j).task_3 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).new_task_3);
                     }
                     else {
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).task_3.toString());
                     }
                     bufferedWriter.write(",");
-                    if (futurFullAgenda.get(i).get(j).task_4 == timeSlot.currentTask.NEWEVENT){
+                    if (futurFullAgenda.get(i).get(j).task_4 == timeSlot.CurrentTask.NEWEVENT){
                         bufferedWriter.write(futurFullAgenda.get(i).get(j).new_task_4);
                     }
                     else {
@@ -804,14 +804,14 @@ Section de récupération du profil
         pastAgenda = new ArrayList<>();
         newEventPastAgenda = new ArrayList<>();
 
-        timeSlot.currentTask task;
+        timeSlot.CurrentTask task;
 
         for(int j = 0; j < this.pastAgendaSize; j++ ) {
             List<timeSlot> mySlots = new ArrayList<>();
 
             for (int i = 0; i < 24; i++) {
 
-                task = timeSlot.currentTask.FREE;
+                task = timeSlot.CurrentTask.FREE;
                 timeSlot slot = new timeSlot();
                 slot.time = i;
                 slot.task_1 = task;
@@ -825,11 +825,11 @@ Section de récupération du profil
         }
 
         for(int j = 0; j < this.pastAgendaSize; j++ ) {
-            ArrayList<timeSlot.currentTask> tasks = new ArrayList<>();
+            ArrayList<timeSlot.CurrentTask> tasks = new ArrayList<>();
             ArrayList<String> newEvent = new ArrayList<>();
 
             for (int i = 0; i < 96; i++) {
-                task = timeSlot.currentTask.FREE;
+                task = timeSlot.CurrentTask.FREE;
                 tasks.add(task);
                 newEvent.add("");
             }
@@ -843,35 +843,35 @@ Section de récupération du profil
             int k = i%96;
 
             if ("SPORT".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.SPORT);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.SPORT);
 
             } else if ("WORK".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.WORK);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.WORK);
 
             } else if ("EAT".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.EAT);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.EAT);
 
             } else if ("FREE".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.FREE);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.FREE);
 
             } else if ("WORK_FIX".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.WORK_FIX);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.WORK_FIX);
 
             } else if ("MORNING_ROUTINE".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.MORNING_ROUTINE);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.MORNING_ROUTINE);
 
             } else if ("SLEEP".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.SLEEP);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.SLEEP);
 
             } else if ("PAUSE".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.PAUSE);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.PAUSE);
             } else if ("WORK_CATCH_UP".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.WORK_CATCH_UP);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.WORK_CATCH_UP);
             } else if ("SPORT_CATCH_UP".equals(past_agenda_back.get(i))) {
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.SPORT_CATCH_UP);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.SPORT_CATCH_UP);
             }
             else{
-                this.pastAgenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
+                this.pastAgenda.get(j).set(k, timeSlot.CurrentTask.NEWEVENT);
                 newEventPastAgenda.get(j).set(k, past_agenda_back.get(i));
                 if(k%4 == 0) {
                     pastFullAgenda.get(j).get((int) k / 4).new_task_1 = past_agenda_back.get(i);
@@ -909,37 +909,37 @@ Section de récupération du profil
             int k = i%96;
 
             if ("SPORT".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.SPORT);
+                agenda.get(j).set(k, timeSlot.CurrentTask.SPORT);
 
             } else if ("WORK".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.WORK);
+                agenda.get(j).set(k, timeSlot.CurrentTask.WORK);
 
             } else if ("EAT".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.EAT);
+                agenda.get(j).set(k, timeSlot.CurrentTask.EAT);
 
             } else if ("FREE".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.FREE);
+                agenda.get(j).set(k, timeSlot.CurrentTask.FREE);
 
             } else if ("WORK_FIX".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.WORK_FIX);
+                agenda.get(j).set(k, timeSlot.CurrentTask.WORK_FIX);
 
             } else if ("MORNING_ROUTINE".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.MORNING_ROUTINE);
+                agenda.get(j).set(k, timeSlot.CurrentTask.MORNING_ROUTINE);
 
             } else if ("SLEEP".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.SLEEP);
+                agenda.get(j).set(k, timeSlot.CurrentTask.SLEEP);
 
             } else if ("PAUSE".equals(agenda_back.get(i))) {
-                agenda.get(j).set(k, timeSlot.currentTask.PAUSE);
+                agenda.get(j).set(k, timeSlot.CurrentTask.PAUSE);
             }
             else if ("WORK_CATCH_UP".equals(agenda_back.get(i))) {
-                this.agenda.get(j).set(k, timeSlot.currentTask.WORK_CATCH_UP);
+                this.agenda.get(j).set(k, timeSlot.CurrentTask.WORK_CATCH_UP);
             }
             else if ("SPORT_CATCH_UP".equals(agenda_back.get(i))) {
-                this.agenda.get(j).set(k, timeSlot.currentTask.SPORT_CATCH_UP);
+                this.agenda.get(j).set(k, timeSlot.CurrentTask.SPORT_CATCH_UP);
             }
             else{
-                agenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
+                agenda.get(j).set(k, timeSlot.CurrentTask.NEWEVENT);
                 newEventAgenda.get(j).set(k, agenda_back.get(i));
                 if(k%4 == 0) {
                     fullAgenda.get(j).get((int) k / 4).new_task_1 = agenda_back.get(i);
@@ -978,37 +978,37 @@ Section de récupération du profil
             int k = i%96;
 
             if ("SPORT".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.SPORT);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.SPORT);
 
             } else if ("WORK".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.WORK);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.WORK);
 
             } else if ("EAT".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.EAT);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.EAT);
 
             } else if ("FREE".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.FREE);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.FREE);
 
             } else if ("WORK_FIX".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.WORK_FIX);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.WORK_FIX);
 
             } else if ("MORNING_ROUTINE".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.MORNING_ROUTINE);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.MORNING_ROUTINE);
 
             } else if ("SLEEP".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.SLEEP);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.SLEEP);
 
             } else if ("PAUSE".equals(futur_agenda_back.get(i))) {
-                futurAgenda.get(j).set(k, timeSlot.currentTask.PAUSE);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.PAUSE);
             }
             else if ("WORK_CATCH_UP".equals(futur_agenda_back.get(i))) {
-                this.futurAgenda.get(j).set(k, timeSlot.currentTask.WORK_CATCH_UP);
+                this.futurAgenda.get(j).set(k, timeSlot.CurrentTask.WORK_CATCH_UP);
             }
             else if ("SPORT_CATCH_UP".equals(futur_agenda_back.get(i))) {
-                this.futurAgenda.get(j).set(k, timeSlot.currentTask.SPORT_CATCH_UP);
+                this.futurAgenda.get(j).set(k, timeSlot.CurrentTask.SPORT_CATCH_UP);
             }
             else{
-                futurAgenda.get(j).set(k, timeSlot.currentTask.NEWEVENT);
+                futurAgenda.get(j).set(k, timeSlot.CurrentTask.NEWEVENT);
                 newEventFuturAgenda.get(j).set(k, futur_agenda_back.get(i));
                 if(k%4 == 0) {
                     futurFullAgenda.get(j).get((int) k / 4).new_task_1 = futur_agenda_back.get(i);
@@ -1208,7 +1208,7 @@ Fonction de conversion en jour passé et recalcul du septième jour.
                 offset_indice += 7;
             }
 
-            ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks = new ArrayList<>(this.agenda);
+            ArrayList<ArrayList<timeSlot.CurrentTask>> dailyTasks = new ArrayList<>(this.agenda);
             ArrayList<ArrayList<timeSlot>> week = new ArrayList<>(this.fullAgenda);
             ArrayList<ArrayList<String>> newEventWeek = new ArrayList<>(this.newEventAgenda);
 
