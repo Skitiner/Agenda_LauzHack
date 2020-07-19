@@ -17,6 +17,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.Calendar;
 
+
+/*
+
+Cette classe est utilisée quand l'utilisateur annule un événement.
+Elle met à jour le score du travail et du sport si nécessaire et replanifie le planning du jour.
+
+ */
+
 public class Cancel_broadcast extends BroadcastReceiver {
 
     private Context context;
@@ -45,51 +53,48 @@ public class Cancel_broadcast extends BroadcastReceiver {
 
         for (int i = startI; i < startI + NB_SLOT_MAX_CANCELED; i++) {
 
-            if(userProfile.agenda.get(converted_indice).get(i) != userProfile.agenda.get(converted_indice).get(startI))
-                break;
+            if (startI + NB_SLOT_MAX_CANCELED < 96) {
+                if (userProfile.agenda.get(converted_indice).get(i) != userProfile.agenda.get(converted_indice).get(startI))
+                    break;
 
-            userProfile.canceled_slots.get(converted_indice).set(i, Boolean.TRUE);
+                userProfile.canceled_slots.get(converted_indice).set(i, Boolean.TRUE);
 
 
-            //update weight
-            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK &&
-                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
-                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
-                //userProfile.lateWorkSlot++;
-                userProfile.workCatchUp++;
-            }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_CATCH_UP &&
-                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
-                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
-            }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
-                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
-                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
-                //userProfile.lateSportSlot++;
-                userProfile.sportCatchUp++;
-            }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT_CATCH_UP &&
-                    userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
-                userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
-            }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_FIX){
-                //userProfile.lateWorkSlot++;
-                userProfile.workCatchUp++;
-            }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.NEWEVENT){
-                for (newEvent event : userProfile.savedEvent){
-                    if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(startI))){
-                        if (event.sport){
-                            //userProfile.lateSportSlot++;
-                            userProfile.sportCatchUp++;
-                        }
-                        else if(event.work){
-                            //userProfile.lateWorkSlot++;
-                            userProfile.workCatchUp++;
+                //update weight
+                if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK &&
+                        userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0) {
+                    userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
+                    //userProfile.lateWorkSlot++;
+                    userProfile.workCatchUp++;
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_CATCH_UP &&
+                        userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0) {
+                    userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT &&
+                        userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0) {
+                    userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
+                    //userProfile.lateSportSlot++;
+                    userProfile.sportCatchUp++;
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT_CATCH_UP &&
+                        userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0) {
+                    userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_FIX) {
+                    //userProfile.lateWorkSlot++;
+                    userProfile.workCatchUp++;
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.NEWEVENT) {
+                    for (newEvent event : userProfile.savedEvent) {
+                        if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(startI))) {
+                            if (event.sport) {
+                                //userProfile.lateSportSlot++;
+                                userProfile.sportCatchUp++;
+                            } else if (event.work) {
+                                //userProfile.lateWorkSlot++;
+                                userProfile.workCatchUp++;
+                            }
                         }
                     }
                 }
             }
+            else break;
         }
 
         saveToFile();
@@ -120,6 +125,7 @@ public class Cancel_broadcast extends BroadcastReceiver {
 
             boolean freeday = true;
             boolean nextfreeday = true;
+            boolean pastfreeday = true;
             for (int k = 0; k < freedaylist.length; k++) {
                 if (freedaylist[k] == (currentDay + conversionDayIndice() + dayOffset) % 7) {
                     freeday = false;
@@ -127,15 +133,18 @@ public class Cancel_broadcast extends BroadcastReceiver {
                 if (freedaylist[k] == (currentDay + conversionDayIndice() + 1 + dayOffset) % 7) {
                     nextfreeday = false;
                 }
+                if (freedaylist[k] == (currentDay + conversionDayIndice() + 1 + 7 + dayOffset) % 7) {
+                   pastfreeday = false;
+                }
             }
 
             int val = (currentDay + convertedIndice() + dayOffset)%7; // à tester
             int dayCalcul = val;
 
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(userProfile, freeday, nextfreeday, val,false);
+            AgendaInitialisation agendaInitialisation = new AgendaInitialisation(userProfile, freeday, nextfreeday, pastfreeday, val,false);
 
-            IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
-                    userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
+            DayPlan Agent = new DayPlan(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
+                    userProfile.lastConnection, userProfile.settingDay, agendaInitialisation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
                     freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
                     userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp, userProfile.agendaInit, false, false);

@@ -4,7 +4,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Stat implements Serializable {
+/*
+
+Cette classe n'est pas utilisée dans la version actuelle du code
+
+ */
+
+public class StatPerDay implements Serializable {
     int work;
     float workDone;
     int sport;
@@ -17,18 +23,18 @@ public class Stat implements Serializable {
         sportDone = 0;
     }
 
-    void updateStat(ArrayList<timeSlot.currentTask> agenda, ArrayList<String> newEventAgenda, List<newEvent> savedEvent){
+    void updateStat(ArrayList<timeSlot.CurrentTask> agenda, ArrayList<String> newEventAgenda, List<newEvent> savedEvent){
         int workTimeSlot = 0;
         int sportTimeSlot = 0;
 
         for (int i = 0; i < agenda.size(); i++){
-            if (agenda.get(i) == timeSlot.currentTask.WORK || agenda.get(i) == timeSlot.currentTask.WORK_FIX){
+            if (agenda.get(i) == timeSlot.CurrentTask.WORK || agenda.get(i) == timeSlot.CurrentTask.WORK_FIX){
                 workTimeSlot++;
             }
-            else if (agenda.get(i) == timeSlot.currentTask.SPORT){
+            else if (agenda.get(i) == timeSlot.CurrentTask.SPORT){
                 sportTimeSlot++;
             }
-            else if (agenda.get(i) == timeSlot.currentTask.NEWEVENT){
+            else if (agenda.get(i) == timeSlot.CurrentTask.NEWEVENT){
                 for (newEvent event : savedEvent){
                     if (event.work){
                         workTimeSlot++;

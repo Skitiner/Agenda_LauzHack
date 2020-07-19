@@ -19,6 +19,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+/*
+
+Cette classe est utilisée quand l'utilisateur accepte une notification.
+Elle met à jour le score du travail et du sport si nécessaire.
+
+ */
+
 public class Start_broadcast extends BroadcastReceiver {
 
     private Context context;
@@ -43,7 +50,7 @@ public class Start_broadcast extends BroadcastReceiver {
         int startI = calendar.get(Calendar.HOUR_OF_DAY)*4 + calendar.get(Calendar.MINUTE)/15;
         int converted_indice = convertedIndice();
 
-        ArrayList<timeSlot.currentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
+        ArrayList<timeSlot.CurrentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
         List<String> newEvent = new ArrayList<>(userProfile.newEventAgenda.get(converted_indice));
 
         // Determinate the time boudaries of the block to postpone
@@ -55,19 +62,19 @@ public class Start_broadcast extends BroadcastReceiver {
 
         for(int i = startI; i < (endI + 1); i++) {
             //update weight
-            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK &&
+            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) < 9){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) + 1);
             }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.WORK_CATCH_UP &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_CATCH_UP &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
             }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) < 9){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) + 1);
             }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.currentTask.SPORT_CATCH_UP &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT_CATCH_UP &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
             }

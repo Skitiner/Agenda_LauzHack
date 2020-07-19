@@ -8,14 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -29,7 +26,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.MutableLiveData;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -49,6 +45,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+
+/*
+
+Activité de l'agenda.
+Cette activité est utilisee pour l'agenda, mais également dans le cadre de la mise en place des
+heures de travail fixe et des repas. (la booléene fixed_work ou lunch_time est, dans ces situations, vrai.)
+
+ */
+
 public class AgendaActivity extends AppCompatActivity {
 
     private final int NB_SLOTS_LUNCH = 6;
@@ -58,7 +63,7 @@ public class AgendaActivity extends AppCompatActivity {
     private myAdapter adapter;
     private ListView schedule;
     private static ArrayList<ArrayList<timeSlot>> week;
-    private static ArrayList<ArrayList<timeSlot.currentTask>> dailyTasks;
+    private static ArrayList<ArrayList<timeSlot.CurrentTask>> dailyTasks;
     private static List<List<Boolean>> cancel_day_taks;
 
 
@@ -167,13 +172,13 @@ public class AgendaActivity extends AppCompatActivity {
         if (week == null){
             week = new ArrayList<>();
 
-            timeSlot.currentTask task;
+            timeSlot.CurrentTask task;
 
             for(int j = 0; j < 7; j++ ) {
                 ArrayList<timeSlot> mySlots = new ArrayList<>();
                 for (int i = 0; i < 24; i++) {
 
-                    task = timeSlot.currentTask.FREE;
+                    task = timeSlot.CurrentTask.FREE;
                     timeSlot slot = new timeSlot();
                     slot.time = i;
                     slot.task_1 = task;
@@ -265,6 +270,30 @@ public class AgendaActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(WEEK_SAVE, week);
+        outState.putSerializable(DAILY_TASK, dailyTasks);
+    }
+
+    private int compare(ArrayList<ArrayList<timeSlot.CurrentTask>> week_slots){
+        int nbFixedWork = 0;
+
+        int offset_indice = convertedIndice();
+
+        for (int i = 0; i < 7; i++) {
+            int indice = (i + offset_indice)%7;
+
+            for (int j = 0; j < week_slots.get(indice).size(); j++) {
+                if (!(week_slots.get(indice).get(j) == timeSlot.CurrentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.CurrentTask.EAT || week_slots.get(indice).get(j) == timeSlot.CurrentTask.NEWEVENT)){
+                    dailyTasks.get(i).set(j, timeSlot.CurrentTask.FREE);
+                }
+            }
+        }
+        return nbFixedWork;
+    }
+
     // Fonction pour adapter le dailyTask au jour actuel
     public void setWeekSlots() {
 
@@ -276,7 +305,7 @@ public class AgendaActivity extends AppCompatActivity {
 
         for (int i = 0; i < 7; i++) {
             int indice = (i + offset_indice)%7;
-            ArrayList<timeSlot.currentTask> day = new ArrayList<>(userProfile.agenda.get(indice));
+            ArrayList<timeSlot.CurrentTask> day = new ArrayList<>(userProfile.agenda.get(indice));
             ArrayList<Boolean> cancel = new ArrayList<>(userProfile.canceled_slots.get(indice));
             ArrayList<timeSlot> we = new ArrayList<>(userProfile.fullAgenda.get(indice));
             for (int j = 0; j < 96; j++){
@@ -284,7 +313,8 @@ public class AgendaActivity extends AppCompatActivity {
                 cancel.set(j, userProfile.canceled_slots.get(indice).get(j));
             }
             for (int j = 0; j < 24; j++){
-                we.set(j, userProfile.fullAgenda.get(indice).get(j));
+                timeSlot task = new timeSlot(userProfile.fullAgenda.get(indice).get(j));
+                we.set(j, task);
             }
             dailyTasks.set(i, day);
             cancel_day_taks.set(i, cancel);
@@ -299,19 +329,25 @@ public class AgendaActivity extends AppCompatActivity {
         }*/
     }
 
+/*
+
+Fonctions de placement des heures de travail fixe ou de repas.
+
+ */
     public void saveTimeSlots(View view) {
         day_already_setted++;
 
-        if(day_already_setted >= nb_day_to_set)
+        if(day_already_setted >= nb_day_to_set && fixed_work)
+            settingFinish = true;
+        else if (day_already_setted >= 7 && lunch_time)
             settingFinish = true;
 
         if(settingFinish) {
-            Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
+            //startActivity(intent);
             adapter.updateWeek();
 
-            userProfile.agenda = dailyTasks;
-            userProfile.fullAgenda = week;
+            saveAgenda();
 
             userProfile.settingDay = Calendar.getInstance();
             userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
@@ -336,9 +372,15 @@ public class AgendaActivity extends AppCompatActivity {
             builder.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     setScheduleOverDays();
+
+                    saveAgenda();
+
+                    userProfile.settingDay = Calendar.getInstance();
+                    userProfile.settingDay.setTimeInMillis(System.currentTimeMillis());
+
                     saveToFile();
-                    Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
-                    startActivity(intent);
+                    //Intent intent = new Intent(AgendaActivity.this, ProfileActivity.class);
+                    //startActivity(intent);
                     finish();
                 }
             });
@@ -362,67 +404,82 @@ public class AgendaActivity extends AppCompatActivity {
 
     }
 
-    public static int conversionDayIndice() {
-        int offset = 0;
-        Calendar calendar = Calendar.getInstance();
-        int day = calendar.get(Calendar.DAY_OF_WEEK);
+    private void saveAgenda(){
 
-        switch (day) {
-            case Calendar.MONDAY:
-                offset = 0;
-                break;
-            case Calendar.TUESDAY:
-                offset = 1;
-                break;
-            case Calendar.WEDNESDAY:
-                offset = 2;
-                break;
-            case Calendar.THURSDAY:
-                offset = 3;
-                break;
-            case Calendar.FRIDAY:
-                offset = 4;
-                break;
-            case Calendar.SATURDAY:
-                offset = 5;
-                break;
-            case Calendar.SUNDAY:
-                offset = 6;
-                break;
-
+        if (lunch_time){
+            for (int i = 0; i < userProfile.agenda.size(); i++){
+                for (int j = 0; j < userProfile.agenda.get(i).size(); j++){
+                    if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.EAT){
+                        userProfile.agenda.get(i).set(j, timeSlot.CurrentTask.FREE);
+                        userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.FREE);
+                    }
+                    if (dailyTasks.get((i + convertedIndice()) % 7).get(j) == timeSlot.CurrentTask.EAT){
+                        userProfile.agenda.get(i).set(j, timeSlot.CurrentTask.EAT);
+                        userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.EAT);
+                    }
+                }
+            }
         }
-
-        return offset;
+        else if (fixed_work){
+            for (int i = 0; i < userProfile.agenda.size(); i++){
+                for (int j = 0; j < userProfile.agenda.get(i).size(); j++){
+                    if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX){
+                        userProfile.agenda.get(i).set(j, timeSlot.CurrentTask.FREE);
+                        userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.FREE);
+                    }
+                    if (dailyTasks.get((i + convertedIndice()) % 7).get(j) == timeSlot.CurrentTask.WORK_FIX){
+                        userProfile.agenda.get(i).set(j, timeSlot.CurrentTask.WORK_FIX);
+                        userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.WORK_FIX);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < userProfile.agenda.size(); i++) {
+            userProfile.updateFullAgenda(i);
+            userProfile.updateFuturAgenda(i);
+        }
     }
 
     private void setScheduleOverDays() {
         int indice;
 
         for (int i = 0; i < 7; i++) {
-            indice = (conversionDayIndice() +i)%7;
+            indice = (conversionDayIndice() + convertedIndice() + i)%7;
 
-            if(userProfile.freeDay[indice] == true)
+            if(userProfile.freeDay[indice] == true) {
+                for(int j = 0; j < 96; j++) {
+                    if(dailyTasks.get(currentDay).get(j) == timeSlot.CurrentTask.EAT && lunch_time) {
+                        dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+                        //userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.EAT);
+                    }
+                    if(dailyTasks.get(i).get(j) == timeSlot.CurrentTask.EAT && lunch_time && dailyTasks.get(currentDay).get(j) == timeSlot.CurrentTask.FREE) {
+                        dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
+                        //userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.FREE);
+                    }
+                }
+                userProfile.updateFuturAgenda(i);
                 continue;
+            }
 
             for(int j = 0; j < 96; j++) {
-                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work) {
+                if(dailyTasks.get(currentDay).get(j) == timeSlot.CurrentTask.WORK_FIX && fixed_work) {
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
-                    userProfile.futurAgenda.get(i).set(j, timeSlot.currentTask.WORK_FIX);
+                    //userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.WORK_FIX);
                 }
 
-                if(dailyTasks.get(i).get(j) == timeSlot.currentTask.WORK_FIX && fixed_work && dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE) {
+                if(dailyTasks.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX && fixed_work && dailyTasks.get(currentDay).get(j) == timeSlot.CurrentTask.FREE) {
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
-                    userProfile.futurAgenda.get(i).set(j, timeSlot.currentTask.FREE);
+                    //userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.FREE);
                 }
 
-                if(dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.EAT && lunch_time) {
+                if(dailyTasks.get(currentDay).get(j) == timeSlot.CurrentTask.EAT && lunch_time) {
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
-                    userProfile.futurAgenda.get(i).set(j, timeSlot.currentTask.EAT);
+                    //userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.EAT);
                 }
 
-                if(dailyTasks.get(i).get(j) == timeSlot.currentTask.EAT && lunch_time && dailyTasks.get(currentDay).get(j) == timeSlot.currentTask.FREE) {
+                if(dailyTasks.get(i).get(j) == timeSlot.CurrentTask.EAT && lunch_time && dailyTasks.get(currentDay).get(j) == timeSlot.CurrentTask.FREE) {
                     dailyTasks.get(i).set(j, dailyTasks.get(currentDay).get(j));
-                    userProfile.futurAgenda.get(i).set(j, timeSlot.currentTask.FREE);
+                    //userProfile.futurAgenda.get(i).set(j, timeSlot.CurrentTask.FREE);
                 }
             }
             userProfile.updateFuturAgenda(i);
@@ -431,49 +488,44 @@ public class AgendaActivity extends AppCompatActivity {
         adapter.updateWeek();
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(WEEK_SAVE, week);
-        outState.putSerializable(DAILY_TASK, dailyTasks);
-    }
 
+/*
+
+Fonctions de changement de jour de l'agenda.
+
+ */
     public void goToday(View view) {
         if (!lunch_time && !fixed_work) {
-            switch (view.getId()) {
-                case R.id.date:
-                    currentDay = 0;
-                    date_offset = 0;
-                    View addEvent = findViewById(R.id.addEvent);
-                    View delEvent = findViewById(R.id.delEvent);
+                currentDay = 0;
+                date_offset = 0;
+                View addEvent = findViewById(R.id.addEvent);
+                View delEvent = findViewById(R.id.delEvent);
 
-                    addEvent.setVisibility(View.VISIBLE);
-                    delEvent.setVisibility(View.VISIBLE);
+                addEvent.setVisibility(View.VISIBLE);
+                delEvent.setVisibility(View.VISIBLE);
 
-                    adapter.updateAgenda();
+                adapter.updateAgenda();
 
-                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
-                    date = findViewById(R.id.date);
-                    currentDate = new Date();
-                    date.setText(formatter.format(currentDate));
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+                date = findViewById(R.id.date);
+                currentDate = new Date();
+                date.setText(formatter.format(currentDate));
 
-                    /*// Start date
-                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
-                    String dt = sdf.format(currentDate);
-                    Calendar c = Calendar.getInstance();
-                    try {
-                        c.setTime(sdf.parse(dt));
+                /*// Start date
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+                String dt = sdf.format(currentDate);
+                Calendar c = Calendar.getInstance();
+                try {
+                    c.setTime(sdf.parse(dt));
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    c.add(Calendar.DATE, date_offset);  // number of days to add
-                    dt = sdf.format(c.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                c.add(Calendar.DATE, date_offset);  // number of days to add
+                dt = sdf.format(c.getTime());
 
-                    date.setText(dt);*/
-                    break;
+                date.setText(dt);*/
 
-            }
         }
     }
 
@@ -490,7 +542,7 @@ public class AgendaActivity extends AppCompatActivity {
             int indice = (conversionDayIndice() + currentDay)%7;
             int i = 0;
 
-            if(lunch_time || fixed_work) {
+            if(fixed_work) {
                 while (userProfile.freeDay[indice] && i < 7) {
                     currentDay++;
                     currentDay %= 7;
@@ -512,7 +564,7 @@ public class AgendaActivity extends AppCompatActivity {
             int indice = (conversionDayIndice() + currentDay)%7;
             int i = 0;
 
-            if(lunch_time || fixed_work) {
+            if(fixed_work) {
                 while (userProfile.freeDay[indice] && i < 7) {
                     if (currentDay == 0)
                         currentDay = 6;
@@ -585,43 +637,11 @@ public class AgendaActivity extends AppCompatActivity {
         date.setText(dt);
     }
 
-    private void saveToFile(){
+/*
 
-        try {
-            File file = new File(getFilesDir(), userProfile.FileName);
-            FileOutputStream fileOutputStream = new FileOutputStream(file);
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
-            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+Classe s'occupant du rendu visuel de l'agenda.
 
-            userProfile.Save(bufferedWriter);
-
-            bufferedWriter.flush();
-            bufferedWriter.close();
-            outputStreamWriter.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void readFromFile() {
-        try {
-            Context ctx = getApplicationContext();
-            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            String lineData = bufferedReader.readLine();
-
-            userProfile.decode(lineData);
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+ */
     private class myAdapter extends ArrayAdapter<timeSlot> {
 
         private int time_layout;
@@ -662,7 +682,7 @@ public class AgendaActivity extends AppCompatActivity {
             return row;
         }
 
-        private void setItemApparence(TextView textView, timeSlot.currentTask task, String new_task, int position, int task_num) {
+        private void setItemApparence(TextView textView, timeSlot.CurrentTask task, String new_task, int position, int task_num) {
 
             int slot_indice = position*4 + task_num;
             textView.setPaintFlags(Paint.ANTI_ALIAS_FLAG);
@@ -727,7 +747,8 @@ public class AgendaActivity extends AppCompatActivity {
                     textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
                     break;
                 case PAUSE:
-                    textView.setText(R.string.pause);
+                    //textView.setText(R.string.pause);
+                    textView.setText("-");
                     textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
@@ -857,41 +878,41 @@ public class AgendaActivity extends AppCompatActivity {
 
                 if(fixed_work) {
                     if (v.getId() == R.id.t_1) {
-                        if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.currentTask.WORK_FIX ||
-                                dailyTasks.get(currentDay).get(daily_task_pos+1) != timeSlot.currentTask.WORK_FIX ||
-                                dailyTasks.get(currentDay).get(daily_task_pos+2) != timeSlot.currentTask.WORK_FIX ||
-                                dailyTasks.get(currentDay).get(daily_task_pos+3) != timeSlot.currentTask.WORK_FIX) {
+                        if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.CurrentTask.WORK_FIX ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+1) != timeSlot.CurrentTask.WORK_FIX ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+2) != timeSlot.CurrentTask.WORK_FIX ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+3) != timeSlot.CurrentTask.WORK_FIX) {
 
 
-                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.WORK_FIX);
-                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.WORK_FIX);
-                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.WORK_FIX);
-                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.WORK_FIX);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.currentTask.WORK_FIX);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.WORK_FIX);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.WORK_FIX);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.WORK_FIX);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.WORK_FIX);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.WORK_FIX);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.WORK_FIX);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.WORK_FIX);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.WORK_FIX);
                         }
                         else {
-                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
-                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
-                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
-                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.FREE);
 
                         }
 
                     } else {
-                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.WORK_FIX) {
-                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.WORK_FIX);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.WORK_FIX);
+                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.CurrentTask.WORK_FIX) {
+                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.WORK_FIX);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.WORK_FIX);
                         }
                         else {
-                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
                         }
                     }
                     updateAgenda();
@@ -900,42 +921,42 @@ public class AgendaActivity extends AppCompatActivity {
 
                 if(lunch_time) {
                     if (v.getId() == R.id.t_1) {
-                        if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.currentTask.EAT ||
-                                dailyTasks.get(currentDay).get(daily_task_pos+1) != timeSlot.currentTask.EAT ||
-                                dailyTasks.get(currentDay).get(daily_task_pos+2) != timeSlot.currentTask.EAT ||
-                                dailyTasks.get(currentDay).get(daily_task_pos+3) != timeSlot.currentTask.EAT) {
+                        if  (dailyTasks.get(currentDay).get(daily_task_pos) != timeSlot.CurrentTask.EAT ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+1) != timeSlot.CurrentTask.EAT ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+2) != timeSlot.CurrentTask.EAT ||
+                                dailyTasks.get(currentDay).get(daily_task_pos+3) != timeSlot.CurrentTask.EAT) {
 
 
-                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.EAT);
-                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.EAT);
-                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.EAT);
-                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.EAT);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.EAT);
 
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.currentTask.EAT);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.EAT);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.EAT);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.EAT);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.EAT);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.EAT);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.EAT);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.EAT);
                         }
                         else {
-                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
-                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
-                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
-                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.FREE);
 
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.currentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+1, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+2, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos+3, timeSlot.CurrentTask.FREE);
                         }
 
                     } else {
-                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.currentTask.EAT) {
-                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.EAT);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos-1, timeSlot.currentTask.EAT);
+                        if ( dailyTasks.get(currentDay).get(daily_task_pos-1) != timeSlot.CurrentTask.EAT) {
+                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.EAT);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos-1, timeSlot.CurrentTask.EAT);
                         }
                         else {
-                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
-                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
+                            dailyTasks.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
+                            userProfile.futurAgenda.get(currentDay).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
                         }
                     }
 
@@ -946,7 +967,7 @@ public class AgendaActivity extends AppCompatActivity {
                 if (delNewEvent) {
                     if (date_offset < 7 && date_offset >= 0) {
                         if (!(v.getId() == R.id.t_1)) {
-                            if (userProfile.agenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos - 1) == timeSlot.currentTask.NEWEVENT) {
+                            if (userProfile.agenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos - 1) == timeSlot.CurrentTask.NEWEVENT) {
                                 for (newEvent event : userProfile.savedEvent) {
                                     if (event.name.equals(userProfile.newEventAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos - 1))) {
                                         if (event.sport) {
@@ -956,12 +977,12 @@ public class AgendaActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-                                userProfile.agenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
+                                userProfile.agenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
                                 userProfile.newEventAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos - 1, "");
                             }
                         } else {
                             for (int i = 0; i < 4; i++) {
-                                if (userProfile.agenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos + i) == timeSlot.currentTask.NEWEVENT) {
+                                if (userProfile.agenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos + i) == timeSlot.CurrentTask.NEWEVENT) {
                                     for (newEvent event : userProfile.savedEvent) {
                                         if (event.name.equals(userProfile.newEventAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos + i))) {
                                             if (event.sport) {
@@ -971,7 +992,7 @@ public class AgendaActivity extends AppCompatActivity {
                                             }
                                         }
                                     }
-                                    userProfile.agenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos + i, timeSlot.currentTask.FREE);
+                                    userProfile.agenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos + i, timeSlot.CurrentTask.FREE);
                                     userProfile.newEventAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos + i, "");
                                 }
                             }
@@ -983,14 +1004,14 @@ public class AgendaActivity extends AppCompatActivity {
                     }
                     else if (date_offset >= 7){
                         if (!(v.getId() == R.id.t_1)) {
-                            if (userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos - 1) == timeSlot.currentTask.NEWEVENT) {
-                                userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
+                            if (userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos - 1) == timeSlot.CurrentTask.NEWEVENT) {
+                                userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
                                 userProfile.newEventFuturAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos - 1, "");
                             }
                         } else {
                             for (int i = 0; i < 4; i++) {
-                                if (userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos + i) == timeSlot.currentTask.NEWEVENT) {
-                                    userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos + i, timeSlot.currentTask.FREE);
+                                if (userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos + i) == timeSlot.CurrentTask.NEWEVENT) {
+                                    userProfile.futurAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos + i, timeSlot.CurrentTask.FREE);
                                     userProfile.newEventFuturAgenda.get((currentDay + convertedIndice()) % 7).set(daily_task_pos + i, "");
                                 }
                             }
@@ -1003,7 +1024,7 @@ public class AgendaActivity extends AppCompatActivity {
                         int past = Math.abs(date_offset + 1);
 
                         if (!(v.getId() == R.id.t_1)) {
-                            if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(daily_task_pos - 1) == timeSlot.currentTask.NEWEVENT) {
+                            if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(daily_task_pos - 1) == timeSlot.CurrentTask.NEWEVENT) {
                                 for (newEvent event : userProfile.savedEvent) {
                                     if (event.name.equals(userProfile.newEventAgenda.get((currentDay + convertedIndice()) % 7).get(daily_task_pos - 1))) {
                                         if (event.sport) {
@@ -1013,12 +1034,12 @@ public class AgendaActivity extends AppCompatActivity {
                                         }
                                     }
                                 }
-                                userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).set(daily_task_pos - 1, timeSlot.currentTask.FREE);
+                                userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).set(daily_task_pos - 1, timeSlot.CurrentTask.FREE);
                                 userProfile.newEventPastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).set(daily_task_pos - 1, "");
                             }
                         } else {
                             for (int i = 0; i < 4; i++) {
-                                if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(daily_task_pos + i) == timeSlot.currentTask.NEWEVENT) {
+                                if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(daily_task_pos + i) == timeSlot.CurrentTask.NEWEVENT) {
                                     for (newEvent event : userProfile.savedEvent) {
                                         if (event.name.equals(userProfile.newEventPastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(daily_task_pos + i))) {
                                             if (event.sport) {
@@ -1028,7 +1049,7 @@ public class AgendaActivity extends AppCompatActivity {
                                             }
                                         }
                                     }
-                                    userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).set(daily_task_pos + i, timeSlot.currentTask.FREE);
+                                    userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).set(daily_task_pos + i, timeSlot.CurrentTask.FREE);
                                     userProfile.newEventPastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).set(daily_task_pos + i, "");
                                 }
                             }
@@ -1041,6 +1062,12 @@ public class AgendaActivity extends AppCompatActivity {
             }
         }
     }
+
+/*
+
+Fonctions liées aux nouveaux événements.
+
+ */
     public void addEventXmlCallback(View view){
         eventCreation(view);
     }
@@ -1055,8 +1082,10 @@ public class AgendaActivity extends AppCompatActivity {
         delFinished.setVisibility(View.VISIBLE);
         View previousDay = findViewById(R.id.previousDay);
         previousDay.setClickable(false);
-        View nextday = findViewById(R.id.previousDay);
+        View nextday = findViewById(R.id.nextDay);
         nextday.setClickable(false);
+        View today = findViewById(R.id.today);
+        today.setClickable(false);
     }
 
     public void delFinishedEventXmlCallback(View view){
@@ -1078,8 +1107,10 @@ public class AgendaActivity extends AppCompatActivity {
         MainActivity.setAlarmOfTheDay(AgendaActivity.this);
         View previousDay = findViewById(R.id.previousDay);
         previousDay.setClickable(true);
-        View nextday = findViewById(R.id.previousDay);
+        View nextday = findViewById(R.id.nextDay);
         nextday.setClickable(true);
+        View today = findViewById(R.id.today);
+        today.setClickable(true);
     }
 
     public void eventCreation(View v){
@@ -1252,9 +1283,9 @@ public class AgendaActivity extends AppCompatActivity {
                                 nE.work = workRB.isChecked();
                                 nE.sport = sportRB.isChecked();
                                 userProfile.savedEvent.add(nE);
-                                if (userProfile.savedEvent.size() > 20) {
+                                /*if (userProfile.savedEvent.size() > 50) {
                                     userProfile.savedEvent.remove(0);
-                                }
+                                }*/
                                 event = userProfile.savedEvent.size()-1;
                             } else {
                                 newEvent nE = new newEvent();
@@ -1280,11 +1311,12 @@ public class AgendaActivity extends AppCompatActivity {
                             int day = (currentDay + convertedIndice()) % 7;
                             userProfile.updateFullAgenda(day);
                             userProfile.updateFuturAgenda(day);
+                            userProfile.updateFuturAgenda(day);
                             saveToFile();
                             if (date_offset < 7){
                                 plan();                   // si jour actuelle, ne pas update ce qui est déja passé
-                                MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                             }
+                            MainActivity.setAlarmOfTheDay(AgendaActivity.this);
                         }
                         else if (startTime == -1){
                             Toast.makeText(AgendaActivity.this, R.string.wrongEventStart, Toast.LENGTH_SHORT).show();
@@ -1299,6 +1331,7 @@ public class AgendaActivity extends AppCompatActivity {
 
     }
 
+    // fonction de recalcul du planning d'au moins un jour.
     public void plan(){
         int dayOffset = 0;
         int actualDay;
@@ -1325,6 +1358,7 @@ public class AgendaActivity extends AppCompatActivity {
 
             boolean freeday = true;
             boolean nextfreeday = true;
+            boolean pastfreeday = true;
             for (int k = 0; k < freedaylist.length; k++) {
                 if (freedaylist[k] == (actualDay + conversionDayIndice() + dayOffset) % 7) {
                     freeday = false;
@@ -1332,15 +1366,18 @@ public class AgendaActivity extends AppCompatActivity {
                 if (freedaylist[k] == (actualDay + conversionDayIndice() + 1 + dayOffset) % 7) {
                     nextfreeday = false;
                 }
+                if (freedaylist[k] == (actualDay + conversionDayIndice() - 1 + 7 + dayOffset) % 7) {
+                    pastfreeday = false;
+                }
             }
 
             int val = (actualDay + convertedIndice() + dayOffset)%7; // à tester
             int dayCalcul = val;
 
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(userProfile, freeday, nextfreeday, val, false);
+            AgendaInitialisation agendaInitialisation = new AgendaInitialisation(userProfile, freeday, nextfreeday, pastfreeday, val, false);
 
-            IA Agent = new IA(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
-                    userProfile.lastConnection, userProfile.settingDay, daySlotsCalculation.daily_slots_generated,
+            DayPlan Agent = new DayPlan(userProfile.weight, userProfile.canceled_slots.get(val), userProfile.sportDayRank,
+                    userProfile.lastConnection, userProfile.settingDay, agendaInitialisation.daily_slots_generated,
                     userProfile.agenda.get(val), userProfile.newEventAgenda.get(val), dayCalcul, userProfile.savedEvent,
                     freeday, Integer.parseInt(userProfile.optWorkTime), userProfile.lateWorkSlot, userProfile.workCatchUp,
                     userProfile.sportRoutine, userProfile.lateSportSlot, userProfile.sportCatchUp,userProfile.agendaInit, false, false);
@@ -1399,7 +1436,7 @@ public class AgendaActivity extends AppCompatActivity {
         if(date_offset >= 0) {
             int day = (currentDay + convertedIndice()) % 7;
             for (int i = (int) (4 * startTime); i < (int) (4 * stopTime); i++) {
-                if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.NEWEVENT) {
+                if (userProfile.agenda.get(day).get(i) == timeSlot.CurrentTask.NEWEVENT) {
                     for (newEvent event : userProfile.savedEvent) {
                         if (event.name.equals(userProfile.newEventAgenda.get(day).get(i))) {
                             if (event.sport && !newEvent.sport) {
@@ -1409,19 +1446,19 @@ public class AgendaActivity extends AppCompatActivity {
                             }
                         }
                     }
-                } else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.WORK ||
-                        userProfile.agenda.get(day).get(i) == timeSlot.currentTask.WORK_FIX && !newEvent.work) {
+                } else if (userProfile.agenda.get(day).get(i) == timeSlot.CurrentTask.WORK ||
+                        userProfile.agenda.get(day).get(i) == timeSlot.CurrentTask.WORK_FIX && !newEvent.work) {
                     userProfile.lateWorkSlot++;
-                } else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.SPORT && !newEvent.sport) {
+                } else if (userProfile.agenda.get(day).get(i) == timeSlot.CurrentTask.SPORT && !newEvent.sport) {
                     userProfile.lateSportSlot++;
                 }
-                /*else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.WORK_CATCH_UP && !newEvent.work) {
+                /*else if (userProfile.agenda.get(day).get(i) == timeSlot.CurrentTask.WORK_CATCH_UP && !newEvent.work) {
                     userProfile.workCatchUp++;
-                } else if (userProfile.agenda.get(day).get(i) == timeSlot.currentTask.SPORT_CATCH_UP && !newEvent.sport) {
+                } else if (userProfile.agenda.get(day).get(i) == timeSlot.CurrentTask.SPORT_CATCH_UP && !newEvent.sport) {
                     userProfile.sportCatchUp++;
                 }*/
 
-                userProfile.agenda.get(day).set(i, timeSlot.currentTask.NEWEVENT);
+                userProfile.agenda.get(day).set(i, timeSlot.CurrentTask.NEWEVENT);
                 userProfile.newEventAgenda.get(day).set(i, newEvent.name);
                 if (newEvent.sport) {
                     userProfile.lateSportSlot--;
@@ -1430,108 +1467,108 @@ public class AgendaActivity extends AppCompatActivity {
                 }
 
                 if (eventWeekly) {
-                    userProfile.futurAgenda.get(day).set(i, timeSlot.currentTask.NEWEVENT);
+                    userProfile.futurAgenda.get(day).set(i, timeSlot.CurrentTask.NEWEVENT);
                     userProfile.newEventFuturAgenda.get(day).set(i, newEvent.name);
                 }
 
             /*if ((int)startTime == (int) stopTime){
                 if (((int)(startTime*4))%4 == 0) {
                     if (((int)(stopTime*4))%4 == 1) {
-                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_1 = eventName;
                     }
                     else if (((int)(stopTime*4))%4 == 2) {
-                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_1 = eventName;
-                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_2 = eventName;
                     }
                     else if (((int)(stopTime*4))%4 == 3) {
-                        week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_1 = eventName;
-                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_2 = eventName;
-                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_3 = eventName;
                     }
                 }
                 else if (((int)(startTime*4))%4 == 1) {
                     if (((int)(stopTime*4))%4 == 2) {
-                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_2 = eventName;
                     }
                     else if (((int)(stopTime*4))%4 == 3) {
-                        week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_2 = eventName;
-                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_3 = eventName;
                     }
                 }
                 else if (((int)(startTime*4))%4 == 2) {
                     if (((int)(stopTime*4))%4 == 3) {
-                        week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                        week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                         week.get(currentDay).get(i).new_task_3 = eventName;
                     }
                 }
             }
             else if (i == (int)startTime) {
                 if (((int)(startTime*4))%4 == 0) {
-                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_1 = eventName;
-                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_2 = eventName;
-                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_3 = eventName;
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_4 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
                 if (((int)(startTime*4))%4 == 1) {
-                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_2 = eventName;
-                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_3 = eventName;
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_4 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
                 if (((int)(startTime*4))%4 == 2) {
-                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_3 = eventName;
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_4 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
                 if (((int)(startTime*4))%4 == 3) {
-                    week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_4 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_4 = eventName;
                 }
             }
             else if (i == (int)stopTime) {
                 if (((int)(stopTime*4))%4 == 1) {
-                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_1 = eventName;
                 }
                 if (((int)(stopTime*4))%4 == 2) {
-                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_1 = eventName;
-                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_2 = eventName;
                 }
                 if (((int)(stopTime*4))%4 == 3) {
-                    week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_1 = eventName;
-                    week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_2 = eventName;
-                    week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                    week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                     week.get(currentDay).get(i).new_task_3 = eventName;
                 }
             }
             else {
-                week.get(currentDay).get(i).task_1 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).task_1 = timeSlot.CurrentTask.NEWEVENT;
                 week.get(currentDay).get(i).new_task_1 = eventName;
-                week.get(currentDay).get(i).task_2 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).task_2 = timeSlot.CurrentTask.NEWEVENT;
                 week.get(currentDay).get(i).new_task_2 = eventName;
-                week.get(currentDay).get(i).task_3 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).task_3 = timeSlot.CurrentTask.NEWEVENT;
                 week.get(currentDay).get(i).new_task_3 = eventName;
-                week.get(currentDay).get(i).task_4 = timeSlot.currentTask.NEWEVENT;
+                week.get(currentDay).get(i).task_4 = timeSlot.CurrentTask.NEWEVENT;
                 week.get(currentDay).get(i).new_task_4 = eventName;
             }*/
             }
@@ -1541,7 +1578,7 @@ public class AgendaActivity extends AppCompatActivity {
         else {
             int past = Math.abs(date_offset + 1);
             for (int i = (int) (4 * startTime); i < (int) (4 * stopTime); i++) {
-                if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i) == timeSlot.currentTask.NEWEVENT) {
+                if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i) == timeSlot.CurrentTask.NEWEVENT) {
                     for (newEvent event : userProfile.savedEvent) {
                         if (event.name.equals(userProfile.newEventPastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i))) {
                             if (event.sport && !newEvent.sport) {
@@ -1553,16 +1590,16 @@ public class AgendaActivity extends AppCompatActivity {
                             }
                         }
                     }
-                } else if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i) == timeSlot.currentTask.WORK ||
-                        userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).get(i) == timeSlot.currentTask.WORK_FIX && !newEvent.work) {
+                } else if (userProfile.pastAgenda.get(userProfile.pastFullAgenda.size() - 1 - past).get(i) == timeSlot.CurrentTask.WORK ||
+                        userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).get(i) == timeSlot.CurrentTask.WORK_FIX && !newEvent.work) {
                     //userProfile.lateWorkSlot++;
                     userProfile.workCatchUp++;
-                } else if (userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).get(i) == timeSlot.currentTask.SPORT && !newEvent.sport) {
+                } else if (userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).get(i) == timeSlot.CurrentTask.SPORT && !newEvent.sport) {
                     //userProfile.lateSportSlot++;
                     userProfile.sportCatchUp++;
                 }
 
-                userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).set(i, timeSlot.currentTask.NEWEVENT);
+                userProfile.pastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).set(i, timeSlot.CurrentTask.NEWEVENT);
                 userProfile.newEventPastAgenda.get((userProfile.pastFullAgenda.size() - 1 - past)).set(i, newEvent.name);
                 if (newEvent.sport) {
                     userProfile.lateSportSlot--;
@@ -1660,23 +1697,54 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
 
-    private int compare(ArrayList<ArrayList<timeSlot.currentTask>> week_slots){
-        int nbFixedWork = 0;
+/*
 
-        int offset_indice = convertedIndice();
+Fonctions de sauvegarde et de récupération.
 
-        for (int i = 0; i < 7; i++) {
-            int indice = (i + offset_indice)%7;
+ */
 
-            for (int j = 0; j < week_slots.get(indice).size(); j++) {
-                if (!(week_slots.get(indice).get(j) == timeSlot.currentTask.WORK_FIX || week_slots.get(indice).get(j) == timeSlot.currentTask.EAT || week_slots.get(indice).get(j) == timeSlot.currentTask.NEWEVENT)){
-                    dailyTasks.get(i).set(j, timeSlot.currentTask.FREE);
-                }
-            }
+    private void saveToFile(){
+
+        try {
+            File file = new File(getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return nbFixedWork;
     }
 
+    private void readFromFile() {
+        try {
+            Context ctx = getApplicationContext();
+            FileInputStream fileInputStream = ctx.openFileInput(userProfile.FileName);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            String lineData = bufferedReader.readLine();
+
+            userProfile.decode(lineData);
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+/*
+
+Fonctions de conversion des jours.
+
+ */
     private int convertedIndice() {
         int setting_day = userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
         int actual_day = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
@@ -1689,5 +1757,38 @@ public class AgendaActivity extends AppCompatActivity {
         }
 
         return offset%7;
+    }
+
+    public static int conversionDayIndice() {
+        int offset = 0;
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_WEEK);
+
+        switch (day) {
+            case Calendar.MONDAY:
+                offset = 0;
+                break;
+            case Calendar.TUESDAY:
+                offset = 1;
+                break;
+            case Calendar.WEDNESDAY:
+                offset = 2;
+                break;
+            case Calendar.THURSDAY:
+                offset = 3;
+                break;
+            case Calendar.FRIDAY:
+                offset = 4;
+                break;
+            case Calendar.SATURDAY:
+                offset = 5;
+                break;
+            case Calendar.SUNDAY:
+                offset = 6;
+                break;
+
+        }
+
+        return offset;
     }
 }

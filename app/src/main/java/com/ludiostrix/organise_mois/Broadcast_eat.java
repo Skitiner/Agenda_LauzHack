@@ -8,6 +8,13 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+
+/*
+
+Notification de repas.
+
+ */
+
 public class Broadcast_eat  extends BroadcastReceiver {
 
     private String CHANNEL_ID = "CHANNEL_ID";

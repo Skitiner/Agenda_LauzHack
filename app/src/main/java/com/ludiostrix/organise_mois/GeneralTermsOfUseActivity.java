@@ -3,7 +3,9 @@ package com.ludiostrix.organise_mois;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -20,7 +22,16 @@ import java.io.OutputStreamWriter;
 import java.util.Locale;
 import java.util.Scanner;
 
-public class popupActivity extends AppCompatActivity {
+/*
+
+Activité des conditions générale
+Place les conditions de la langue du natel ou anglais par défaut avec le bouton accepté si elles ne
+le sont pas déjà, retour sinon.
+
+
+ */
+
+public class GeneralTermsOfUseActivity extends AppCompatActivity {
 
     public static final String USER_PROFILE = "USER_PROFILE";
     Profile userProfile;
@@ -64,8 +75,12 @@ public class popupActivity extends AppCompatActivity {
         result = result.replaceAll("\\uFFFD", "\u00AE");
 
         TextView conditionTextView = findViewById(R.id.utilisationCondition);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            conditionTextView.setJustificationMode(android.text.Layout.JUSTIFICATION_MODE_INTER_WORD);
+        }
         conditionTextView.setTextColor(getResources().getColor(R.color.black, null));
-        conditionTextView.setText(result);
+        //conditionTextView.setText(result);
+        conditionTextView.setText(Html.fromHtml(result));
     }
 
     public void saveToFile(){
@@ -95,13 +110,13 @@ public class popupActivity extends AppCompatActivity {
 
         saveToFile();
 
-        Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(GeneralTermsOfUseActivity.this, ProfileActivity.class);
         startActivity(intent);
         finish();
     }
 
     public void clickedBackToProfileButtonXmlCallback(View view) {
-        Intent intent = new Intent(popupActivity.this, ProfileActivity.class);
+        Intent intent = new Intent(GeneralTermsOfUseActivity.this, ProfileActivity.class);
         startActivity(intent);
         finish();
     }

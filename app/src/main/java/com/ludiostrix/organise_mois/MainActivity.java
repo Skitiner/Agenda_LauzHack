@@ -13,16 +13,29 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
+
+
+/*
+
+Activitl prinipale.
+Se lance à l'ouverture de l'application.
+Ouvre premièrement les conditions générales si elles n'ont pas encore été accetées.
+Sinon, Active les notifications et offre la possibilité d'aller au profil ou à l'agenda.
+Le logo change en fonction de l'activité en cours.
+
+ */
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
         mgrAlarm = (AlarmManager) getSystemService(ALARM_SERVICE);
 
-        setLogo();
-        setAlarmOfTheDay(this);
+        //setLogo();
+        //setAlarmOfTheDay(this);
 
         //planningCalculation();
 
@@ -54,10 +67,44 @@ public class MainActivity extends AppCompatActivity {
         if (!userProfile.licenceAccepted){
             File file = new File(getFilesDir(), userProfile.LastFileName);
             file.delete();
-            Intent intent = new Intent(MainActivity.this, popupActivity.class);
+            Intent intent = new Intent(MainActivity.this, GeneralTermsOfUseActivity.class);
             intent.putExtra(ProfileActivity.USER_PROFILE, userProfile);
             startActivity(intent);
             finish();
+        }
+
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        readFromFile(this);
+        userProfile.convertInPastDay();
+
+        saveToFile();
+        readFromFile(this); // pas très opti, mais permet de généré aussi le pastAgenda et newEventPastAgenda
+
+        setLogo();
+        setAlarmOfTheDay(this);
+    }
+
+    private void saveToFile(){
+
+        try {
+            File file = new File(getFilesDir(), userProfile.FileName);
+            FileOutputStream fileOutputStream = new FileOutputStream(file);
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
+            BufferedWriter bufferedWriter = new BufferedWriter(outputStreamWriter);
+
+            userProfile.Save(bufferedWriter);
+
+            bufferedWriter.flush();
+            bufferedWriter.close();
+            outputStreamWriter.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -116,8 +163,8 @@ public class MainActivity extends AppCompatActivity {
         int offset = 365*year_offset + actual_day - setting_day + (int) (0.25*(year_offset + 3));
 
         if(offset >= 7) {
-            DaySlotsCalculation daySlotsCalculation = new DaySlotsCalculation(getApplicationContext());
-            daySlotsCalculation.slotCalculation();
+            AgendaInitialisation agendaInitialisation = new AgendaInitialisation(getApplicationContext());
+            agendaInitialisation.slotCalculation();
         }
     }
 
@@ -127,13 +174,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         intentArray.clear();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        setLogo();
-        setAlarmOfTheDay(this);
     }
 
     protected static void setAlarmOfTheDay(Context context) {
@@ -161,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         int offset_indice = offset%7;
 
-        timeSlot.currentTask task = userProfile.agenda.get(offset_indice).get(0);
+        timeSlot.CurrentTask task = userProfile.agenda.get(offset_indice).get(0);
         Boolean canceled = userProfile.canceled_slots.get(offset_indice).get(0);
 
         for(int i = 0; i < (userProfile.agenda).size(); i++){
@@ -175,15 +215,15 @@ public class MainActivity extends AppCompatActivity {
                 if(userProfile.agenda.get(indice).get(j) != task || userProfile.canceled_slots.get(indice).get(j) != canceled) {
 
                     // No difference between WORK and WORK_FIX for the notifications
-                    if((task == timeSlot.currentTask.WORK || task == timeSlot.currentTask.WORK_FIX)
-                            && (userProfile.agenda.get(indice).get(j) == timeSlot.currentTask.WORK || userProfile.agenda.get(indice).get(j) == timeSlot.currentTask.WORK_FIX)
+                    if((task == timeSlot.CurrentTask.WORK || task == timeSlot.CurrentTask.WORK_FIX)
+                            && (userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.WORK || userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.WORK_FIX)
                             && userProfile.canceled_slots.get(indice).get(j) == canceled) {
                         task = userProfile.agenda.get(indice).get(j);
                         continue;
                     }
                     // No difference between PAUSE and FREE for the notifications
-                    if((task == timeSlot.currentTask.PAUSE || task == timeSlot.currentTask.FREE)
-                            && (userProfile.agenda.get(indice).get(j) == timeSlot.currentTask.PAUSE || userProfile.agenda.get(indice).get(j) == timeSlot.currentTask.FREE)) {
+                    if((task == timeSlot.CurrentTask.PAUSE || task == timeSlot.CurrentTask.FREE)
+                            && (userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.PAUSE || userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.FREE)) {
                         task = userProfile.agenda.get(indice).get(j);
                         continue;
                     }

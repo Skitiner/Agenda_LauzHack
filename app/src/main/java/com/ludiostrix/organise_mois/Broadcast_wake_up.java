@@ -8,6 +8,13 @@ import android.content.Intent;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+
+/*
+
+Notification de réveil.
+
+ */
+
 public class Broadcast_wake_up  extends BroadcastReceiver {
 
     private String CHANNEL_ID = "CHANNEL_ID";

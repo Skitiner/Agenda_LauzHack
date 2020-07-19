@@ -9,6 +9,13 @@ import android.graphics.BitmapFactory;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+
+/*
+
+Notification de rattrapage de travail.
+
+ */
+
 public class Broadcast_work_catch_up extends BroadcastReceiver {
     private String CHANNEL_ID = "CHANNEL_ID";
     private int notificationId = 156;
