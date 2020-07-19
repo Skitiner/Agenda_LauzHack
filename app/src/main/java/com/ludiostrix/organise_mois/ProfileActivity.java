@@ -2,7 +2,6 @@ package com.ludiostrix.organise_mois;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -91,10 +90,10 @@ public class ProfileActivity extends AppCompatActivity {
             userProfile.sportRoutine = positionSport;
             int newOffsetSettings = Calendar.getInstance().get(Calendar.DAY_OF_YEAR) - userProfile.settingDay.get(Calendar.DAY_OF_YEAR);
             for (int i = 0; i < newOffsetSettings ; i++) {
-                ArrayList<timeSlot> tempDay = userProfile.fullAgenda.get(0);
+                ArrayList<TimeSlot> tempDay = userProfile.fullAgenda.get(0);
                 userProfile.fullAgenda.remove(0);
                 userProfile.fullAgenda.add(tempDay);
-                ArrayList<timeSlot> futurTempDay = userProfile.futurFullAgenda.get(0);
+                ArrayList<TimeSlot> futurTempDay = userProfile.futurFullAgenda.get(0);
                 userProfile.futurFullAgenda.remove(0);
                 userProfile.futurFullAgenda.add(futurTempDay);
             }
@@ -112,7 +111,7 @@ public class ProfileActivity extends AppCompatActivity {
             }
             for(int j = start; j < userProfile.agenda.get(i).size(); j++){
                 if (!userProfile.canceled_slots.get(i).get(j)){
-                    if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.NEWEVENT) {
+                    if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.NEWEVENT) {
                         for (newEvent event : userProfile.savedEvent) {
                             if (event.name.equals(userProfile.newEventAgenda.get(i).get(j))) {
                                 if (event.sport) {
@@ -122,15 +121,15 @@ public class ProfileActivity extends AppCompatActivity {
                                 }
                             }
                         }
-                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK ||
-                            userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX) {
+                    } else if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.WORK ||
+                            userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.WORK_FIX) {
                         userProfile.lateWorkSlot++;
-                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.SPORT) {
+                    } else if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.SPORT) {
                         userProfile.lateSportSlot++;
                     }
-                    else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK_CATCH_UP) {
+                    else if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.WORK_CATCH_UP) {
                         userProfile.workCatchUp++;
-                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.SPORT_CATCH_UP) {
+                    } else if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.SPORT_CATCH_UP) {
                         userProfile.sportCatchUp++;
                     }
                 }
@@ -148,7 +147,7 @@ public class ProfileActivity extends AppCompatActivity {
         for(int j = 0; j < userProfile.agenda.get(today).size(); j++){
             int sport = 0;
             int work = 0;
-            if (userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.NEWEVENT) {
+            if (userProfile.agenda.get(today).get(j) == TimeSlot.CurrentTask.NEWEVENT) {
                 for (newEvent event : userProfile.savedEvent) {
                     if (event.name.equals(userProfile.newEventAgenda.get(today).get(j))) {
                         if (event.sport) {
@@ -158,10 +157,10 @@ public class ProfileActivity extends AppCompatActivity {
                         }
                     }
                 }
-            } else if (userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.WORK ||
-                    userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.WORK_FIX) {
+            } else if (userProfile.agenda.get(today).get(j) == TimeSlot.CurrentTask.WORK ||
+                    userProfile.agenda.get(today).get(j) == TimeSlot.CurrentTask.WORK_FIX) {
                 work = 1;
-            } else if (userProfile.agenda.get(today).get(j) == timeSlot.CurrentTask.SPORT) {
+            } else if (userProfile.agenda.get(today).get(j) == TimeSlot.CurrentTask.SPORT) {
                 sport = 1;
             }
 
@@ -425,8 +424,8 @@ public class ProfileActivity extends AppCompatActivity {
         int indice = ((7-conversionDayIndice()) + position)%7;
 
         for(int i = 0; i < userProfile.agenda.get(indice).size(); i++) {
-            if(userProfile.agenda.get(indice).get(i) != timeSlot.CurrentTask.NEWEVENT) {
-                userProfile.agenda.get(indice).set(i, timeSlot.CurrentTask.FREE);
+            if(userProfile.agenda.get(indice).get(i) != TimeSlot.CurrentTask.NEWEVENT) {
+                userProfile.agenda.get(indice).set(i, TimeSlot.CurrentTask.FREE);
             }
         }
 

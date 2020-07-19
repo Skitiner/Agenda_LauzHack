@@ -3,7 +3,6 @@ package com.ludiostrix.organise_mois;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.core.app.NotificationManagerCompat;
 
@@ -52,21 +51,21 @@ public class Postpone_broadcast extends BroadcastReceiver {
         int converted_indice = convertedIndice();
 
 
-        ArrayList<timeSlot.CurrentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
+        ArrayList<TimeSlot.CurrentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
         List<String> newEvent = new ArrayList<>(userProfile.newEventAgenda.get(converted_indice));
 
         // Determinate the time boudaries of the block to postpone
         int endI = startI;
 
-        while ((dailyTasks.get(endI) != timeSlot.CurrentTask.FREE &&
-                dailyTasks.get(endI) != timeSlot.CurrentTask.PAUSE && dailyTasks.get(endI) != timeSlot.CurrentTask.WORK &&
-                dailyTasks.get(endI) != timeSlot.CurrentTask.WORK_CATCH_UP) && endI < (dailyTasks.size())) {
+        while ((dailyTasks.get(endI) != TimeSlot.CurrentTask.FREE &&
+                dailyTasks.get(endI) != TimeSlot.CurrentTask.PAUSE && dailyTasks.get(endI) != TimeSlot.CurrentTask.WORK &&
+                dailyTasks.get(endI) != TimeSlot.CurrentTask.WORK_CATCH_UP) && endI < (dailyTasks.size())) {
             endI++;
         }
 
         // si le endI est le dernier du jours il est supprimé
         if (endI == 95){
-            if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.NEWEVENT) {
+            if (userProfile.agenda.get(converted_indice).get(endI) == TimeSlot.CurrentTask.NEWEVENT) {
                 for (newEvent event : userProfile.savedEvent) {
                     if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(endI))) {
                         if (event.sport) {
@@ -76,15 +75,15 @@ public class Postpone_broadcast extends BroadcastReceiver {
                         }
                     }
                 }
-            } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.WORK ||
-                    userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.WORK_FIX) {
+            } else if (userProfile.agenda.get(converted_indice).get(endI) == TimeSlot.CurrentTask.WORK ||
+                    userProfile.agenda.get(converted_indice).get(endI) == TimeSlot.CurrentTask.WORK_FIX) {
                 userProfile.lateWorkSlot++;
-            } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.SPORT) {
+            } else if (userProfile.agenda.get(converted_indice).get(endI) == TimeSlot.CurrentTask.SPORT) {
                 userProfile.lateSportSlot++;
             }
-            else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.WORK_CATCH_UP) {
+            else if (userProfile.agenda.get(converted_indice).get(endI) == TimeSlot.CurrentTask.WORK_CATCH_UP) {
                 userProfile.workCatchUp++;
-            } else if (userProfile.agenda.get(converted_indice).get(endI) == timeSlot.CurrentTask.SPORT_CATCH_UP) {
+            } else if (userProfile.agenda.get(converted_indice).get(endI) == TimeSlot.CurrentTask.SPORT_CATCH_UP) {
                 userProfile.sportCatchUp++;
             }
         }
@@ -92,7 +91,7 @@ public class Postpone_broadcast extends BroadcastReceiver {
 
         for(int i = startI; i <= endI; i++) {
             if (userProfile.canceled_slots.get(converted_indice).get(i - 1)){
-                userProfile.agenda.get(converted_indice).set(i, timeSlot.CurrentTask.FREE);
+                userProfile.agenda.get(converted_indice).set(i, TimeSlot.CurrentTask.FREE);
                 userProfile.newEventAgenda.get(converted_indice).set(i, "");
             }
             else {
@@ -103,7 +102,7 @@ public class Postpone_broadcast extends BroadcastReceiver {
 
 
         //le StartI est prolongé
-        if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.NEWEVENT) {
+        if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.NEWEVENT) {
             for (newEvent event : userProfile.savedEvent) {
                 if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(startI))) {
                     if (event.sport) {
@@ -113,15 +112,15 @@ public class Postpone_broadcast extends BroadcastReceiver {
                     }
                 }
             }
-        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK ||
-                userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_FIX) {
+        } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK ||
+                userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK_FIX) {
             userProfile.lateWorkSlot--;
-        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT) {
+        } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.SPORT) {
             userProfile.lateSportSlot--;
         }
-        else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_CATCH_UP) {
+        else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK_CATCH_UP) {
             userProfile.workCatchUp--;
-        } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT_CATCH_UP) {
+        } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.SPORT_CATCH_UP) {
             userProfile.sportCatchUp--;
         }
 
