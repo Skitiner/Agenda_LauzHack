@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onResume(){
         super.onResume();
+        readFromFile(this);
         userProfile.convertInPastDay();
 
         saveToFile();

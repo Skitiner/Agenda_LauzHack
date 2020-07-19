@@ -39,15 +39,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/date"
+        <Button
+            android:id="@+id/today"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Saturday, 04.03.2020"
+            android:text="@string/today"
             android:textColor="@color/black"
             android:textSize="18sp"
-            android:textStyle="bold"
+            android:textAllCaps="false"
             android:clickable="true"
+            android:backgroundTint="@color/organisemois_background"
             android:focusable="true"
             android:onClick="goToday"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -56,6 +57,47 @@
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:text="Saturday, 04.03.2020"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/upspace"
+            app:layout_constraintBottom_toBottomOf="@id/botspace"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Space
+            android:id="@+id/botspace"
+            android:layout_width="match_parent"
+            android:layout_height="20px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/date"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+        <Space
+            android:id="@+id/upspace"
+            android:layout_width="match_parent"
+            android:layout_height="20px"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/date"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     <View
         android:layout_width="match_parent"
         android:layout_height="2px"

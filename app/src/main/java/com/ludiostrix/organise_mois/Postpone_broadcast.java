@@ -91,8 +91,14 @@ public class Postpone_broadcast extends BroadcastReceiver {
 
 
         for(int i = startI; i <= endI; i++) {
-            userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i-1));
-            userProfile.newEventAgenda.get(converted_indice).set(i, newEvent.get(i-1));
+            if (userProfile.canceled_slots.get(converted_indice).get(i - 1)){
+                userProfile.agenda.get(converted_indice).set(i, timeSlot.CurrentTask.FREE);
+                userProfile.newEventAgenda.get(converted_indice).set(i, "");
+            }
+            else {
+                userProfile.agenda.get(converted_indice).set(i, dailyTasks.get(i - 1));
+                userProfile.newEventAgenda.get(converted_indice).set(i, newEvent.get(i - 1));
+            }
         }
 
 

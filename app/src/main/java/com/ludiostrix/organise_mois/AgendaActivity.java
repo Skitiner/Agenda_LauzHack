@@ -496,40 +496,36 @@ Fonctions de changement de jour de l'agenda.
  */
     public void goToday(View view) {
         if (!lunch_time && !fixed_work) {
-            switch (view.getId()) {
-                case R.id.date:
-                    currentDay = 0;
-                    date_offset = 0;
-                    View addEvent = findViewById(R.id.addEvent);
-                    View delEvent = findViewById(R.id.delEvent);
+                currentDay = 0;
+                date_offset = 0;
+                View addEvent = findViewById(R.id.addEvent);
+                View delEvent = findViewById(R.id.delEvent);
 
-                    addEvent.setVisibility(View.VISIBLE);
-                    delEvent.setVisibility(View.VISIBLE);
+                addEvent.setVisibility(View.VISIBLE);
+                delEvent.setVisibility(View.VISIBLE);
 
-                    adapter.updateAgenda();
+                adapter.updateAgenda();
 
-                    SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
-                    date = findViewById(R.id.date);
-                    currentDate = new Date();
-                    date.setText(formatter.format(currentDate));
+                SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+                date = findViewById(R.id.date);
+                currentDate = new Date();
+                date.setText(formatter.format(currentDate));
 
-                    /*// Start date
-                    SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
-                    String dt = sdf.format(currentDate);
-                    Calendar c = Calendar.getInstance();
-                    try {
-                        c.setTime(sdf.parse(dt));
+                /*// Start date
+                SimpleDateFormat sdf = new SimpleDateFormat("EEE, dd/MM/yyyy", Locale.getDefault());
+                String dt = sdf.format(currentDate);
+                Calendar c = Calendar.getInstance();
+                try {
+                    c.setTime(sdf.parse(dt));
 
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    c.add(Calendar.DATE, date_offset);  // number of days to add
-                    dt = sdf.format(c.getTime());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                c.add(Calendar.DATE, date_offset);  // number of days to add
+                dt = sdf.format(c.getTime());
 
-                    date.setText(dt);*/
-                    break;
+                date.setText(dt);*/
 
-            }
         }
     }
 
@@ -751,8 +747,8 @@ Classe s'occupant du rendu visuel de l'agenda.
                     textView.setBackgroundColor(getResources().getColor(R.color.darkBlue, null));
                     break;
                 case PAUSE:
-                    textView.setText(R.string.pause);
-                    //textView.setText("-");
+                    //textView.setText(R.string.pause);
+                    textView.setText("-");
                     textView.setBackgroundColor(getResources().getColor(R.color.green, null));
                     break;
 
@@ -1086,8 +1082,10 @@ Fonctions liées aux nouveaux événements.
         delFinished.setVisibility(View.VISIBLE);
         View previousDay = findViewById(R.id.previousDay);
         previousDay.setClickable(false);
-        View nextday = findViewById(R.id.previousDay);
+        View nextday = findViewById(R.id.nextDay);
         nextday.setClickable(false);
+        View today = findViewById(R.id.today);
+        today.setClickable(false);
     }
 
     public void delFinishedEventXmlCallback(View view){
@@ -1109,8 +1107,10 @@ Fonctions liées aux nouveaux événements.
         MainActivity.setAlarmOfTheDay(AgendaActivity.this);
         View previousDay = findViewById(R.id.previousDay);
         previousDay.setClickable(true);
-        View nextday = findViewById(R.id.previousDay);
+        View nextday = findViewById(R.id.nextDay);
         nextday.setClickable(true);
+        View today = findViewById(R.id.today);
+        today.setClickable(true);
     }
 
     public void eventCreation(View v){
@@ -1283,9 +1283,9 @@ Fonctions liées aux nouveaux événements.
                                 nE.work = workRB.isChecked();
                                 nE.sport = sportRB.isChecked();
                                 userProfile.savedEvent.add(nE);
-                                if (userProfile.savedEvent.size() > 20) {
+                                /*if (userProfile.savedEvent.size() > 50) {
                                     userProfile.savedEvent.remove(0);
-                                }
+                                }*/
                                 event = userProfile.savedEvent.size()-1;
                             } else {
                                 newEvent nE = new newEvent();

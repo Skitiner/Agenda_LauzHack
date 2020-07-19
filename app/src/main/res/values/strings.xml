@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Organise-MOIs</string>
     <string name="Agenda">Agenda</string>
-    <string name="today">today</string>
+    <string name="today">Today</string>
     <string name="fixed_work">Fixed work</string>
     <string name="eat">Lunch</string>
     <string name="work">Work</string>

@@ -153,6 +153,7 @@ public class DayPlan {
     // Met à jour la quantité de travail et de sport à faire avant de les replacer.
     private void updateWorkSportToDo(int slot){
         if (!convertInPastDay && !init) {
+            this.sportSlot -= sportCatchUp;
             for (int i = slot; i < currentAgenda.size(); i++) {
                 if (currentAgenda.get(i) == timeSlot.CurrentTask.SPORT && !canceledAgenda.get(i)) {
                     sportSlot++;
@@ -160,7 +161,7 @@ public class DayPlan {
                     workSlot++;
                 } else if (currentAgenda.get(i) == timeSlot.CurrentTask.SPORT_CATCH_UP && !canceledAgenda.get(i)) {
                     sportCatchUp++;
-                } else if ((currentAgenda.get(i) == timeSlot.CurrentTask.WORK_CATCH_UP || currentAgenda.get(i) == timeSlot.CurrentTask.WORK_FIX) && !canceledAgenda.get(i)) {
+                } else if ((currentAgenda.get(i) == timeSlot.CurrentTask.WORK_CATCH_UP) && !canceledAgenda.get(i)) {
                     workSlotCatchUp++;
                 } else if (currentAgenda.get(i) == timeSlot.CurrentTask.NEWEVENT && !canceledAgenda.get(i)) {
                     for (newEvent event : savedEvent) {
@@ -174,6 +175,7 @@ public class DayPlan {
                     }
                 }
             }
+            this.sportSlot += sportCatchUp;
         }
     }
 

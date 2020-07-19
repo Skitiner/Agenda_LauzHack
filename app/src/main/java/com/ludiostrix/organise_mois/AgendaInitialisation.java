@@ -152,7 +152,6 @@ Pré-autocompletion
 
         for (int j = 0; j < day_slots.size(); j++) {
             if (day_slots.get(j) == timeSlot.CurrentTask.WORK_FIX || day_slots.get(j) == timeSlot.CurrentTask.EAT ||
-                    day_slots.get(j) == timeSlot.CurrentTask.WORK_CATCH_UP || day_slots.get(j) == timeSlot.CurrentTask.SPORT_CATCH_UP ||
                     day_slots.get(j) == timeSlot.CurrentTask.NEWEVENT || day_canceledSlots.get(j)){
 
                 this.daily_slots_generated.set(j,copy.get(j));
@@ -182,7 +181,7 @@ Initialisation de l'agenda.
         readFromFile();
         init();
         //countWeekWorkAndSport();          /l'idée était ne ne pas réinit le workslot et sportslot à zero mais c'est un peu plus compliqué que ca
-        userProfile.remove_canceled_days();
+        //userProfile.remove_canceled_days();
         setMorningRoutine();
         setNight();
 
