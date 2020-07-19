@@ -61,26 +61,26 @@ public class Cancel_broadcast extends BroadcastReceiver {
 
 
                 //update weight
-                if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK &&
+                if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK &&
                         userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0) {
                     userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
                     //userProfile.lateWorkSlot++;
                     userProfile.workCatchUp++;
-                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_CATCH_UP &&
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK_CATCH_UP &&
                         userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0) {
                     userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
-                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT &&
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.SPORT &&
                         userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0) {
                     userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
                     //userProfile.lateSportSlot++;
                     userProfile.sportCatchUp++;
-                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT_CATCH_UP &&
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.SPORT_CATCH_UP &&
                         userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0) {
                     userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
-                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_FIX) {
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK_FIX) {
                     //userProfile.lateWorkSlot++;
                     userProfile.workCatchUp++;
-                } else if (userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.NEWEVENT) {
+                } else if (userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.NEWEVENT) {
                     for (newEvent event : userProfile.savedEvent) {
                         if (event.name.equals(userProfile.newEventAgenda.get(converted_indice).get(startI))) {
                             if (event.sport) {

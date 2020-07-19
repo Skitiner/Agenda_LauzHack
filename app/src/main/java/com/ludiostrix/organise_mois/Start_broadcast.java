@@ -50,7 +50,7 @@ public class Start_broadcast extends BroadcastReceiver {
         int startI = calendar.get(Calendar.HOUR_OF_DAY)*4 + calendar.get(Calendar.MINUTE)/15;
         int converted_indice = convertedIndice();
 
-        ArrayList<timeSlot.CurrentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
+        ArrayList<TimeSlot.CurrentTask> dailyTasks = new ArrayList<>(userProfile.agenda.get(converted_indice));
         List<String> newEvent = new ArrayList<>(userProfile.newEventAgenda.get(converted_indice));
 
         // Determinate the time boudaries of the block to postpone
@@ -62,19 +62,19 @@ public class Start_broadcast extends BroadcastReceiver {
 
         for(int i = startI; i < (endI + 1); i++) {
             //update weight
-            if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK &&
+            if(userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) < 9){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) + 1);
             }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.WORK_CATCH_UP &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.WORK_CATCH_UP &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Work")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Work"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Work")) - 1);
             }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.SPORT &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) < 9){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) + 1);
             }
-            else if(userProfile.agenda.get(converted_indice).get(startI) == timeSlot.CurrentTask.SPORT_CATCH_UP &&
+            else if(userProfile.agenda.get(converted_indice).get(startI) == TimeSlot.CurrentTask.SPORT_CATCH_UP &&
                     userProfile.weight.get(conversionDayIndice()).get(i).get(userProfile.Task.get("Sport")) > 0){
                 userProfile.weight.get(conversionDayIndice()).get(i).set(userProfile.Task.get("Sport"), userProfile.weight.get(converted_indice).get(i).get(userProfile.Task.get("Sport")) - 1);
             }

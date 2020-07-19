@@ -33,9 +33,9 @@ public class AgendaInitialisation {
     private int nbWorkDay;
     private Context context;
     private Profile userProfile = new Profile();
-    public ArrayList<ArrayList<timeSlot.CurrentTask>> slots_generated;
-    public ArrayList<ArrayList<timeSlot.CurrentTask>> futur_slots_generated;
-    public ArrayList<timeSlot.CurrentTask> daily_slots_generated;
+    public ArrayList<ArrayList<TimeSlot.CurrentTask>> slots_generated;
+    public ArrayList<ArrayList<TimeSlot.CurrentTask>> futur_slots_generated;
+    public ArrayList<TimeSlot.CurrentTask> daily_slots_generated;
     private int nbSportTimeSlots = 0;
     private int weekSport;
     private float weekWork;
@@ -121,11 +121,11 @@ Pré-autocompletion
         for (int j = 0; j < 32; j++) {
             if ((wake_up*4)-j-1 < 0) {
                 if (!nextfreeday) {
-                    this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
+                    this.daily_slots_generated.set(daily_slots_generated.size() + Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
                 }
             }
             else if (!freeday) {
-                this.daily_slots_generated.set(Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
+                this.daily_slots_generated.set(Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
             }
         }
     }
@@ -134,25 +134,25 @@ Pré-autocompletion
         for (int j = 0; j < 4; j++) {
             if ((wake_up*4) + j >= 96) {
                 if (!pastfreeday) {
-                    this.daily_slots_generated.set(Math.round(wake_up * 4) + j, timeSlot.CurrentTask.MORNING_ROUTINE);
+                    this.daily_slots_generated.set(Math.round(wake_up * 4) + j, TimeSlot.CurrentTask.MORNING_ROUTINE);
                 }
             }
             else if (!freeday) {
-                this.daily_slots_generated.set((Math.round(wake_up * 4) + j)%96, timeSlot.CurrentTask.MORNING_ROUTINE);
+                this.daily_slots_generated.set((Math.round(wake_up * 4) + j)%96, TimeSlot.CurrentTask.MORNING_ROUTINE);
             }
         }
     }
 
-    private void daily_compare(ArrayList<timeSlot.CurrentTask> day_slots, List<Boolean> day_canceledSlots){
-        ArrayList<timeSlot.CurrentTask> copy = new ArrayList<>(day_slots.size());
+    private void daily_compare(ArrayList<TimeSlot.CurrentTask> day_slots, List<Boolean> day_canceledSlots){
+        ArrayList<TimeSlot.CurrentTask> copy = new ArrayList<>(day_slots.size());
 
-        for (timeSlot.CurrentTask task : day_slots) {
+        for (TimeSlot.CurrentTask task : day_slots) {
             copy.add(task);
         }
 
         for (int j = 0; j < day_slots.size(); j++) {
-            if (day_slots.get(j) == timeSlot.CurrentTask.WORK_FIX || day_slots.get(j) == timeSlot.CurrentTask.EAT ||
-                    day_slots.get(j) == timeSlot.CurrentTask.NEWEVENT || day_canceledSlots.get(j)){
+            if (day_slots.get(j) == TimeSlot.CurrentTask.WORK_FIX || day_slots.get(j) == TimeSlot.CurrentTask.EAT ||
+                    day_slots.get(j) == TimeSlot.CurrentTask.NEWEVENT || day_canceledSlots.get(j)){
 
                 this.daily_slots_generated.set(j,copy.get(j));
             }
@@ -161,11 +161,11 @@ Pré-autocompletion
 
 
     private void daily_init(){
-        timeSlot.CurrentTask task;
+        TimeSlot.CurrentTask task;
 
         for (int i = 0; i < 96; i++) {
 
-            task = timeSlot.CurrentTask.FREE;
+            task = TimeSlot.CurrentTask.FREE;
             this.daily_slots_generated.add(task);
         }
     }
@@ -333,23 +333,23 @@ Initialisation de l'agenda.
                 for (int k = 0; k < freedaylist.length; k ++){
                     if ((wake_up*4)-j-1 < 0) {
                         if (freedaylist[(k+1) % freedaylist.length] == (i + 1) % 7) {
-                            this.slots_generated.get(i).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
-                            this.futur_slots_generated.get(i).set(futur_slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
+                            this.slots_generated.get(i).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
+                            this.futur_slots_generated.get(i).set(futur_slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
                         }
                     }
                     else if (i == freedaylist[k]){
-                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
-                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
+                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
+                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
                     }
 
                 }
                 /*if ((wake_up*4)-j-1 < 0) {
                     if (freedaylist[(i+1) % freedaylist.length] == (freedaylist[i] + 1) % 7) {
-                        this.slots_generated.get(freedaylist[i]).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
+                        this.slots_generated.get(freedaylist[i]).set(slots_generated.get(0).size() + Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
                     }
                 }
                 else {
-                    this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, timeSlot.CurrentTask.SLEEP);
+                    this.slots_generated.get(freedaylist[i]).set(Math.round(wake_up * 4) - j - 1, TimeSlot.CurrentTask.SLEEP);
                 }*/
             }
         }
@@ -361,13 +361,13 @@ Initialisation de l'agenda.
                 for (int k = 0; k < freedaylist.length; k ++){
                     if ((wake_up*4) + j >= 96) {
                         if (freedaylist[(k-1 + freedaylist.length) % freedaylist.length] == (i - 1) % 7) {
-                            this.slots_generated.get(i).set((Math.round(wake_up * 4) + j)%96, timeSlot.CurrentTask.MORNING_ROUTINE);
-                            this.futur_slots_generated.get(i).set((Math.round(wake_up*4) + j)%96, timeSlot.CurrentTask.MORNING_ROUTINE);
+                            this.slots_generated.get(i).set((Math.round(wake_up * 4) + j)%96, TimeSlot.CurrentTask.MORNING_ROUTINE);
+                            this.futur_slots_generated.get(i).set((Math.round(wake_up*4) + j)%96, TimeSlot.CurrentTask.MORNING_ROUTINE);
                         }
                     }
                     else if (i == freedaylist[k]){
-                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) + j, timeSlot.CurrentTask.MORNING_ROUTINE);
-                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up*4) + j, timeSlot.CurrentTask.MORNING_ROUTINE);
+                        this.slots_generated.get(freedaylist[k]).set(Math.round(wake_up * 4) + j, TimeSlot.CurrentTask.MORNING_ROUTINE);
+                        this.futur_slots_generated.get(freedaylist[k]).set(Math.round(wake_up*4) + j, TimeSlot.CurrentTask.MORNING_ROUTINE);
                     }
 
                 }
@@ -375,13 +375,13 @@ Initialisation de l'agenda.
         }
     }
 
-    private int compare(ArrayList<ArrayList<timeSlot.CurrentTask>> week_slots){
+    private int compare(ArrayList<ArrayList<TimeSlot.CurrentTask>> week_slots){
         int nbFixedWork = 0;
         for (int i = 0; i < free_day.length; i++) {
             for (int j = 0; j < week_slots.get(0).size(); j++) {
-                if (week_slots.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX || week_slots.get(i).get(j) == timeSlot.CurrentTask.EAT || week_slots.get(i).get(j) == timeSlot.CurrentTask.NEWEVENT){
+                if (week_slots.get(i).get(j) == TimeSlot.CurrentTask.WORK_FIX || week_slots.get(i).get(j) == TimeSlot.CurrentTask.EAT || week_slots.get(i).get(j) == TimeSlot.CurrentTask.NEWEVENT){
                     this.slots_generated.get(i).set(j,week_slots.get(i).get(j));
-                    if (week_slots.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX){
+                    if (week_slots.get(i).get(j) == TimeSlot.CurrentTask.WORK_FIX){
                         nbFixedWork++;
                     }
                 }
@@ -393,8 +393,8 @@ Initialisation de l'agenda.
     private void futurCompare(){
         for (int i = 0; i < free_day.length; i++) {
             for (int j = 0; j < userProfile.futurAgenda.get(0).size(); j++) {
-                if (userProfile.futurAgenda.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX || userProfile.futurAgenda.get(i).get(j) == timeSlot.CurrentTask.EAT ||
-                        userProfile.futurAgenda.get(i).get(j) == timeSlot.CurrentTask.NEWEVENT){
+                if (userProfile.futurAgenda.get(i).get(j) == TimeSlot.CurrentTask.WORK_FIX || userProfile.futurAgenda.get(i).get(j) == TimeSlot.CurrentTask.EAT ||
+                        userProfile.futurAgenda.get(i).get(j) == TimeSlot.CurrentTask.NEWEVENT){
                     this.futur_slots_generated.get(i).set(j,userProfile.futurAgenda.get(i).get(j));
 
                 }
@@ -403,23 +403,23 @@ Initialisation de l'agenda.
     }
 
     private void init(){
-        timeSlot.CurrentTask task;
+        TimeSlot.CurrentTask task;
 
         for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot.CurrentTask> tasks = new ArrayList<>();
+            ArrayList<TimeSlot.CurrentTask> tasks = new ArrayList<>();
             for (int i = 0; i < 96; i++) {
 
-                task = timeSlot.CurrentTask.FREE;
+                task = TimeSlot.CurrentTask.FREE;
                 tasks.add(task);
 
             }
             this.slots_generated.add(tasks);
         }
         for(int j = 0; j < 7; j++ ) {
-            ArrayList<timeSlot.CurrentTask> tasks = new ArrayList<>();
+            ArrayList<TimeSlot.CurrentTask> tasks = new ArrayList<>();
             for (int i = 0; i < 96; i++) {
 
-                task = timeSlot.CurrentTask.FREE;
+                task = TimeSlot.CurrentTask.FREE;
                 tasks.add(task);
 
             }
@@ -540,12 +540,12 @@ Première version de l'algorithme de plannification.
         for (int i = 0; i < userProfile.agenda.size();i++){
             for (int j = 0; j < userProfile.agenda.get(i).size(); j++){
                 if (!userProfile.canceled_slots.get(i).get(j)) {
-                    if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK_FIX ||
-                            userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.WORK) {
+                    if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.WORK_FIX ||
+                            userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.WORK) {
                         weekWork++;
-                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.SPORT) {
+                    } else if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.SPORT) {
                         weekSport++;
-                    } else if (userProfile.agenda.get(i).get(j) == timeSlot.CurrentTask.NEWEVENT) {
+                    } else if (userProfile.agenda.get(i).get(j) == TimeSlot.CurrentTask.NEWEVENT) {
                         for (newEvent event : userProfile.savedEvent) {
                             if (event.sport) {
                                 weekSport++;
@@ -587,17 +587,17 @@ Première version de l'algorithme de plannification.
                     for (int i = 0; i < nbWorkDay; i++) {
                         if (memi[nbWorkDay] < 9) {
                             for (int j = 0; j < memi[nbWorkDay]; j++) {
-                                slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.CurrentTask.WORK);
+                                slots_generated.get(freedaylist[i]).set(memi[i] + j, TimeSlot.CurrentTask.WORK);
                             }
                         } else {
                             for (int k = 2; k < 12; k++) {
                                 if (memi[nbWorkDay] < 8 * k) {
                                     for (int j = 0; j < memi[nbWorkDay]; j++) {
                                         if ((j % (memi[nbWorkDay] / k) == (memi[nbWorkDay] / k) - 1) && memi[nbWorkDay] > j + 2) {
-                                            slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.CurrentTask.PAUSE);
+                                            slots_generated.get(freedaylist[i]).set(memi[i] + j, TimeSlot.CurrentTask.PAUSE);
                                             nbpause++;
                                         } else {
-                                            slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.CurrentTask.WORK);
+                                            slots_generated.get(freedaylist[i]).set(memi[i] + j, TimeSlot.CurrentTask.WORK);
                                         }
                                     }
                                     break;
@@ -616,7 +616,7 @@ Première version de l'algorithme de plannification.
                     if (memi[i] == -1) {
                         // TODO: 05.04.2020 no possibilities found
                     } else {
-                        slots_generated.get(freedaylist[i]).set(memi[i], timeSlot.CurrentTask.WORK);
+                        slots_generated.get(freedaylist[i]).set(memi[i], TimeSlot.CurrentTask.WORK);
                     }
                 }
             }
@@ -710,7 +710,7 @@ Première version de l'algorithme de plannification.
         else {
             for (int i = 0; i < nbWorkDay; i++) {
                 for (int j = 0; j < nbSportSlotsPerDay; j++) {
-                    slots_generated.get(freedaylist[i]).set(memi[i] + j, timeSlot.CurrentTask.SPORT);
+                    slots_generated.get(freedaylist[i]).set(memi[i] + j, TimeSlot.CurrentTask.SPORT);
                 }
             }
         }
@@ -751,7 +751,7 @@ Première version de l'algorithme de plannification.
         }
         return memiComplete;
     }
-    // give a timeSlot, a timeSlot space and a boolean, 0 = search descent, 1 = search ascend
+    // give a TimeSlot, a TimeSlot space and a boolean, 0 = search descent, 1 = search ascend
     //return a time slot if it found one, null however
     private int[] FreeTime(int timeSlotMin, int timeSlotMax, int timeSpace, boolean ascend){
         int freeTimeSlotCounter = 0;
@@ -763,7 +763,7 @@ Première version de l'algorithme de plannification.
             for (int j = 0; j < nbWorkDay; j++) {
                 freeTimeSlotCounter=0;
                 for (int i = timeSlotMin; i <= timeSlotMax; i++) {
-                    if (slots_generated.get(freedaylist[j]).get(i) == timeSlot.CurrentTask.FREE){
+                    if (slots_generated.get(freedaylist[j]).get(i) == TimeSlot.CurrentTask.FREE){
                         freeTimeSlotCounter ++;
                         if (freeTimeSlotCounter >= timeSpace){
                             memi[j] = i - timeSpace + 1;
@@ -780,7 +780,7 @@ Première version de l'algorithme de plannification.
             for (int j = 0; j < nbWorkDay; j++) {
                 freeTimeSlotCounter=0;
                 for (int i = timeSlotMax; i >= timeSlotMin; i--) {
-                    if (slots_generated.get(freedaylist[j]).get(i) == timeSlot.CurrentTask.FREE){
+                    if (slots_generated.get(freedaylist[j]).get(i) == TimeSlot.CurrentTask.FREE){
                         freeTimeSlotCounter ++;
                         if (freeTimeSlotCounter >= timeSpace){
                             memi[j] = i;

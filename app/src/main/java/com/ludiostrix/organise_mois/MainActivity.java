@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
         int offset_indice = offset%7;
 
-        timeSlot.CurrentTask task = userProfile.agenda.get(offset_indice).get(0);
+        TimeSlot.CurrentTask task = userProfile.agenda.get(offset_indice).get(0);
         Boolean canceled = userProfile.canceled_slots.get(offset_indice).get(0);
 
         for(int i = 0; i < (userProfile.agenda).size(); i++){
@@ -215,15 +215,15 @@ public class MainActivity extends AppCompatActivity {
                 if(userProfile.agenda.get(indice).get(j) != task || userProfile.canceled_slots.get(indice).get(j) != canceled) {
 
                     // No difference between WORK and WORK_FIX for the notifications
-                    if((task == timeSlot.CurrentTask.WORK || task == timeSlot.CurrentTask.WORK_FIX)
-                            && (userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.WORK || userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.WORK_FIX)
+                    if((task == TimeSlot.CurrentTask.WORK || task == TimeSlot.CurrentTask.WORK_FIX)
+                            && (userProfile.agenda.get(indice).get(j) == TimeSlot.CurrentTask.WORK || userProfile.agenda.get(indice).get(j) == TimeSlot.CurrentTask.WORK_FIX)
                             && userProfile.canceled_slots.get(indice).get(j) == canceled) {
                         task = userProfile.agenda.get(indice).get(j);
                         continue;
                     }
                     // No difference between PAUSE and FREE for the notifications
-                    if((task == timeSlot.CurrentTask.PAUSE || task == timeSlot.CurrentTask.FREE)
-                            && (userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.PAUSE || userProfile.agenda.get(indice).get(j) == timeSlot.CurrentTask.FREE)) {
+                    if((task == TimeSlot.CurrentTask.PAUSE || task == TimeSlot.CurrentTask.FREE)
+                            && (userProfile.agenda.get(indice).get(j) == TimeSlot.CurrentTask.PAUSE || userProfile.agenda.get(indice).get(j) == TimeSlot.CurrentTask.FREE)) {
                         task = userProfile.agenda.get(indice).get(j);
                         continue;
                     }
