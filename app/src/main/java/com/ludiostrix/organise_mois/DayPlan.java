@@ -572,24 +572,25 @@ Section de placement des heures de travail et de sport.
         List<Integer> position;
         List<List<Integer>> scoresPosition = new ArrayList<>();
 
-        for (int i = 0; i < dailyAgenda.size() - nbSportSlot + 1; i++) {
-            position = new ArrayList<>();
-            if (dailyAgenda.get(i) == TimeSlot.CurrentTask.FREE) {
-                position.add(i);
-                for (int j = i + 1; j < i + nbSportSlot; j++){
-                    if (j < dailyAgenda.size()) {
-                        if (dailyAgenda.get(j) == TimeSlot.CurrentTask.FREE) {
-                            position.add(j);
-                            if (j == i + nbSportSlot - 1) {
-                                scoresPosition.add(position);
+        if (nbSportSlot != 0) {
+            for (int i = 0; i < dailyAgenda.size() - nbSportSlot + 1; i++) {
+                position = new ArrayList<>();
+                if (dailyAgenda.get(i) == TimeSlot.CurrentTask.FREE) {
+                    position.add(i);
+                    for (int j = i + 1; j < i + nbSportSlot; j++) {
+                        if (j < dailyAgenda.size()) {
+                            if (dailyAgenda.get(j) == TimeSlot.CurrentTask.FREE) {
+                                position.add(j);
+                                if (j == i + nbSportSlot - 1) {
+                                    scoresPosition.add(position);
+                                }
+                            } else {
+                                i = j;
+                                break;
                             }
-                        } else {
-                            i = j;
+                        } else
                             break;
-                        }
                     }
-                    else
-                        break;
                 }
             }
         }

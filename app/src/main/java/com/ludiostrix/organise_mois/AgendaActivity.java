@@ -1169,9 +1169,11 @@ Fonctions liées aux nouveaux événements.
             EVENT_NAME[i] = eventName.get(i);
         }
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String> (popupView.getContext(), android.R.layout.simple_dropdown_item_1line, EVENT_NAME);
-        AutoCompleteTextView textView = (AutoCompleteTextView) popupView.findViewById(R.id.eventNameAutoCompleteTextView);
-        textView.setAdapter(adapter);
+        if (Integer.valueOf(android.os.Build.VERSION.SDK) > 25) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(popupView.getContext(), android.R.layout.simple_dropdown_item_1line, EVENT_NAME);
+            AutoCompleteTextView textView = (AutoCompleteTextView) popupView.findViewById(R.id.eventNameAutoCompleteTextView);
+            textView.setAdapter(adapter);
+        }
 
     }
 
